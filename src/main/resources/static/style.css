@@ -1,0 +1,92 @@
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    z-index: 9999;
+}
+
+#about-text {
+    display: none;
+    position: absolute;
+    z-index: 10000;
+    left: 50%;
+    top: 20%;
+}
+
+#about-card {
+    left: -50%;
+    width: 50vw;
+}
+
+.page-content .mdl-grid {
+    padding: 16px;
+}
+
+#github-icon {
+    vertical-align: -15%;
+}
+
+.functional-buttons .mdl-button {
+    margin-top: 10px;
+}
+
+#save-config[disabled] {
+    background-color: rgba(0,0,0,.12);
+}
+
+#save-config {
+    background-color: rgb(76,175,80);
+}
+
+.fail-icon {
+    vertical-align: -12%;
+    margin-right: 5px;
+    display: none;
+}
+
+ul#available-classes-list {
+    overflow: auto;
+    width: 300px;
+    height: 300px;
+}
+
+ul#available-classes-list li {
+    padding: 0;
+}
+
+.function-buttons-separator {
+    width: 90%;
+    margin-top: 20px;
+}
+
+#progress-bar {
+    width: 90%;
+    display: none;
+}
+
+.available-classes-header {
+    margin-bottom: 0;
+}
+
+#available-classes-list {
+    margin-top: 0;
+}
+
+.orange-button.mdl-button {
+    background-color: rgb(255,171,64) !important;
+    color: rgb(66,66,66) !important;
+}
+
+.blue-button.mdl-button {
+    background-color: rgb(33,150,243) !important;
+}
+
+.download-button {
+    width: 140px;
+}

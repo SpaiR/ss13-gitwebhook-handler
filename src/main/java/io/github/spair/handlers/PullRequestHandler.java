@@ -1,0 +1,32 @@
+package io.github.spair.handlers;
+
+import io.github.spair.entities.PullRequest;
+import io.github.spair.services.PullRequestService;
+import io.github.spair.services.changelog.ChangelogService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+
+@Component
+public class PullRequestHandler {
+
+    @Autowired
+    private PullRequestService pullRequestService;
+    @Autowired
+    private ChangelogService changelogService;
+
+    public void handle(HashMap webhook) {
+        PullRequest pullRequest = pullRequestService.convertWebhookMap(webhook);
+
+        switch (pullRequest.getType()) {
+            case OPENED:
+            case EDITED:
+                changelogService.validate(pullRequest);
+                break;
+            case MERGED:
+                changelogService.generateAndUpdate(pullRequest);
+                break;
+        }
+    }
+}
