@@ -34,7 +34,7 @@ For additional info about what every filed mean, look description in the right p
 ### Changelog Generator
 This generator **NOT** oriented to work with legacy changelog html's.
 By legacy I mean [these](http://i.imgur.com/zNf32aG.png) Web 1.0 design.
-So, instead, generator was designed to work with [this](http://i.imgur.com/C1itc7N.png).
+So, instead, generator was designed to work with [this](http://i.imgur.com/C6pHaOu.png).
 
 To generate changelog there is `<div id="changelogs"></div>` element should exist.
 
