@@ -21,7 +21,7 @@ so literally everything can work with just one 'jar' and command line to start i
 ## Installation
 **Before:** ensure that machine where you gonna start app has at least Java 8.
 
-1. Download jar archive to your server.
+1. [Download](https://github.com/SpaiR/ss13-gitwebhook-handler/releases) 'jar' archive to your server.
 2. Start it with next command:
 `java -jar ss13-gitwebhook-handler-1.0.jar --security.user.name=[your login name] --security.user.password=[your login password]`
 In root where you started the app will be created two files: GWHConfig.json and GWHLog.log for configuration and logging respectively.
