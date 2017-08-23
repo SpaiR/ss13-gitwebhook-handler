@@ -1,1 +1,84 @@
 # ss13-gitwebhook-handler
+## About
+GitHub webhook handler oriented for Space Station 13 repositories.
+Actually, this orientation isn't strict, 
+so handler could be used for any SS13 like repositories based on BYOND.
+
+#### What it can do:
+- Validate 'in body' changelog if exist, when PR description created or edited.
+If something gone wrong handler will tell about it.
+- Parse merged PR for existence of 'in body' changelog, create it and send it right into html file on repository.
+Process fully automated, so no need of Python scripts or something like that and any manual work.
+
+## Features
+- Web UI configuration.
+There is no need to recompile application to work with another repository.
+All properties could be changed in browser. Screenshots: http://imgur.com/a/Z8tQa
+- Works with just one jar.
+This application based on Spring Boot framework, 
+so literally everything can work with just one 'jar' and command line to start it.
+
+## Installation
+**Before:** ensure that machine where you gonna start app has at least Java 8.
+
+1. Download jar archive to your server.
+2. Start it with next command:
+`java -jar ss13-gitwebhook-handler-1.0.jar --security.user.name=[your login name] --security.user.password=[your login password]`
+In root where you started the app will be created two files: GWHConfig.json and GWHLog.log for configuration and logging respectively.
+3. Go to configuration UI in browser and change all properties as you need.
+Path should look like this: `[server ip]:[port]/config` or `[server dns]/config`
+
+For additional info about what every filed mean, look description in the right part or click help button in the bottom-right.
+
+## Additional info
+### Changelog Generator
+This generator **NOT** oriented to work with legacy changelog html's.
+By legacy I mean [these](http://i.imgur.com/zNf32aG.png) Web 1.0 design.
+So, instead, generator was designed to work with [this](http://i.imgur.com/C1itc7N.png).
+
+To generate changelog there is `<div id="changelogs"></div>` element should exist.
+
+Result schema will be:
+```
+<div id="changelog">
+ <div class="row" id="[current date]"> 
+  <div class="col-lg-12">
+   <h3 class="date">[current date]</h3> 
+   <div id="[author name]"> 
+    <h4 class="author">[author name] [updated text from config]:</h4> 
+    <ul class="changelog"> 
+     <li class="rscadd">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li> 
+    </ul> 
+   </div> 
+  </div> 
+ </div> 
+</div>
+```
+
+#### How to use:
+**At the end** of PR description add:
+```
+:cl: [here custom author name could be passed]
+ - rscadd: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+```
+After PR merge changelog html will be updated instantly.
+
+Generator can automatically add link to PR if `[link]` marked added to change description. Like that:
+```
+:cl:
+ - rscadd[link]: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+```
+and this will result into next entry: `<li class="rscadd">Lorem ipsum. <a href="[link to PR]">- [more text from config] -</a></li> `
+
+Generator will also automatically do next things:
+- Capitalize first letter of change description.
+- Add dot to the end of description if there is no `.`, `?` or `!`.
+
+HTML, CSS and all used scripts for changelog file provided in template folder.
+How it looks in production can be seen [here](https://github.com/TauCetiStation/TauCetiClassic/blob/master/html/changelog.html).
+
+#### Validation:
+After PR created or merged, if 'in body' changelog exist, it will be validated.
+To make process right your repository **should** have `Invalid Changelog` label.
+If changelog validation failed this label will be automatically added to PR. Also comment with fail description will be created.
+Right after changelog fixed or removed, warning label will be removed too.

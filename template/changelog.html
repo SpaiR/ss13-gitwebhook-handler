@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+ <head> 
+  <title>[Your Station Name] Changelos</title>
+  <base target="_blank">
+  <meta charset="utf-8"> 
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/changelog.css">
+  <script defer src="scripts/jquery-3.2.1.min.js"></script>
+  <script defer src="scripts/bootstrap.min.js"></script>
+  <script defer src="scripts/changelog.js"></script>
+ </head> 
+ <body> 
+  <div class="header jumbotron text-center"> 
+   <h1>[Your Station Name]</h1>
+   <p><a href="#" class="btn btn-primary btn-sm" role="button">Forum</a> <a href="#" class="btn btn-primary btn-sm" role="button">Wiki</a> <a href="#" class="btn btn-primary btn-sm" role="button">GitHub</a></p>
+   <p>Conference: <a href="#">IRC</a></p>
+  </div> 
+  <div class="container"> 
+   <div class="row"> 
+    <div class="col-lg-12"> 
+     <p><b>Current Maintainers: </b>[maintainers]</p>
+     <p><b>Build contributors: </b><a href="#">-click me-</a></p>
+     <p><b>Thanks to: </b>Baystation 12, /tg/station, /vg/station, Paradise Station, GoonStation devs and the original SpaceStation developers.</p> 
+     <p class="bg-danger"><b>Found bug?</b> Please, report about it on our <a href="#"><b>tracker</b></a>.</p>
+    </div> 
+   </div> 
+   <hr>
+   <button id="open-legend-button" type="button" class="btn btn-info btn-xs">Show Legend</button>
+   <div id="legend-text">
+    <ul>
+	   <li class="bugfix">- description</li>
+	   <li class="rscadd">- description</li>
+	   <li class="rscdel">- description</li>
+	   <li class="image">- description</li>
+	   <li class="sound">- description</li>
+	   <li class="spellcheck">- description</li>
+	   <li class="tweak">- description</li>
+	   <li class="balance">- description</li>
+	   <li class="map">- description</li>
+	   <li class="performance">- description</li>
+	   <li class="experiment">- description</li>
+	  </ul>
+	  <button id="close-legend-button" type="button" class="btn btn-danger btn-xs">X</button>
+	  <hr>
+   </div>
+   <!-- DO NOT change this elements. Changelog generated AUTOMATICALLY -->
+   <div id="changelogs"></div>
+   <div class="row"> 
+    <div class="col-lg-12"> 
+     <p>[Additional info]</p>
+    </div> 
+   </div> 
+  </div>  
+ </body>
+</html>
