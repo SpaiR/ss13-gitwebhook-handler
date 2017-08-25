@@ -1,14 +1,12 @@
 # ss13-gitwebhook-handler
 ## About
-GitHub webhook handler oriented for Space Station 13 repositories.
+GitHub webhook handler, oriented for Space Station 13 repositories.
 Actually, this orientation isn't strict, 
 so handler could be used for any SS13 like repositories based on BYOND.
 
 #### What it can do:
-- Validate 'in body' changelog if exist, when PR description created or edited.
-If something gone wrong handler will tell about it.
-- Parse merged PR for existence of 'in body' changelog, create it and send it right into html file on repository.
-Process fully automated, so no need of Python scripts or something like that and any manual work.
+- Create changelog from PR description
+- Validate changelog on PR creation and edit
 
 ## Features
 - Web UI configuration.
@@ -28,7 +26,7 @@ In root where you started the app will be created two files: GWHConfig.json and 
 3. Go to configuration UI in browser and change all properties as you need.
 Path should look like this: `[server ip]:[port]/config` or `[server dns]/config`
 
-For additional info about what every filed mean, look description in the right part or click help button in the bottom-right.
+For additional info about what every field mean, look description in the right part or click help button in the bottom-right.
 
 ## Additional info
 ### Changelog Generator
@@ -40,7 +38,7 @@ To generate changelog there is `<div id="changelogs"></div>` element should exis
 
 Result schema will be:
 ```
-<div id="changelog">
+<div id="changelogs">
  <div class="row" id="[current date]"> 
   <div class="col-lg-12">
    <h3 class="date">[current date]</h3> 
@@ -60,10 +58,17 @@ Result schema will be:
 ```
 :cl: [here custom author name could be passed]
  - rscadd: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-```
-After PR merge changelog html will be updated instantly.
 
-Generator can automatically add link to PR if `[link]` marked added to change description. Like that:
+or
+
+:cl:
+- rscadd: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+```
+**Important:** to be valid there should be space after first `-` and after `:` sign. Also it will look like list in GitHub markdown.
+
+After PR is merged changelog html file will be updated instantly.
+
+Generator can automatically add link to PR if `[link]` mark added to change description. Like that:
 ```
 :cl:
  - rscadd[link]: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -78,7 +83,7 @@ HTML, CSS and all used scripts for changelog file provided in template folder.
 How it looks in production can be seen [here](https://github.com/TauCetiStation/TauCetiClassic/blob/master/html/changelog.html).
 
 #### Validation:
-After PR created or merged, if 'in body' changelog exist, it will be validated.
+After PR created or edited, if 'in body' changelog exist, it will be validated.
 To make process right your repository **should** have `Invalid Changelog` label.
 If changelog validation failed this label will be automatically added to PR. Also comment with fail description will be created.
 Right after changelog fixed or removed, warning label will be removed too.
