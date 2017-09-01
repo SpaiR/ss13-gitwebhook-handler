@@ -25,6 +25,10 @@ so literally everything can work with just one 'jar' and command line to start i
 In root where you started the app will be created two files: GWHConfig.json and GWHLog.log for configuration and logging respectively.
 3. Go to configuration UI in browser and change all properties as you need.
 Path should look like this: `[server ip]:[port]/config` or `[server dns]/config`
+4. Config your Repo to send webhook to handler.
+
+### Webhooks
+Currently only webhook for pull requests is managed. So you should create webhook for them only and provide next address: `[server ip]:[port]/handler/pull_request` or `[server dns]/handler/pull_request`
 
 For additional info about what every field mean, look description in the right part or click help button in the bottom-right.
 
