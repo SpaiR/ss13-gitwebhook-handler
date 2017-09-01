@@ -82,13 +82,18 @@ $('document').ready(function () {
 function addClassAction() {
     var $addClassField = $('#add-class-field');
     var fieldValue = $addClassField.val();
+    var classesArray = configObject.changelogConfig.html.availableClasses;
 
     if (fieldValue.length > 0) {
-        addClassToList(fieldValue, configObject.changelogConfig.html.availableClasses.length);
-        configObject.changelogConfig.html.availableClasses.push(fieldValue);
+        if (classesArray.indexOf(fieldValue) !== -1) {
+            showToast('Class \'' + fieldValue + '\' already available!');
+        } else {
+            addClassToList(fieldValue);
+            classesArray.push(fieldValue);
 
-        $addClassField.val('');
-        $addClassField.parent().get(0).MaterialTextfield.checkDirty();
+            $addClassField.val('');
+            $addClassField.parent().get(0).MaterialTextfield.checkDirty();
+        }
     }
 }
 
@@ -159,26 +164,26 @@ function initForms() {
     $htmlUpdateText.val(configObject.changelogConfig.html.updateText);
     $htmlUpdateText.keyup(function () { configObject.changelogConfig.html.updateText = $htmlUpdateText.val() });
 
-    configObject.changelogConfig.html.availableClasses.forEach(function (item, index) {
-        addClassToList(item, index);
+    configObject.changelogConfig.html.availableClasses.forEach(function (item) {
+        addClassToList(item);
     });
 
     // Check all fields for changes, to make labels float.
     $('.mdl-textfield').each(function () { this.MaterialTextfield.checkDirty(); });
 }
 
-function addClassToList(className, index) {
+function addClassToList(className) {
     $('#available-classes-list').append(
-        '<li data-class-index="' + index + '" class="mdl-list__item">' +
-        ' <button id="remove-class-button" data-index-to-remove="' + index + '" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">' +
+        '<li class="mdl-list__item">' +
+        ' <button id="remove-class-button" data-class-to-remove="' + className + '" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">' +
         '  <i class="material-icons">clear</i>' +
         ' </button>' +
         '&nbsp;' + className +
         '</li>'
     );
 
-    $('#remove-class-button[data-index-to-remove="' + index + '"]').click(function () {
-        $('#available-classes-list').find('li[data-class-index="' + index + '"]').remove();
+    $('[data-class-to-remove="' + className + '"]').click(function () {
+        $(this).parent().remove();
 
         var classesArray = configObject.changelogConfig.html.availableClasses;
         classesArray.splice(classesArray.indexOf(className), 1);
