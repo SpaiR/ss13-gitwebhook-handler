@@ -28,7 +28,7 @@ public class ChangelogService {
     @Autowired
     private ConfigService configService;
 
-    private static final Logger logger = LoggerFactory.getLogger(ChangelogService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChangelogService.class);
 
     private static final Pattern CHANGELOG_TEXT_PATTERN = Pattern.compile(":cl:((?:.|\\n|\\r)*+)|\uD83C\uDD91((?:.|\\n|\\r)*+)");
     private static final Pattern AUTHOR_BEFORE_CHANGES_PATTERN = Pattern.compile(".*");
@@ -47,7 +47,7 @@ public class ChangelogService {
             String updateMessage = "Automatic changelog generation for PR #" + pullRequest.getNumber();
             gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);
 
-            logger.info("Changelog generated for PR #" + pullRequest.getNumber());
+            LOGGER.info("Changelog generated for PR #" + pullRequest.getNumber());
         }
     }
 

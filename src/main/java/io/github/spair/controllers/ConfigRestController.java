@@ -27,7 +27,7 @@ public class ConfigRestController {
     @Autowired
     private Environment env;
 
-    private static final Logger logger = LoggerFactory.getLogger(ConfigRestController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigRestController.class);
 
     @GetMapping("/current")
     public HandlerConfig getCurrentConfig() {
@@ -41,7 +41,7 @@ public class ConfigRestController {
 
     @GetMapping("/file")
     public FileSystemResource downloadConfigFile(HttpServletResponse response) {
-        logger.info("Configuration file downloaded");
+        LOGGER.info("Configuration file downloaded");
 
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ConfigService.CONFIG_NAME);
@@ -51,7 +51,7 @@ public class ConfigRestController {
 
     @GetMapping("/log")
     public FileSystemResource downloadLogFile(HttpServletResponse response) {
-        logger.info("Log file downloaded");
+        LOGGER.info("Log file downloaded");
 
         String logName = env.getProperty("logging.file");
 

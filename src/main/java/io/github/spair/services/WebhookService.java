@@ -16,7 +16,7 @@ public class WebhookService {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(WebhookService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebhookService.class);
 
     public HashMap convertWebhookToMap(String webhook) {
         try {
@@ -24,9 +24,9 @@ public class WebhookService {
         } catch (Exception e) {
 
             if (e instanceof JsonMappingException || e instanceof JsonParseException) {
-                logger.error("JSON parsing error due to webhook conversion", e);
+                LOGGER.error("JSON parsing error due to webhook conversion", e);
             } else {
-                logger.error("Convert webhook to map error", e);
+                LOGGER.error("Convert webhook to map error", e);
             }
 
             throw new RuntimeException(e);

@@ -21,7 +21,7 @@ public class GitHubService {
     @Autowired
     private ConfigService configService;
 
-    private static final Logger logger = LoggerFactory.getLogger(GitHubService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
     private static Map<String, String> FILE_PATH_SHA = new HashMap<>();
 
     private static final String API_PATH = "https://api.github.com";
@@ -125,7 +125,7 @@ public class GitHubService {
             byte[] base64decodedBytes = Base64.getMimeDecoder().decode(encodedContent);
             return new String(base64decodedBytes, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            logger.error("Decoding github response content error", e);
+            LOGGER.error("Decoding github response content error", e);
             throw new RuntimeException(e);
         }
     }

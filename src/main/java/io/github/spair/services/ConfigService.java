@@ -23,7 +23,7 @@ public class ConfigService {
     public static final String CONFIG_NAME = "GWHConfig.json";
 
     private HandlerConfig configuration;
-    private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
 
     @PostConstruct
     public void initConfigFile() throws IOException {
@@ -31,11 +31,11 @@ public class ConfigService {
 
         if (file.exists()) {
             configuration = objectMapper.readValue(file, HandlerConfig.class);
-            logger.info("Configuration loaded from file");
+            LOGGER.info("Configuration loaded from file");
         } else if (file.createNewFile()) {
             configuration = new HandlerConfig();
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, configuration);
-            logger.info("Configuration created and loaded. File path: " + file.getAbsolutePath());
+            LOGGER.info("Configuration created and loaded. File path: " + file.getAbsolutePath());
         } else {
             throw new IOException("Configuration file creation error");
         }
@@ -48,7 +48,7 @@ public class ConfigService {
     public void saveNewConfig(HandlerConfig configuration) throws IOException {
         this.configuration = configuration;
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(CONFIG_NAME), configuration);
-        logger.info("New configuration saved. Config object: " + configuration);
+        LOGGER.info("New configuration saved. Config object: " + configuration);
     }
 
     public HandlerConfigStatus validateConfig(HandlerConfig config) {

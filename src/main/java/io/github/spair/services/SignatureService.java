@@ -18,7 +18,7 @@ public class SignatureService {
     @Autowired
     private ConfigService configService;
 
-    private static final Logger logger = LoggerFactory.getLogger(SignatureService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SignatureService.class);
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
     public void validate(String signature, String data) throws InvalidSignatureException {
@@ -33,7 +33,7 @@ public class SignatureService {
                 throw new InvalidSignatureException();
             }
         } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-            logger.error("Signature validation error", e);
+            LOGGER.error("Signature validation error", e);
             throw new RuntimeException(e);
         }
     }
