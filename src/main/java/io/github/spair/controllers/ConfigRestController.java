@@ -22,12 +22,16 @@ import java.io.IOException;
 @RequestMapping("/config/rest")
 public class ConfigRestController {
 
-    @Autowired
-    private ConfigService configService;
-    @Autowired
-    private Environment env;
+    private final ConfigService configService;
+    private final Environment env;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigRestController.class);
+
+    @Autowired
+    public ConfigRestController(ConfigService configService, Environment env) {
+        this.configService = configService;
+        this.env = env;
+    }
 
     @GetMapping("/current")
     public HandlerConfig getCurrentConfig() {

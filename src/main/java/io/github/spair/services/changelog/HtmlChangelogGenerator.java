@@ -17,10 +17,14 @@ import java.util.List;
 @Component
 class HtmlChangelogGenerator {
 
-    @Autowired
-    private ConfigService configService;
+    private final ConfigService configService;
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY");
+
+    @Autowired
+    public HtmlChangelogGenerator(ConfigService configService) {
+        this.configService = configService;
+    }
 
     String generate(String currentChangelogHtml, Changelog changelog) {
         Document parsedChangelog = Jsoup.parse(currentChangelogHtml);

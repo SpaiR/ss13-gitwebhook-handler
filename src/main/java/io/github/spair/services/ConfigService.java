@@ -6,6 +6,7 @@ import io.github.spair.entities.HandlerConfigStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -15,15 +16,19 @@ import java.io.IOException;
 @Service
 public class ConfigService {
 
-    @Autowired
-    private ObjectMapper objectMapper;
-    @Autowired
-    private GitHubService gitHubService;
+    private final ObjectMapper objectMapper;
+    private final GitHubService gitHubService;
 
     public static final String CONFIG_NAME = "GWHConfig.json";
 
     private HandlerConfig configuration;
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
+
+    @Autowired
+    public ConfigService(ObjectMapper objectMapper, @Lazy GitHubService gitHubService) {
+        this.objectMapper = objectMapper;
+        this.gitHubService = gitHubService;
+    }
 
     @PostConstruct
     public void initConfigFile() throws IOException {

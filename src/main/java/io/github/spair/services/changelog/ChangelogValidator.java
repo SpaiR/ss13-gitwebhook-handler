@@ -13,8 +13,12 @@ import java.util.Set;
 @Service
 class ChangelogValidator {
 
+    private final ConfigService configService;
+
     @Autowired
-    private ConfigService configService;
+    public ChangelogValidator(ConfigService configService) {
+        this.configService = configService;
+    }
 
     ChangelogValidationStatus validate(Changelog changelog) {
         ChangelogValidationStatus status = new ChangelogValidationStatus();

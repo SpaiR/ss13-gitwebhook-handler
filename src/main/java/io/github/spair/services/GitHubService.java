@@ -16,15 +16,19 @@ import java.util.*;
 @Service
 public class GitHubService {
 
-    @Autowired
-    private RestOperations restOperations;
-    @Autowired
-    private ConfigService configService;
+    private final RestOperations restOperations;
+    private final ConfigService configService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
     private static Map<String, String> FILE_PATH_SHA = new HashMap<>();
 
     private static final String API_PATH = "https://api.github.com";
+
+    @Autowired
+    public GitHubService(RestOperations restOperations, ConfigService configService) {
+        this.restOperations = restOperations;
+        this.configService = configService;
+    }
 
     public String readFile(String path) {
         HashMap responseMap = restOperations.exchange(

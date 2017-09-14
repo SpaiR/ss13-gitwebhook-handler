@@ -15,11 +15,15 @@ import java.util.Formatter;
 @Service
 public class SignatureService {
 
-    @Autowired
-    private ConfigService configService;
+    private final ConfigService configService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SignatureService.class);
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+
+    @Autowired
+    public SignatureService(ConfigService configService) {
+        this.configService = configService;
+    }
 
     public void validate(String signature, String data) throws InvalidSignatureException {
         try {

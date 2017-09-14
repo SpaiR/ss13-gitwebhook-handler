@@ -13,10 +13,14 @@ import java.util.HashMap;
 @Service
 public class WebhookService {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WebhookService.class);
+
+    @Autowired
+    public WebhookService(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     public HashMap convertWebhookToMap(String webhook) {
         try {

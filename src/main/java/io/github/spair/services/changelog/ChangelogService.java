@@ -19,14 +19,10 @@ import java.util.regex.Pattern;
 @Service
 public class ChangelogService {
 
-    @Autowired
-    private GitHubService gitHubService;
-    @Autowired
-    private HtmlChangelogGenerator htmlChangelogGenerator;
-    @Autowired
-    private ChangelogValidator changelogValidator;
-    @Autowired
-    private ConfigService configService;
+    private final GitHubService gitHubService;
+    private final HtmlChangelogGenerator htmlChangelogGenerator;
+    private final ChangelogValidator changelogValidator;
+    private final ConfigService configService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChangelogService.class);
 
@@ -35,6 +31,14 @@ public class ChangelogService {
     private static final Pattern CHANGELOG_ROW_WITH_CLASS_PATTERN = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
 
     private static final String INVALID_CHANGELOG_LABEL = "Invalid Changelog";
+
+    @Autowired
+    public ChangelogService(GitHubService gitHubService, HtmlChangelogGenerator htmlChangelogGenerator, ChangelogValidator changelogValidator, ConfigService configService) {
+        this.gitHubService = gitHubService;
+        this.htmlChangelogGenerator = htmlChangelogGenerator;
+        this.changelogValidator = changelogValidator;
+        this.configService = configService;
+    }
 
     public void generateAndUpdate(PullRequest pullRequest) {
         Changelog changelog = findAndCreate(pullRequest);

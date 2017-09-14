@@ -11,10 +11,14 @@ import java.util.HashMap;
 @Component
 public class PullRequestHandler {
 
+    private final PullRequestService pullRequestService;
+    private final ChangelogService changelogService;
+
     @Autowired
-    private PullRequestService pullRequestService;
-    @Autowired
-    private ChangelogService changelogService;
+    public PullRequestHandler(PullRequestService pullRequestService, ChangelogService changelogService) {
+        this.pullRequestService = pullRequestService;
+        this.changelogService = changelogService;
+    }
 
     public void handle(HashMap webhook) {
         PullRequest pullRequest = pullRequestService.convertWebhookMap(webhook);

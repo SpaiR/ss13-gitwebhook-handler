@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/handler")
 public class HandlerWebController {
 
+    private final SignatureService signatureService;
+    private final WebhookService webhookService;
+    private final PullRequestHandler pullRequestHandler;
+
     @Autowired
-    private SignatureService signatureService;
-    @Autowired
-    private WebhookService webhookService;
-    @Autowired
-    private PullRequestHandler pullRequestHandler;
+    public HandlerWebController(SignatureService signatureService, WebhookService webhookService, PullRequestHandler pullRequestHandler) {
+        this.signatureService = signatureService;
+        this.webhookService = webhookService;
+        this.pullRequestHandler = pullRequestHandler;
+    }
 
     @PostMapping(path = "/pull_request", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void catchPullRequestWebhook(
