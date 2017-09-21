@@ -1,0 +1,61 @@
+<html xmlns:th="http://www.thymeleaf.org">
+  <div th:fragment="tab">
+    <div class="page-content">
+      <div class="mdl-grid">
+        <div class="mdl-cell">
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input id="path-to-changelog" class="mdl-textfield__input" pattern="[/].+">
+            <label for="path-to-changelog" class="mdl-textfield__label">Changelog Path</label>
+          </div>
+
+          <br />
+
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input id="html-more-text" class="mdl-textfield__input">
+            <label for="html-more-text" class="mdl-textfield__label">More Text</label>
+          </div>
+
+          <br />
+
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input id="html-update-text" class="mdl-textfield__input">
+            <label for="html-update-text" class="mdl-textfield__label">Update Text</label>
+          </div>
+
+          <br />
+          <h6 class="available-classes-header">Available classes:</h6>
+          <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+            <input id="add-class-field" class="mdl-textfield__input">
+            <label for="add-class-field" class="mdl-textfield__label">Add class</label>
+          </div>
+          <button id="add-class-button" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+            <i class="material-icons">add</i>
+          </button>
+          <ul id="available-classes-list" class="mdl-list"></ul>
+        </div>
+
+        <div class="md-cell">
+          <h5>Changelog path:</h5>
+          <p>
+            Path to your changelog from root of repository. <i><b>Should starts with '/'</b></i>
+          </p>
+
+          <h5>More text:</h5>
+          <p>Will be used in changelog as name for link to PR.</p>
+
+          <h5>Update text:</h5>
+          <p>
+            Will be used in changelog generation to say that author updated something.<br />
+            Look for changelog html schema in source code repository or in about text.
+          </p>
+
+          <h5>Available classes and fields below:</h5>
+          <p>
+            All of these use in validation process of changelog, when PR created or edited.<br />
+            List can't have repeatable values.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</html>

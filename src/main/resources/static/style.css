@@ -45,6 +45,7 @@
 }
 
 .fail-icon {
+    color: #f44336;
     vertical-align: -12%;
     margin-right: 5px;
     display: none;
