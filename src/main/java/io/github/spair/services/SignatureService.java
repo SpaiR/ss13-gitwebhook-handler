@@ -27,7 +27,7 @@ public class SignatureService {
 
     public void validate(String signature, String data) throws InvalidSignatureException {
         try {
-            String realSecretKey = configService.getGitHubConfig().getSecretKey();
+            String realSecretKey = configService.getConfig().getGitHubConfig().getSecretKey();
             SecretKeySpec signingKey = new SecretKeySpec(realSecretKey.getBytes(), HMAC_SHA1_ALGORITHM);
 
             Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);

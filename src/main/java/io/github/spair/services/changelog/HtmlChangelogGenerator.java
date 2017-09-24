@@ -32,14 +32,15 @@ class HtmlChangelogGenerator {
 
         ZoneId zoneId = ZoneId.of(configService.getConfig().getTimeZone());
         String currentDate = LocalDate.now(zoneId).format(FORMATTER);
-        Element currentDateElement = currentChangelogs.getElementById(currentDate);
+
+        Element currentDateElement = getCurrentDateElement(currentChangelogs, currentDate);
 
         if (currentDateElement != null) {
             addChangelogToCurrentDate(changelog, currentDateElement);
         } else {
-            currentChangelogs.prepend("<div class=\"row\" id=\"" + currentDate + "\"></div>");
+            currentChangelogs.prepend("<div class=\"row\" data-date=\"" + currentDate + "\"></div>");
 
-            Element newCurrentDateElement = currentChangelogs.getElementById(currentDate);
+            Element newCurrentDateElement = getCurrentDateElement(currentChangelogs, currentDate);
             newCurrentDateElement.append("<div class=\"col-lg-12\"><h3 class=\"date\">" + currentDate + "</h3></div>");
 
             addChangelogToCurrentDate(changelog, newCurrentDateElement);
@@ -50,15 +51,15 @@ class HtmlChangelogGenerator {
 
     private void addChangelogToCurrentDate(Changelog changelog, Element currentDateElement) {
         Element columnAddTo = currentDateElement.getElementsByClass("col-lg-12").first();
-        Element authorElement = columnAddTo.getElementById(changelog.getAuthor());
+        Element authorElement = getAuthorElement(columnAddTo, changelog.getAuthor());
 
         if (authorElement != null) {
             addChangelogRows(changelog.getChangelogRows(), authorElement);
         } else {
-            columnAddTo.append("<div id=\"" + changelog.getAuthor() + "\"></div>");
+            columnAddTo.append("<div data-author=\"" + changelog.getAuthor() + "\"></div>");
 
-            Element newAuthorElement = columnAddTo.getElementById(changelog.getAuthor());
-            String updateText = configService.getChangelogConfig().getHtml().getUpdateText();
+            Element newAuthorElement = getAuthorElement(columnAddTo, changelog.getAuthor());
+            String updateText = configService.getConfig().getChangelogConfig().getHtml().getUpdateText();
             newAuthorElement.append(
                     "<h4 class=\"author\">" + changelog.getAuthor() + " "+ updateText +":</h4><ul class=\"changelog\"></ul>");
 
@@ -71,5 +72,13 @@ class HtmlChangelogGenerator {
 
         changelogRows.forEach(row ->
                 changelogElement.append("<li class=\"" + row.getClassName() + "\">" + row.getChanges() + "</li>"));
+    }
+
+    private Element getCurrentDateElement(Element elementToParse, String currentDate) {
+        return elementToParse.getElementsByAttributeValue("data-date", currentDate).first();
+    }
+
+    private Element getAuthorElement(Element elementToParse, String author) {
+        return elementToParse.getElementsByAttributeValue("data-author", author).first();
     }
 }

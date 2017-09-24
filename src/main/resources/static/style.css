@@ -91,3 +91,17 @@ ul#available-classes-list li {
 .download-button {
     width: 140px;
 }
+
+.class-labels-wrap {
+    max-height: 400px;
+    width: 317px;
+    overflow-y: auto;
+}
+
+.class-labels-table {
+    width: 300px;
+}
+
+.class-labels-table th, .class-labels-table input, .class-labels-table td {
+    font-size: 14px;
+}

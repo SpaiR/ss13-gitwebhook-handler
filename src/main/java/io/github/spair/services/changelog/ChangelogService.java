@@ -30,10 +30,12 @@ public class ChangelogService {
     private static final Pattern AUTHOR_BEFORE_CHANGES_PATTERN = Pattern.compile(".*");
     private static final Pattern CHANGELOG_ROW_WITH_CLASS_PATTERN = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
 
-    private static final String INVALID_CHANGELOG_LABEL = "Invalid Changelog";
-
     @Autowired
-    public ChangelogService(GitHubService gitHubService, HtmlChangelogGenerator htmlChangelogGenerator, ChangelogValidator changelogValidator, ConfigService configService) {
+    public ChangelogService(GitHubService gitHubService,
+                            HtmlChangelogGenerator htmlChangelogGenerator,
+                            ChangelogValidator changelogValidator,
+                            ConfigService configService)
+    {
         this.gitHubService = gitHubService;
         this.htmlChangelogGenerator = htmlChangelogGenerator;
         this.changelogValidator = changelogValidator;
@@ -44,7 +46,7 @@ public class ChangelogService {
         Changelog changelog = findAndCreate(pullRequest);
 
         if (changelog != null) {
-            String changelogPath = configService.getChangelogConfig().getPathToChangelog();
+            String changelogPath = configService.getConfig().getChangelogConfig().getPathToChangelog();
             String currentChangelogHtml = gitHubService.readFile(changelogPath);
             String newChangelogHtml = htmlChangelogGenerator.generate(currentChangelogHtml, changelog);
 
@@ -56,10 +58,11 @@ public class ChangelogService {
     }
 
     public void validate(PullRequest pullRequest) {
+        String invalidChangelogLabel = configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog();
         Changelog changelog = findAndCreate(pullRequest);
 
         boolean isValid = true;
-        boolean hasInvalidLabel = gitHubService.getIssueLabels(pullRequest.getNumber()).contains(INVALID_CHANGELOG_LABEL);
+        boolean hasInvalidLabel = gitHubService.getIssueLabels(pullRequest.getNumber()).contains(invalidChangelogLabel);
 
         if (changelog != null) {
             ChangelogValidationStatus validationStatus = changelogValidator.validate(changelog);
@@ -69,16 +72,28 @@ public class ChangelogService {
 
                 if (!hasInvalidLabel) {
                     String message = "**Warning!** Invalid changelog detected.\n\n" + validationStatus.getMessage();
-                    gitHubService.createReview(pullRequest.getNumber(), message);
-                    gitHubService.addLabel(pullRequest.getNumber(), INVALID_CHANGELOG_LABEL);
+                    gitHubService.addReviewComment(pullRequest.getNumber(), message);
+                    gitHubService.addLabel(pullRequest.getNumber(), invalidChangelogLabel);
                     return;
                 }
             }
         }
 
         if (hasInvalidLabel && isValid) {
-            gitHubService.removeLabel(pullRequest.getNumber(), INVALID_CHANGELOG_LABEL);
+            gitHubService.removeLabel(pullRequest.getNumber(), invalidChangelogLabel);
         }
+    }
+
+    public List<String> getChangelogClassesList(PullRequest pullRequest) {
+        Changelog changelog = findAndCreate(pullRequest);
+
+        if (changelog != null && changelog.getChangelogRows().size() > 0) {
+            List<String> changelogClasses = new ArrayList<>();
+            changelog.getChangelogRows().forEach(row -> changelogClasses.add(row.getClassName()));
+            return changelogClasses;
+        }
+
+        return new ArrayList<>();
     }
 
     private Changelog findAndCreate(PullRequest pullRequest) {
@@ -186,7 +201,7 @@ public class ChangelogService {
 
     private void addPullRequestLink(boolean hasLink, StringBuilder sb, String prLink) {
         if (hasLink) {
-            String moreText = configService.getChangelogConfig().getHtml().getMoreText();
+            String moreText = configService.getConfig().getChangelogConfig().getHtml().getMoreText();
             sb.append(" <a href=\"").append(prLink).append("\">- ").append(moreText).append(" -</a>");
         }
     }

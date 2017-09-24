@@ -40,7 +40,7 @@ public class ConfigRestController {
 
     @PutMapping("/current")
     public void saveConfig(@RequestBody HandlerConfig configuration) throws IOException {
-        configService.saveNewConfig(configuration);
+        configService.importConfig(configuration);
     }
 
     @GetMapping("/file")
@@ -50,7 +50,7 @@ public class ConfigRestController {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + ConfigService.CONFIG_NAME);
 
-        return new FileSystemResource(configService.downloadConfigFile());
+        return new FileSystemResource(configService.exportConfig());
     }
 
     @GetMapping("/log")

@@ -108,7 +108,15 @@ var configObject = {
         organizationName: '',
         repositoryName: '',
         token: '',
-        secretKey: ''
+        secretKey: '',
+        labels: {
+            invalidChangelog: '',
+            mapChanges: '',
+            iconChanges: '',
+            workInProgress: '',
+            doNotMerge: '',
+            availableClassesLabels: { }
+        }
     },
     changelogConfig: {
         pathToChangelog: '',
@@ -121,12 +129,69 @@ var configObject = {
 };
 
 function initForms() {
+    initFirstTabForms();
+    initSecondTabForms();
+    initThirdTabForms();
+
+    // Check all fields for changes, to make labels float.
+    $('.mdl-textfield').each(function () {
+        this.MaterialTextfield.checkDirty();
+    });
+}
+
+function addClassToList(className) {
+    $('#available-classes-list').append(
+        '<li class="mdl-list__item">' +
+        ' <button id="remove-class-button" data-class-to-remove="' + className + '" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">' +
+        '  <i class="material-icons">clear</i>' +
+        ' </button>' +
+        '&nbsp;' + className +
+        '</li>'
+    );
+
+    $('[data-class-to-remove="' + className + '"]').click(function () {
+        $(this).parent().remove();
+
+        var classesArray = configObject.changelogConfig.html.availableClasses;
+        classesArray.splice(classesArray.indexOf(className), 1);
+
+        delete availableClassesLabelsMap[className];
+        $classLabel.parent().parent().remove();
+    });
+
+    var availableClassesLabelsMap = configObject.gitHubConfig.labels.availableClassesLabels;
+
+    $('#available-classes-labels').append(
+        '<tr>' +
+        ' <td>' + className + '</td>' +
+        ' <td>' +
+        '   <input data-class-label="' + className + '" class="mdl-textfield__input">' +
+        ' </td>' +
+        '</tr>'
+    );
+
+    var $classLabel = $('[data-class-label="' + className + '"]');
+
+    if (availableClassesLabelsMap.hasOwnProperty(className)) {
+        $classLabel.val(availableClassesLabelsMap[className]);
+    } else {
+        availableClassesLabelsMap[className] = '';
+    }
+
+    $classLabel.keyup(function () {
+        availableClassesLabelsMap[className] = $(this).val();
+    });
+}
+
+function initFirstTabForms() {
     var $requestAgentNameInput = $('#request-agent-name');
     $requestAgentNameInput.val(configObject.requestAgentName);
     $requestAgentNameInput.keyup(function () { configObject.requestAgentName = $requestAgentNameInput.val(); });
 
     $('#time-zone').val(configObject.timeZone).change(function () { configObject.timeZone = $('#time-zone').val(); });
+}
 
+function initSecondTabForms() {
     var $organizationName = $('#organization-name');
     $organizationName.val(configObject.gitHubConfig.organizationName);
     $organizationName.keyup(function () {
@@ -149,6 +214,28 @@ function initForms() {
     $secretKey.val(configObject.gitHubConfig.secretKey);
     $secretKey.keyup(function () { configObject.gitHubConfig.secretKey = $secretKey.val() });
 
+    var $invalidChangelog = $('#invalid-changelog');
+    $invalidChangelog.val(configObject.gitHubConfig.labels.invalidChangelog);
+    $invalidChangelog.keyup(function () { configObject.gitHubConfig.labels.invalidChangelog = $invalidChangelog.val() });
+
+    var $mapChanges = $('#map-changes');
+    $mapChanges.val(configObject.gitHubConfig.labels.mapChanges);
+    $mapChanges.keyup(function () { configObject.gitHubConfig.labels.mapChanges = $mapChanges.val() });
+
+    var $iconChanges = $('#icon-changes');
+    $iconChanges.val(configObject.gitHubConfig.labels.iconChanges);
+    $iconChanges.keyup(function () { configObject.gitHubConfig.labels.iconChanges = $iconChanges.val() });
+
+    var $workInProgress = $('#work-in-progress');
+    $workInProgress.val(configObject.gitHubConfig.labels.workInProgress);
+    $workInProgress.keyup(function () { configObject.gitHubConfig.labels.workInProgress = $workInProgress.val() });
+
+    var $doNotMerge = $('#do-not-merge');
+    $doNotMerge.val(configObject.gitHubConfig.labels.doNotMerge);
+    $doNotMerge.keyup(function () { configObject.gitHubConfig.labels.doNotMerge = $doNotMerge.val() });
+}
+
+function initThirdTabForms() {
     var $pathToChangelog = $('#path-to-changelog');
     $pathToChangelog.val(configObject.changelogConfig.pathToChangelog);
     $pathToChangelog.keyup(function () {
@@ -166,26 +253,5 @@ function initForms() {
 
     configObject.changelogConfig.html.availableClasses.forEach(function (item) {
         addClassToList(item);
-    });
-
-    // Check all fields for changes, to make labels float.
-    $('.mdl-textfield').each(function () { this.MaterialTextfield.checkDirty(); });
-}
-
-function addClassToList(className) {
-    $('#available-classes-list').append(
-        '<li class="mdl-list__item">' +
-        ' <button id="remove-class-button" data-class-to-remove="' + className + '" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">' +
-        '  <i class="material-icons">clear</i>' +
-        ' </button>' +
-        '&nbsp;' + className +
-        '</li>'
-    );
-
-    $('[data-class-to-remove="' + className + '"]').click(function () {
-        $(this).parent().remove();
-
-        var classesArray = configObject.changelogConfig.html.availableClasses;
-        classesArray.splice(classesArray.indexOf(className), 1);
     });
 }

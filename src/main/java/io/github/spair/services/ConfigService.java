@@ -46,11 +46,11 @@ public class ConfigService {
         }
     }
 
-    public File downloadConfigFile() {
+    public File exportConfig() {
         return new File(CONFIG_NAME);
     }
 
-    public void saveNewConfig(HandlerConfig configuration) throws IOException {
+    public void importConfig(HandlerConfig configuration) throws IOException {
         this.configuration = configuration;
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(CONFIG_NAME), configuration);
         LOGGER.info("New configuration saved. Config object: " + configuration);
@@ -71,13 +71,5 @@ public class ConfigService {
 
     public HandlerConfig getConfig() {
         return configuration;
-    }
-
-    public HandlerConfig.ChangelogConfig getChangelogConfig() {
-        return configuration.getChangelogConfig();
-    }
-
-    public HandlerConfig.GitHubConfig getGitHubConfig() {
-        return configuration.getGitHubConfig();
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestOperations;
 
@@ -52,7 +53,7 @@ public class GitHubService {
                 HttpMethod.PUT, new HttpEntity<>(requestBody, getHttpHeaders()), HashMap.class);
     }
 
-    public void createReview(int pullRequestNumber, String message) {
+    public void addReviewComment(int pullRequestNumber, String message) {
         Map<String, String> requestBody = new HashMap<>();
 
         requestBody.put("event", "COMMENT");
@@ -63,20 +64,39 @@ public class GitHubService {
     }
 
     public void addLabel(int issueNum, String labelName) {
-        List<String> labelList = Collections.singletonList(labelName);
-
-        restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels",
-                HttpMethod.POST, new HttpEntity<>(labelList, getHttpHeaders()), Object.class);
+        addLabels(issueNum, Collections.singletonList(labelName));
     }
 
-    public void removeLabel(int issueName, String labelName) {
-        restOperations.exchange(getIssuesApiPath()+ "/" + issueName + "/labels/" + labelName,
-                HttpMethod.DELETE, new HttpEntity<>(getHttpHeaders()), Object.class);
+    @SuppressWarnings("WeakerAccess")
+    public void addLabels(int issueNum, List<String> labels) {
+        restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels",
+                HttpMethod.POST, new HttpEntity<>(labels, getHttpHeaders()), Object.class);
+    }
+
+    public void removeLabel(int issueNum, String labelName) {
+        try {
+            restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels/" + labelName,
+                    HttpMethod.DELETE, new HttpEntity<>(getHttpHeaders()), Object.class);
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().is4xxClientError()) {
+                LOGGER.warn("Removing label fail. Issue number: " + issueNum + ". Label name: " + labelName + ". " +
+                        "Response: " + e.getResponseBodyAsString() + ". Headers: " + e.getResponseHeaders());
+            }
+        }
     }
 
     public List<String> getIssueLabels(int issueNum) {
-        List responseList = restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels",
-                HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ArrayList.class).getBody();
+        List responseList = new ArrayList();
+
+        try {
+            responseList = restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels",
+                    HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ArrayList.class).getBody();
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().is4xxClientError()) {
+                LOGGER.warn("Getting issue labels fail. Issue number: " + issueNum + ". " +
+                        "Response: " + e.getResponseBodyAsString() + ". Headers: " + e.getResponseHeaders());
+            }
+        }
 
         List<String> labels = new ArrayList<>();
 
@@ -86,6 +106,11 @@ public class GitHubService {
         }
 
         return labels;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public String getPullRequestDiff(String diffLink) {
+        return restOperations.getForObject(diffLink, String.class);
     }
 
     boolean isOrgAndRepoExist(String org, String repo) {
@@ -112,7 +137,7 @@ public class GitHubService {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         String agentName = configService.getConfig().getRequestAgentName();
-        String githubToken = configService.getGitHubConfig().getToken();
+        String githubToken = configService.getConfig().getGitHubConfig().getToken();
 
         httpHeaders.set(HttpHeaders.USER_AGENT, agentName);
         httpHeaders.set(HttpHeaders.AUTHORIZATION, "token " + githubToken);
@@ -135,20 +160,20 @@ public class GitHubService {
     }
 
     private String getContentsApiPath() {
-        String orgName = configService.getGitHubConfig().getOrganizationName();
-        String repoName = configService.getGitHubConfig().getRepositoryName();
+        String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
+        String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
         return API_PATH + "/repos/" + orgName + "/" + repoName + "/contents";
     }
 
     private String getPullsApiPath() {
-        String orgName = configService.getGitHubConfig().getOrganizationName();
-        String repoName = configService.getGitHubConfig().getRepositoryName();
+        String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
+        String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
         return API_PATH + "/repos/" + orgName + "/" + repoName + "/pulls";
     }
 
     private String getIssuesApiPath() {
-        String orgName = configService.getGitHubConfig().getOrganizationName();
-        String repoName = configService.getGitHubConfig().getRepositoryName();
+        String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
+        String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
         return API_PATH + "/repos/" + orgName + "/" + repoName + "/issues";
     }
 }

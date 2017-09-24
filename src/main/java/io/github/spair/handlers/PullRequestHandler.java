@@ -25,6 +25,9 @@ public class PullRequestHandler {
 
         switch (pullRequest.getType()) {
             case OPENED:
+                changelogService.validate(pullRequest);
+                pullRequestService.processLabels(pullRequest);
+                break;
             case EDITED:
                 changelogService.validate(pullRequest);
                 break;

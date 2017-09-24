@@ -37,7 +37,7 @@ class ChangelogValidator {
 
             status.setMessage(sb.toString());
         } else if (changelog.getChangelogRows().size() == 0) {
-            status.setMessage("Reason: empty changelog. Please, check for markdown correctness.");
+            status.setMessage("Reason: empty changelog. Please, check markdown correctness.");
         }
 
         if (status.getMessage() != null) {
@@ -48,7 +48,7 @@ class ChangelogValidator {
     }
 
     private List<String> parseInvalidClasses(List<ChangelogRow> changelogRow) {
-        Set<String> availableClasses = configService.getChangelogConfig().getHtml().getAvailableClasses();
+        Set<String> availableClasses = configService.getConfig().getChangelogConfig().getHtml().getAvailableClasses();
         List<String> invalidClasses = new ArrayList<>();
 
         changelogRow.forEach(row -> {

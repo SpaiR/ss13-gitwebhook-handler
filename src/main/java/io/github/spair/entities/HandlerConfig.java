@@ -1,11 +1,16 @@
 package io.github.spair.entities;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-@Data
+@ToString
+@Getter
+@SuppressWarnings("WeakerAccess")
 public class HandlerConfig {
 
     private String requestAgentName = "Agent name";
@@ -13,38 +18,38 @@ public class HandlerConfig {
     private GitHubConfig gitHubConfig = new GitHubConfig();
     private ChangelogConfig changelogConfig = new ChangelogConfig();
 
-    @Data
+    @ToString
+    @Getter
     public class GitHubConfig {
         private String organizationName = "Org Name";
         private String repositoryName = "Repo Name";
         private String token = "12345";
         private String secretKey = "12345";
+        private Labels labels = new Labels();
+
+        @ToString
+        @Getter
+        public class Labels {
+            private String invalidChangelog = "Invalid Changelog";
+            private String mapChanges = "Map Edit";
+            private String iconChanges = "Sprites";
+            private String workInProgress = "Work In Progress";
+            private String doNotMerge = "DO NOT MERGE";
+            private Map<String, String> availableClassesLabels = new HashMap<>();
+        }
     }
 
-    @Data
+    @ToString
+    @Getter
     public class ChangelogConfig {
         private String pathToChangelog = "/path/to/changelog.html";
         private Html html = new Html();
 
-        @Data
+        @ToString
+        @Getter
         public class Html {
-            /**
-             * Used in linked to PR changelogs.
-             *
-             * Example string: {@code <li class='map'>Changes.<a href='link'>- more -</a></li> }
-             */
             private String moreText = "more";
-
-            /**
-             * Added after author name.
-             *
-             * Example string: {@code <h4 class='author'>Author updated:</h4> }
-             */
             private String updateText = "updated";
-
-            /**
-             * Set of html classes available for changelog. Used in PR markdown.
-             */
             private Set<String> availableClasses = new HashSet<>();
         }
     }
