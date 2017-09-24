@@ -8,7 +8,7 @@ with instant modification of `.html` file with actual changelog. No need of addi
 - Auto-label issues and pull requests.
 
 Also, unlike similar tool called `github_webhook_processor.php`, which do sort of same things,
-this handler has **Web UI** and easy way configuration handling, without redeploying and other annoying stuff.
+this handler has [**Web UI**](https://imgur.com/a/Z8tQa) and easy way configuration handling, without redeploying and other annoying stuff.
 
 ## Installation
 **Before:** ensure that machine where you gonna start the app has installed at least Java 8.
