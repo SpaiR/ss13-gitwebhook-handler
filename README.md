@@ -16,7 +16,7 @@ this handler has [**Web UI**](https://imgur.com/a/Z8tQa) and easy way configurat
 1. [Download](https://github.com/SpaiR/ss13-gitwebhook-handler/releases) 'jar' archive to your server.
 
 2. Start it with next command:
-    - `java -jar ss13-gitwebhook-handler-1.0.jar --security.user.name=[your login name] --security.user.password=[your login password]`
+    - `java -jar ss13-gitwebhook-handler-1.1.jar --security.user.name=[your login name] --security.user.password=[your login password]`
     
    In root where you started the app two files will be created: `GWHConfig.json` and `GWHLog.log` for configuration and logging store respectively.
 
