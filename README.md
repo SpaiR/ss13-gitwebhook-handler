@@ -27,7 +27,7 @@ this handler has [**Web UI**](https://imgur.com/a/Z8tQa) and easy way configurat
 
 While filling of some fields questions about what value it should contain may appear. 
 In the right part of the page (believe me, you won't miss it) you can find pretty full description about every field.
-Also, additional info may be found in `About` window. Click question mark in the bottom-right the part of footer to see it.
+Also, additional info may be found in `About` window. Click question mark in the bottom-right part of the footer to see it.
 
 ### GitHub configuration
 To do something handler should receive so called webhooks from GitHub. (That is why it's called webhook handler...)
@@ -89,6 +89,8 @@ After pull request merge next will appear in your changelog file:
 :cl: Custom name goes here
 - bugfix: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 ```
+
+**Note:** to be valid markup should contain space after `-` and `:`, and after GitHub procession it should look like list.
 
 ### ...Validation
 There is no need to work directly with it.
