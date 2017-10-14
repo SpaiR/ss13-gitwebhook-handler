@@ -1,3 +1,3 @@
-package io.github.spair.services.exceptions;
+package io.github.spair.services;
 
 public class InvalidSignatureException extends RuntimeException {}

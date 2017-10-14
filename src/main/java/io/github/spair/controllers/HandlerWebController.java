@@ -4,7 +4,7 @@ import io.github.spair.handlers.IssuesHandler;
 import io.github.spair.handlers.PullRequestHandler;
 import io.github.spair.services.SignatureService;
 import io.github.spair.services.WebhookService;
-import io.github.spair.services.exceptions.InvalidSignatureException;
+import io.github.spair.services.InvalidSignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
