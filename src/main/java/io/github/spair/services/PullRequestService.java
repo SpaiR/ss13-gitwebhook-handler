@@ -16,8 +16,8 @@ public class PullRequestService {
     private final ConfigService configService;
     private final GitHubService gitHubService;
 
-    private static final Pattern MAP_CHANGES_PATTERN = Pattern.compile("diff.+.dmm");
-    private static final Pattern ICON_CHANGES_PATTERN = Pattern.compile("diff.+.dmi");
+    private static final Pattern MAP_CHANGES_PATTERN = Pattern.compile("diff.+\\.dmm");
+    private static final Pattern ICON_CHANGES_PATTERN = Pattern.compile("diff.+\\.dmi");
 
     @Autowired
     public PullRequestService(ChangelogService changelogService, ConfigService configService, GitHubService gitHubService) {
