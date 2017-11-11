@@ -1,7 +1,7 @@
-package io.github.spair.services;
+package io.github.spair.services.git;
 
-import io.github.spair.entities.Issue;
-import io.github.spair.entities.IssueType;
+import io.github.spair.services.git.entities.Issue;
+import io.github.spair.services.git.entities.IssueType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

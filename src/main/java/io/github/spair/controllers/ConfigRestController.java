@@ -1,8 +1,8 @@
 package io.github.spair.controllers;
 
-import io.github.spair.entities.HandlerConfig;
-import io.github.spair.entities.HandlerConfigStatus;
-import io.github.spair.services.ConfigService;
+import io.github.spair.services.config.ConfigService;
+import io.github.spair.services.config.entities.HandlerConfig;
+import io.github.spair.services.config.entities.HandlerConfigStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

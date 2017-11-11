@@ -1,8 +1,9 @@
-package io.github.spair.services;
+package io.github.spair.services.git;
 
-import io.github.spair.entities.PullRequest;
-import io.github.spair.entities.PullRequestType;
 import io.github.spair.services.changelog.ChangelogService;
+import io.github.spair.services.config.ConfigService;
+import io.github.spair.services.git.entities.PullRequest;
+import io.github.spair.services.git.entities.PullRequestType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

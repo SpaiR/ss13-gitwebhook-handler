@@ -1,8 +1,9 @@
-package io.github.spair.services;
+package io.github.spair.services.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.spair.entities.HandlerConfig;
-import io.github.spair.entities.HandlerConfigStatus;
+import io.github.spair.services.config.entities.HandlerConfig;
+import io.github.spair.services.config.entities.HandlerConfigStatus;
+import io.github.spair.services.git.GitHubService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

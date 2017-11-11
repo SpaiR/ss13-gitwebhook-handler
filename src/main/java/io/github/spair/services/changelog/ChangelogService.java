@@ -1,10 +1,11 @@
 package io.github.spair.services.changelog;
 
-import io.github.spair.entities.Changelog;
-import io.github.spair.entities.ChangelogRow;
-import io.github.spair.entities.PullRequest;
-import io.github.spair.services.ConfigService;
-import io.github.spair.services.GitHubService;
+import io.github.spair.services.changelog.entities.Changelog;
+import io.github.spair.services.changelog.entities.ChangelogRow;
+import io.github.spair.services.changelog.entities.ChangelogValidationStatus;
+import io.github.spair.services.config.ConfigService;
+import io.github.spair.services.git.GitHubService;
+import io.github.spair.services.git.entities.PullRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

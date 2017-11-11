@@ -1,14 +1,14 @@
-package io.github.spair.services.changelog;
+package io.github.spair.services.changelog.entities;
 
 import lombok.Data;
 
 @Data
-class ChangelogValidationStatus {
+public class ChangelogValidationStatus {
 
     private Status status = Status.VALID;
     private String message;
 
-    enum Status {
+    public enum Status {
         VALID, INVALID
     }
 }

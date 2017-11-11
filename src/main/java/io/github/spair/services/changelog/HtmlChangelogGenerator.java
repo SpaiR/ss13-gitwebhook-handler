@@ -1,8 +1,8 @@
 package io.github.spair.services.changelog;
 
-import io.github.spair.entities.Changelog;
-import io.github.spair.entities.ChangelogRow;
-import io.github.spair.services.ConfigService;
+import io.github.spair.services.changelog.entities.Changelog;
+import io.github.spair.services.changelog.entities.ChangelogRow;
+import io.github.spair.services.config.ConfigService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

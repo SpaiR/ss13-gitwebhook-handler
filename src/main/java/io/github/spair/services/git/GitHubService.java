@@ -1,5 +1,6 @@
-package io.github.spair.services;
+package io.github.spair.services.git;
 
+import io.github.spair.services.config.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -113,7 +114,7 @@ public class GitHubService {
         return restOperations.getForObject(diffLink, String.class);
     }
 
-    boolean isOrgAndRepoExist(String org, String repo) {
+    public boolean isOrgAndRepoExist(String org, String repo) {
         try {
             restOperations.getForEntity(API_PATH + "/repos/" + org + "/" + repo, null);
         } catch (HttpStatusCodeException e) {
@@ -123,7 +124,7 @@ public class GitHubService {
         return true;
     }
 
-    boolean isFilePathExist(String org, String repo, String path) {
+    public boolean isFilePathExist(String org, String repo, String path) {
         try {
             restOperations.getForEntity(API_PATH + "/repos/" + org + "/" + repo + "/contents" + path, null);
         } catch (HttpStatusCodeException e) {
