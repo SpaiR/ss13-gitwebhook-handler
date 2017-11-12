@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 @Service
 public class ConfigService {
@@ -72,5 +73,25 @@ public class ConfigService {
 
     public HandlerConfig getConfig() {
         return configuration;
+    }
+
+    public String getGitHubSecretKey() {
+        return configuration.getGitHubConfig().getSecretKey();
+    }
+
+    public String getChangelogMoreText() {
+        return configuration.getChangelogConfig().getHtml().getMoreText();
+    }
+
+    public Set<String> getChangelogAvailableClasses() {
+        return configuration.getChangelogConfig().getHtml().getAvailableClasses();
+    }
+
+    public String getChangelogUpdateText() {
+        return configuration.getChangelogConfig().getHtml().getUpdateText();
+    }
+
+    public String getConfigTimeZone() {
+        return configuration.getTimeZone();
     }
 }

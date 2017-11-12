@@ -1,6 +1,7 @@
 package io.github.spair.services.config.entities;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @ToString
 @Getter
+@Setter
 @SuppressWarnings("WeakerAccess")
 public class HandlerConfig {
 
@@ -20,6 +22,7 @@ public class HandlerConfig {
 
     @ToString
     @Getter
+    @Setter
     public class GitHubConfig {
         private String organizationName = "Org Name";
         private String repositoryName = "Repo Name";
@@ -29,6 +32,7 @@ public class HandlerConfig {
 
         @ToString
         @Getter
+        @Setter
         public class Labels {
             private String invalidChangelog = "Invalid Changelog";
             private String mapChanges = "Map Edit";
@@ -41,12 +45,14 @@ public class HandlerConfig {
 
     @ToString
     @Getter
+    @Setter
     public class ChangelogConfig {
         private String pathToChangelog = "/path/to/changelog.html";
         private Html html = new Html();
 
         @ToString
         @Getter
+        @Setter
         public class Html {
             private String moreText = "more";
             private String updateText = "updated";

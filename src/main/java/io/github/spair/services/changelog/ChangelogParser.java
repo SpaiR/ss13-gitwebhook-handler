@@ -132,7 +132,7 @@ class ChangelogParser {
 
     private void addPullRequestLink(boolean hasLink, StringBuilder sb, String prLink) {
         if (hasLink) {
-            String moreText = configService.getConfig().getChangelogConfig().getHtml().getMoreText();
+            String moreText = configService.getChangelogMoreText();
             sb.append(" <a href=\"").append(prLink).append("\">- ").append(moreText).append(" -</a>");
         }
     }
