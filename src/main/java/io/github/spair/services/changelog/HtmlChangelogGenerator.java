@@ -70,8 +70,15 @@ class HtmlChangelogGenerator {
     private void addChangelogRows(List<ChangelogRow> changelogRows, Element authorElement) {
         Element changelogElement = authorElement.getElementsByClass("changelog").first();
 
-        changelogRows.forEach(row ->
-                changelogElement.append("<li class=\"" + row.getClassName() + "\">" + row.getChanges() + "</li>"));
+        changelogRows.forEach(row -> {
+            String changesRow = linkify(row.getChanges());
+            changelogElement.append("<li class=\"" + row.getClassName() + "\">" + changesRow + "</li>");
+        });
+    }
+
+    private String linkify(String changesRow) {
+        String moreText = configService.getChangelogMoreText();
+        return changesRow.replaceAll("\\[link:(.*)]", "<a href=\"$1\">- " + moreText + " -</a>");
     }
 
     private Element getCurrentDateElement(Element elementToParse, String currentDate) {

@@ -2,24 +2,18 @@ package io.github.spair.services.changelog;
 
 import io.github.spair.services.changelog.entities.Changelog;
 import io.github.spair.services.changelog.entities.ChangelogRow;
-import io.github.spair.services.config.ConfigService;
 import io.github.spair.services.git.entities.PullRequest;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ChangelogParserTest {
 
     @Test
     public void testCreateFromPullRequest_WithCustomAuthorAndCommentsAndLink() {
-        ConfigService configService = mock(ConfigService.class);
-        ChangelogParser changelogParser = new ChangelogParser(configService);
-
-        when(configService.getChangelogMoreText()).thenReturn("more");
+        ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet.\n\n" +
                 "<!-- Comment \n ... \r text -->" +
@@ -41,12 +35,12 @@ public class ChangelogParserTest {
         assertEquals("Value 2.", changelogRows.get(1).getChanges());
 
         assertEquals("entry3", changelogRows.get(2).getClassName());
-        assertEquals("Value 3. <a href=\"pr-link\">- more -</a>", changelogRows.get(2).getChanges());
+        assertEquals("Value 3. [link:pr-link]", changelogRows.get(2).getChanges());
     }
 
     @Test
     public void testCreateFromPullRequest_WithGitHubAuthor() {
-        ChangelogParser changelogParser = new ChangelogParser(mock(ConfigService.class));
+        ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet.\n\n" +
                 ":cl:\n" +
@@ -64,7 +58,7 @@ public class ChangelogParserTest {
 
     @Test
     public void testCreateFromPullRequest_WithoutChangelog() {
-        ChangelogParser changelogParser = new ChangelogParser(mock(ConfigService.class));
+        ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet";
 
@@ -76,7 +70,7 @@ public class ChangelogParserTest {
 
     @Test
     public void testCreateFromPullRequest_WithInvalidChangelog() {
-        ChangelogParser changelogParser = new ChangelogParser(mock(ConfigService.class));
+        ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet\n" +
                 ":cl: entry: Value.";
@@ -98,7 +92,7 @@ public class ChangelogParserTest {
 
     @Test
     public void testCreateFromPullRequest_WithClAsIcon() {
-        ChangelogParser changelogParser = new ChangelogParser(mock(ConfigService.class));
+        ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet\n" +
                 "\uD83C\uDD91\n" +

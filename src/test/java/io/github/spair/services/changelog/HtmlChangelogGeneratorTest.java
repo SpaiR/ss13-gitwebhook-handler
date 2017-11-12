@@ -26,6 +26,7 @@ public class HtmlChangelogGeneratorTest {
         configService = mock(ConfigService.class);
         when(configService.getChangelogUpdateText()).thenReturn("updated");
         when(configService.getConfigTimeZone()).thenReturn("Europe/Moscow");
+        when(configService.getChangelogMoreText()).thenReturn("more");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
         ZoneId zoneId = ZoneId.of("Europe/Moscow");
@@ -44,7 +45,15 @@ public class HtmlChangelogGeneratorTest {
         changelogRow2.setChanges("Another changes.");
         changelogRow2.setClassName("entry2");
 
-        List<ChangelogRow> changelogRows = Lists.newArrayList(changelogRow1, changelogRow2);
+        ChangelogRow changelogRow3 = new ChangelogRow();
+        changelogRow3.setChanges("Linked changes. [link:link-to-pr]");
+        changelogRow3.setClassName("entry3");
+
+        ChangelogRow changelogRow4 = new ChangelogRow();
+        changelogRow4.setChanges("Changes with... [link:some-link] ... link.");
+        changelogRow4.setClassName("entry4");
+
+        List<ChangelogRow> changelogRows = Lists.newArrayList(changelogRow1, changelogRow2, changelogRow3, changelogRow4);
 
         Changelog changelog = new Changelog();
         changelog.setAuthor("Author Name");
@@ -64,6 +73,8 @@ public class HtmlChangelogGeneratorTest {
                 "      <ul class=\"changelog\">\n" +
                 "       <li class=\"entry1\">Some changes.</li>\n" +
                 "       <li class=\"entry2\">Another changes.</li>\n" +
+                "       <li class=\"entry3\">Linked changes. <a href=\"link-to-pr\">- more -</a></li>\n" +
+                "       <li class=\"entry4\">Changes with... <a href=\"some-link\">- more -</a> ... link.</li>\n" +
                 "      </ul>\n" +
                 "     </div>\n" +
                 "    </div>\n" +

@@ -2,9 +2,7 @@ package io.github.spair.services.changelog;
 
 import io.github.spair.services.changelog.entities.Changelog;
 import io.github.spair.services.changelog.entities.ChangelogRow;
-import io.github.spair.services.config.ConfigService;
 import io.github.spair.services.git.entities.PullRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,16 +14,9 @@ import java.util.regex.Pattern;
 @Service
 class ChangelogParser {
 
-    private final ConfigService configService;
-
     private static final Pattern CHANGELOG_TEXT_PATTERN = Pattern.compile(":cl:((?:.|\\n|\\r)*+)|\uD83C\uDD91((?:.|\\n|\\r)*+)");
     private static final Pattern AUTHOR_BEFORE_CHANGES_PATTERN = Pattern.compile(".*");
     private static final Pattern CHANGELOG_ROW_WITH_CLASS_PATTERN = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
-
-    @Autowired
-    public ChangelogParser(ConfigService configService) {
-        this.configService = configService;
-    }
 
     Changelog createFromPullRequest(PullRequest pullRequest) {
         Changelog changelog = null;
@@ -132,8 +123,7 @@ class ChangelogParser {
 
     private void addPullRequestLink(boolean hasLink, StringBuilder sb, String prLink) {
         if (hasLink) {
-            String moreText = configService.getChangelogMoreText();
-            sb.append(" <a href=\"").append(prLink).append("\">- ").append(moreText).append(" -</a>");
+            sb.append(" [link:").append(prLink).append("]");
         }
     }
 }
