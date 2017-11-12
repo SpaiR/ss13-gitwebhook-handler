@@ -59,9 +59,8 @@ class HtmlChangelogGenerator {
             columnAddTo.append("<div data-author=\"" + changelog.getAuthor() + "\"></div>");
 
             Element newAuthorElement = getAuthorElement(columnAddTo, changelog.getAuthor());
-            String updateText = configService.getChangelogUpdateText();
             newAuthorElement.append(
-                    "<h4 class=\"author\">" + changelog.getAuthor() + " "+ updateText +":</h4><ul class=\"changelog\"></ul>");
+                    "<h4 class=\"author\">" + changelog.getAuthor() + ":</h4><ul class=\"changelog\"></ul>");
 
             addChangelogRows(changelog.getChangelogRows(), newAuthorElement);
         }
@@ -77,8 +76,10 @@ class HtmlChangelogGenerator {
     }
 
     private String linkify(String changesRow) {
-        String moreText = configService.getChangelogMoreText();
-        return changesRow.replaceAll("\\[link:(.*)]", "<a href=\"$1\">- " + moreText + " -</a>");
+        return changesRow.replaceAll(
+                "\\[link:(.*)]",
+                "<a class=\"btn btn-xs btn-success link-btn\" href=\"$1\">Read More</a>"
+        );
     }
 
     private Element getCurrentDateElement(Element elementToParse, String currentDate) {

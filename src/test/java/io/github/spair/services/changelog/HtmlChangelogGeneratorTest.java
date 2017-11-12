@@ -24,9 +24,7 @@ public class HtmlChangelogGeneratorTest {
     @Before
     public void setUp() {
         configService = mock(ConfigService.class);
-        when(configService.getChangelogUpdateText()).thenReturn("updated");
         when(configService.getConfigTimeZone()).thenReturn("Europe/Moscow");
-        when(configService.getChangelogMoreText()).thenReturn("more");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
         ZoneId zoneId = ZoneId.of("Europe/Moscow");
@@ -69,12 +67,12 @@ public class HtmlChangelogGeneratorTest {
                 "    <div class=\"col-lg-12\">\n" +
                 "     <h3 class=\"date\">" + currentDate + "</h3>\n" +
                 "     <div data-author=\"Author Name\">\n" +
-                "      <h4 class=\"author\">Author Name updated:</h4>\n" +
+                "      <h4 class=\"author\">Author Name:</h4>\n" +
                 "      <ul class=\"changelog\">\n" +
                 "       <li class=\"entry1\">Some changes.</li>\n" +
                 "       <li class=\"entry2\">Another changes.</li>\n" +
-                "       <li class=\"entry3\">Linked changes. <a href=\"link-to-pr\">- more -</a></li>\n" +
-                "       <li class=\"entry4\">Changes with... <a href=\"some-link\">- more -</a> ... link.</li>\n" +
+                "       <li class=\"entry3\">Linked changes. <a class=\"btn btn-xs btn-success link-btn\" href=\"link-to-pr\">Read More</a></li>\n" +
+                "       <li class=\"entry4\">Changes with... <a class=\"btn btn-xs btn-success link-btn\" href=\"some-link\">Read More</a> ... link.</li>\n" +
                 "      </ul>\n" +
                 "     </div>\n" +
                 "    </div>\n" +

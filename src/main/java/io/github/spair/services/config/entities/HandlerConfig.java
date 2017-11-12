@@ -54,8 +54,6 @@ public class HandlerConfig {
         @Getter
         @Setter
         public class Html {
-            private String moreText = "more";
-            private String updateText = "updated";
             private Set<String> availableClasses = new HashSet<>();
         }
     }
