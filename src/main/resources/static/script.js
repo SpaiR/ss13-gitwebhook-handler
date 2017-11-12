@@ -121,8 +121,6 @@ var configObject = {
     changelogConfig: {
         pathToChangelog: '',
         html: {
-            moreText: '',
-            updateText: '',
             availableClasses: [ ]
         }
     }
@@ -242,14 +240,6 @@ function initThirdTabForms() {
         configObject.changelogConfig.pathToChangelog = $pathToChangelog.val();
         $('#save-config').prop('disabled', true);
     });
-
-    var $htmlMoreText = $('#html-more-text');
-    $htmlMoreText.val(configObject.changelogConfig.html.moreText);
-    $htmlMoreText.keyup(function () { configObject.changelogConfig.html.moreText = $htmlMoreText.val() });
-
-    var $htmlUpdateText = $('#html-update-text');
-    $htmlUpdateText.val(configObject.changelogConfig.html.updateText);
-    $htmlUpdateText.keyup(function () { configObject.changelogConfig.html.updateText = $htmlUpdateText.val() });
 
     configObject.changelogConfig.html.availableClasses.forEach(function (item) {
         addClassToList(item);

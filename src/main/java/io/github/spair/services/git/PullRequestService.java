@@ -60,7 +60,7 @@ public class PullRequestService {
         changelogClasses.forEach(className -> {
             String classLabel = classesLabels.get(className);
 
-            if (classLabel.length() > 0) {
+            if (classLabel != null && classLabel.length() > 0) {
                 labelsToAdd.add(classLabel);
             }
         });
