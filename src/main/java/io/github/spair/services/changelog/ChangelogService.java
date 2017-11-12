@@ -40,7 +40,7 @@ public class ChangelogService {
     public void generateAndUpdate(PullRequest pullRequest) {
         Changelog changelog = changelogParser.createFromPullRequest(pullRequest);
 
-        if (changelog != null) {
+        if (!changelog.isEmpty()) {
             String changelogPath = configService.getConfig().getChangelogConfig().getPathToChangelog();
             String currentChangelogHtml = gitHubService.readFile(changelogPath);
             String newChangelogHtml = htmlChangelogGenerator.generate(currentChangelogHtml, changelog);
@@ -59,7 +59,7 @@ public class ChangelogService {
         boolean isValid = true;
         boolean hasInvalidLabel = gitHubService.getIssueLabels(pullRequest.getNumber()).contains(invalidChangelogLabel);
 
-        if (changelog != null) {
+        if (!changelog.isEmpty()) {
             ChangelogValidationStatus validationStatus = changelogValidator.validate(changelog);
 
             if (validationStatus.getStatus() == ChangelogValidationStatus.Status.INVALID) {
@@ -82,7 +82,7 @@ public class ChangelogService {
     public List<String> getChangelogClassesList(PullRequest pullRequest) {
         Changelog changelog = changelogParser.createFromPullRequest(pullRequest);
 
-        if (changelog != null && changelog.getChangelogRows().size() > 0) {
+        if (!changelog.isEmpty()) {
             List<String> changelogClasses = new ArrayList<>();
             changelog.getChangelogRows().forEach(row -> changelogClasses.add(row.getClassName()));
             return changelogClasses;

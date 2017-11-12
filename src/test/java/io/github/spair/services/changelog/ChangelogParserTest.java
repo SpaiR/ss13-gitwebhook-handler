@@ -65,7 +65,7 @@ public class ChangelogParserTest {
         PullRequest pullRequest = PullRequest.builder().body(bodyText).build();
         Changelog changelog = changelogParser.createFromPullRequest(pullRequest);
 
-        assertNull(changelog);
+        assertTrue(changelog.isEmpty());
     }
 
     @Test

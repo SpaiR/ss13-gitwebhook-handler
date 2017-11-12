@@ -19,7 +19,7 @@ class ChangelogParser {
     private static final Pattern CHANGELOG_ROW_WITH_CLASS_PATTERN = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
 
     Changelog createFromPullRequest(PullRequest pullRequest) {
-        Changelog changelog = null;
+        Changelog changelog = new Changelog();
         String changelogText = findChangelogText(pullRequest.getBody());
 
         if (changelogText != null) {
