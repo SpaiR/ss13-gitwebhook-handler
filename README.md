@@ -71,7 +71,7 @@ After pull request merge next will appear in your changelog file:
       <div class="col-lg-12">
         <h3 class="date">${current date}</h3>
         <div data-author="${author name}">
-          <h4 class="author">${author name} ${'updated' text from config}:</h4>
+          <h4 class="author">${author name}:</h4>
           <ul class="changelog">
             <li class="bugfix">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</li>
           </ul>
