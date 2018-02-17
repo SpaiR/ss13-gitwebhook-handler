@@ -22,7 +22,6 @@ public class GitHubService {
     private final ConfigService configService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
-    private static Map<String, String> FILE_PATH_SHA = new HashMap<>();
 
     private static final String API_PATH = "https://api.github.com";
 
@@ -32,12 +31,10 @@ public class GitHubService {
         this.configService = configService;
     }
 
-    public String readFile(String path) {
+    public String readFileAsString(String relPath) {
         HashMap responseMap = restOperations.exchange(
-                getContentsApiPath() + path, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
+                getContentsApiPath() + relPath, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
         ).getBody();
-
-        FILE_PATH_SHA.put(path, (String) responseMap.get("sha"));
 
         return decodeContent((String) responseMap.get("content"));
     }
@@ -48,7 +45,7 @@ public class GitHubService {
         requestBody.put("path", path);
         requestBody.put("message", updateMessage);
         requestBody.put("content", encodeContent(content));
-        requestBody.put("sha", FILE_PATH_SHA.remove(path));
+        requestBody.put("sha", getFileSha(path));
 
         restOperations.exchange(getContentsApiPath() + path,
                 HttpMethod.PUT, new HttpEntity<>(requestBody, getHttpHeaders()), HashMap.class);
@@ -158,6 +155,14 @@ public class GitHubService {
             LOGGER.error("Decoding github response content error", e);
             throw new RuntimeException(e);
         }
+    }
+
+    private String getFileSha(String relPath) {
+        HashMap responseMap = restOperations.exchange(
+                getContentsApiPath() + relPath, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
+        ).getBody();
+
+        return (String) responseMap.get("sha");
     }
 
     private String getContentsApiPath() {
