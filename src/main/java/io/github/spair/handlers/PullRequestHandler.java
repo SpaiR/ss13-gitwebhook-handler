@@ -1,12 +1,11 @@
 package io.github.spair.handlers;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.services.changelog.ChangelogService;
 import io.github.spair.services.git.PullRequestService;
 import io.github.spair.services.git.entities.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
 
 @Component
 public class PullRequestHandler {
@@ -20,8 +19,8 @@ public class PullRequestHandler {
         this.changelogService = changelogService;
     }
 
-    public void handle(HashMap webhook) {
-        PullRequest pullRequest = pullRequestService.convertWebhookMap(webhook);
+    public void handle(ObjectNode webhookJson) {
+        PullRequest pullRequest = pullRequestService.convertWebhookMap(webhookJson);
 
         switch (pullRequest.getType()) {
             case OPENED:

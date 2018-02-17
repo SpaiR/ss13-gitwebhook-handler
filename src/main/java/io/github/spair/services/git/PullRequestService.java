@@ -1,5 +1,6 @@
 package io.github.spair.services.git;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.services.changelog.ChangelogService;
 import io.github.spair.services.config.ConfigService;
 import io.github.spair.services.git.entities.PullRequest;
@@ -27,14 +28,14 @@ public class PullRequestService {
         this.gitHubService = gitHubService;
     }
 
-    public PullRequest convertWebhookMap(HashMap webhook) {
-        String author = (String) ((HashMap) ((HashMap) webhook.get("pull_request")).get("user")).get("login");
-        int number = (int) ((HashMap) webhook.get("pull_request")).get("number");
-        String title = (String) ((HashMap) webhook.get("pull_request")).get("title");
-        PullRequestType type = identifyType(webhook);
-        String link = (String) (((HashMap) webhook.get("pull_request")).get("html_url"));
-        String diffLink = (String) (((HashMap) webhook.get("pull_request")).get("diff_url"));
-        String body = (String) ((HashMap) webhook.get("pull_request")).get("body");
+    public PullRequest convertWebhookMap(ObjectNode webhookJson) {
+        String author = webhookJson.get("pull_request").get("user").get("login").asText();
+        int number = webhookJson.get("pull_request").get("number").asInt();
+        String title = webhookJson.get("pull_request").get("title").asText();
+        PullRequestType type = identifyType(webhookJson);
+        String link = webhookJson.get("pull_request").get("html_url").asText();
+        String diffLink = webhookJson.get("pull_request").get("diff_url").asText();
+        String body = webhookJson.get("pull_request").get("body").asText();
 
         return PullRequest.builder()
                 .author(author).number(number).title(title).type(type).link(link).diffLink(diffLink).body(body)
@@ -105,8 +106,8 @@ public class PullRequestService {
         return labelsToAdd;
     }
 
-    private PullRequestType identifyType(HashMap webhook) {
-        String action = (String) webhook.get("action");
+    private PullRequestType identifyType(ObjectNode webhookJson) {
+        String action = webhookJson.get("action").asText();
 
         switch (action) {
             case "opened":
@@ -114,8 +115,7 @@ public class PullRequestService {
             case "edited":
                 return PullRequestType.EDITED;
             case "closed":
-                boolean isMerged = (boolean) ((HashMap) webhook.get("pull_request")).get("merged");
-                if (isMerged) {
+                if (webhookJson.get("pull_request").get("merged").asBoolean()) {
                     return PullRequestType.MERGED;
                 }
             default:

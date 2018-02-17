@@ -1,11 +1,10 @@
 package io.github.spair.services.git;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.services.git.entities.Issue;
 import io.github.spair.services.git.entities.IssueType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
 
 @Service
 public class IssuesService {
@@ -17,10 +16,10 @@ public class IssuesService {
         this.gitHubService = gitHubService;
     }
 
-    public Issue convertWebhookMap(HashMap webhook) {
-        int number = (int) ((HashMap) webhook.get("issue")).get("number");
-        String title = (String) ((HashMap) webhook.get("issue")).get("title");
-        IssueType issueType = identifyType(webhook);
+    public Issue convertWebhookMap(ObjectNode webhookJson) {
+        int number = webhookJson.get("issue").get("number").asInt();
+        String title = webhookJson.get("issue").get("title").asText();
+        IssueType issueType = identifyType(webhookJson);
 
         return new Issue(number, title, issueType);
     }
@@ -35,8 +34,8 @@ public class IssuesService {
         }
     }
 
-    private IssueType identifyType(HashMap webhook) {
-        String action = (String) webhook.get("action");
+    private IssueType identifyType(ObjectNode webhookJson) {
+        String action = webhookJson.get("action").asText();
 
         switch (action) {
             case "opened":

@@ -1,10 +1,11 @@
 package io.github.spair.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.handlers.IssuesHandler;
 import io.github.spair.handlers.PullRequestHandler;
 import io.github.spair.services.InvalidSignatureException;
 import io.github.spair.services.SignatureService;
-import io.github.spair.services.WebhookService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,29 +13,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/handler")
 public class HandlerWebController {
 
     private final SignatureService signatureService;
-    private final WebhookService webhookService;
     private final PullRequestHandler pullRequestHandler;
     private final IssuesHandler issuesHandler;
+    private final ObjectMapper objectMapper;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HandlerWebController.class);
 
     @Autowired
     public HandlerWebController(SignatureService signatureService,
-                                WebhookService webhookService,
                                 PullRequestHandler pullRequestHandler,
-                                IssuesHandler issuesHandler)
+                                IssuesHandler issuesHandler,
+                                ObjectMapper objectMapper)
     {
         this.signatureService = signatureService;
-        this.webhookService = webhookService;
         this.pullRequestHandler = pullRequestHandler;
         this.issuesHandler = issuesHandler;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -42,21 +43,21 @@ public class HandlerWebController {
             @RequestHeader("X-Hub-Signature") String signature,
             @RequestHeader("X-GitHub-Event") String event,
             @RequestBody String webhookPayload
-    ) {
+    ) throws IOException {
         // Substring is to cut down 'sha1=' part.
         signatureService.validate(signature.substring(5), webhookPayload);
 
-        HashMap webhookMap = webhookService.convertWebhookToMap(webhookPayload);
+        ObjectNode webhookJson = objectMapper.readValue(webhookPayload, ObjectNode.class);
 
         switch (event) {
             case "ping":
-                LOGGER.info("Ping event caught. Zen: " + webhookMap.get("zen"));
+                LOGGER.info("Ping event caught. Zen: " + webhookJson.get("zen"));
                 break;
             case "pull_request":
-                pullRequestHandler.handle(webhookMap);
+                pullRequestHandler.handle(webhookJson);
                 break;
             case "issues":
-                issuesHandler.handle(webhookMap);
+                issuesHandler.handle(webhookJson);
                 break;
         }
     }

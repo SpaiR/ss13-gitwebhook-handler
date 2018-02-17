@@ -1,5 +1,6 @@
 package io.github.spair.services.git;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.services.config.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,11 +33,11 @@ public class GitHubService {
     }
 
     public String readFileAsString(String relPath) {
-        HashMap responseMap = restOperations.exchange(
-                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
+        ObjectNode responseMap = restOperations.exchange(
+                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ObjectNode.class
         ).getBody();
 
-        return decodeContent((String) responseMap.get("content"));
+        return decodeContent(responseMap.get("content").asText());
     }
 
     public void updateFile(String path, String updateMessage, String content) {
@@ -158,10 +159,10 @@ public class GitHubService {
     }
 
     private String getFileSha(String relPath) {
-        HashMap responseMap = restOperations.exchange(
-                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
+        ObjectNode responseMap = restOperations.exchange(
+                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ObjectNode.class
         ).getBody();
 
-        return (String) responseMap.get("sha");
+        return responseMap.get("sha").asText();
     }
 }
