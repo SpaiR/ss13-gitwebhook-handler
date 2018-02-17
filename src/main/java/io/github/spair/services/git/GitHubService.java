@@ -20,20 +20,20 @@ public class GitHubService {
 
     private final RestOperations restOperations;
     private final ConfigService configService;
+    private final GitHubPathProvider pathProvider;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
 
-    private static final String API_PATH = "https://api.github.com";
-
     @Autowired
-    public GitHubService(RestOperations restOperations, ConfigService configService) {
+    public GitHubService(RestOperations restOperations, ConfigService configService, GitHubPathProvider pathProvider) {
         this.restOperations = restOperations;
         this.configService = configService;
+        this.pathProvider = pathProvider;
     }
 
     public String readFileAsString(String relPath) {
         HashMap responseMap = restOperations.exchange(
-                getContentsApiPath() + relPath, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
+                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
         ).getBody();
 
         return decodeContent((String) responseMap.get("content"));
@@ -47,7 +47,7 @@ public class GitHubService {
         requestBody.put("content", encodeContent(content));
         requestBody.put("sha", getFileSha(path));
 
-        restOperations.exchange(getContentsApiPath() + path,
+        restOperations.exchange(pathProvider.contents(path),
                 HttpMethod.PUT, new HttpEntity<>(requestBody, getHttpHeaders()), HashMap.class);
     }
 
@@ -57,7 +57,7 @@ public class GitHubService {
         requestBody.put("event", "COMMENT");
         requestBody.put("body", message);
 
-        restOperations.exchange(getPullsApiPath() + "/" + pullRequestNumber + "/reviews",
+        restOperations.exchange(pathProvider.pullReviews(pullRequestNumber),
                 HttpMethod.POST, new HttpEntity<>(requestBody, getHttpHeaders()), Object.class);
     }
 
@@ -67,13 +67,13 @@ public class GitHubService {
 
     @SuppressWarnings("WeakerAccess")
     public void addLabels(int issueNum, List<String> labels) {
-        restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels",
+        restOperations.exchange(pathProvider.issueLabels(issueNum),
                 HttpMethod.POST, new HttpEntity<>(labels, getHttpHeaders()), Object.class);
     }
 
     public void removeLabel(int issueNum, String labelName) {
         try {
-            restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels/" + labelName,
+            restOperations.exchange(pathProvider.issueLabel(issueNum, labelName),
                     HttpMethod.DELETE, new HttpEntity<>(getHttpHeaders()), Object.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
@@ -87,7 +87,7 @@ public class GitHubService {
         List responseList = new ArrayList();
 
         try {
-            responseList = restOperations.exchange(getIssuesApiPath() + "/" + issueNum + "/labels",
+            responseList = restOperations.exchange(pathProvider.issueLabels(issueNum),
                     HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ArrayList.class).getBody();
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
@@ -113,7 +113,7 @@ public class GitHubService {
 
     public boolean isOrgAndRepoExist(String org, String repo) {
         try {
-            restOperations.getForEntity(API_PATH + "/repos/" + org + "/" + repo, null);
+            restOperations.getForEntity(pathProvider.generalPath(org, repo), null);
         } catch (HttpStatusCodeException e) {
             return false;
         }
@@ -121,9 +121,9 @@ public class GitHubService {
         return true;
     }
 
-    public boolean isFilePathExist(String org, String repo, String path) {
+    public boolean isFilePathExist(String org, String repo, String relPath) {
         try {
-            restOperations.getForEntity(API_PATH + "/repos/" + org + "/" + repo + "/contents" + path, null);
+            restOperations.getForEntity(pathProvider.contents(org, repo, relPath), null);
         } catch (HttpStatusCodeException e) {
             return false;
         }
@@ -159,27 +159,9 @@ public class GitHubService {
 
     private String getFileSha(String relPath) {
         HashMap responseMap = restOperations.exchange(
-                getContentsApiPath() + relPath, HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
+                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), HashMap.class
         ).getBody();
 
         return (String) responseMap.get("sha");
-    }
-
-    private String getContentsApiPath() {
-        String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
-        String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
-        return API_PATH + "/repos/" + orgName + "/" + repoName + "/contents";
-    }
-
-    private String getPullsApiPath() {
-        String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
-        String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
-        return API_PATH + "/repos/" + orgName + "/" + repoName + "/pulls";
-    }
-
-    private String getIssuesApiPath() {
-        String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
-        String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
-        return API_PATH + "/repos/" + orgName + "/" + repoName + "/issues";
     }
 }

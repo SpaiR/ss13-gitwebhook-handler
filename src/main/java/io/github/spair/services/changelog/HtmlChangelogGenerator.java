@@ -22,7 +22,7 @@ class HtmlChangelogGenerator {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY");
 
     @Autowired
-    public HtmlChangelogGenerator(ConfigService configService) {
+    HtmlChangelogGenerator(ConfigService configService) {
         this.configService = configService;
     }
 
