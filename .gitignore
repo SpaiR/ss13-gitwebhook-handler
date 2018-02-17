@@ -22,3 +22,7 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+
+### Project Files ###
+GWHConfig.json
+GWHLog.log

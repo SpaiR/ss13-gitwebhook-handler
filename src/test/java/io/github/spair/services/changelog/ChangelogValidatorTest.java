@@ -7,6 +7,7 @@ import io.github.spair.services.config.ConfigService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Answers;
 import org.mockito.Mockito;
 import org.mockito.internal.util.collections.Sets;
 
@@ -20,13 +21,13 @@ public class ChangelogValidatorTest {
 
     @Before
     public void setUp() {
-        configService = Mockito.mock(ConfigService.class);
-        Mockito.when(configService.getChangelogAvailableClasses())
+        configService = Mockito.mock(ConfigService.class, Answers.RETURNS_DEEP_STUBS.get());
+        Mockito.when(configService.getConfig().getChangelogConfig().getHtml().getAvailableClasses())
                 .thenReturn(Sets.newSet("entry1", "entry2"));
     }
 
     @Test
-    public void testValidate_WhenAllValid() {
+    public void testValidateWhenAllValid() {
         ChangelogValidator validator = new ChangelogValidator(configService);
 
         ChangelogRow changelogRow1 = new ChangelogRow();
@@ -48,7 +49,7 @@ public class ChangelogValidatorTest {
     }
 
     @Test
-    public void testValidate_WhenMultiInvalidEntryClass() {
+    public void testValidateWhenMultiInvalidEntryClass() {
         ChangelogValidator validator = new ChangelogValidator(configService);
 
         ChangelogRow changelogRow1 = new ChangelogRow();
@@ -71,7 +72,7 @@ public class ChangelogValidatorTest {
     }
 
     @Test
-    public void testValidate_WhenInvalidEntryClass() {
+    public void testValidateWhenInvalidEntryClass() {
         ChangelogValidator validator = new ChangelogValidator(configService);
 
         ChangelogRow changelogRow = new ChangelogRow();
@@ -90,7 +91,7 @@ public class ChangelogValidatorTest {
     }
 
     @Test
-    public void testValidate_WhenEmptyChangelog() {
+    public void testValidateWhenEmptyChangelog() {
         ChangelogValidator validator = new ChangelogValidator(configService);
 
         Changelog changelog = new Changelog();

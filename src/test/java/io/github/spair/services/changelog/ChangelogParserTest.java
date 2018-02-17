@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
 public class ChangelogParserTest {
 
     @Test
-    public void testCreateFromPullRequest_WithCustomAuthorAndCommentsAndLink() {
+    public void testCreateFromPullRequestWithCustomAuthorAndCommentsAndLink() {
         ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet.\n\n" +
@@ -40,7 +40,7 @@ public class ChangelogParserTest {
     }
 
     @Test
-    public void testCreateFromPullRequest_WithGitHubAuthor() {
+    public void testCreateFromPullRequestWithGitHubAuthor() {
         ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet.\n\n" +
@@ -58,7 +58,7 @@ public class ChangelogParserTest {
     }
 
     @Test
-    public void testCreateFromPullRequest_WithoutChangelog() {
+    public void testCreateFromPullRequestWithoutChangelog() {
         ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet";
@@ -70,7 +70,7 @@ public class ChangelogParserTest {
     }
 
     @Test
-    public void testCreateFromPullRequest_WithInvalidChangelog() {
+    public void testCreateFromPullRequestWithInvalidChangelog() {
         ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet\n" +
@@ -92,7 +92,7 @@ public class ChangelogParserTest {
     }
 
     @Test
-    public void testCreateFromPullRequest_WithClAsIcon() {
+    public void testCreateFromPullRequestWithClAsIcon() {
         ChangelogParser changelogParser = new ChangelogParser();
 
         String bodyText = "Lorem ipsum dolor sit amet\n" +

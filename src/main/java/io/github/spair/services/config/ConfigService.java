@@ -75,14 +75,6 @@ public class ConfigService {
         return configuration;
     }
 
-    public String getGitHubSecretKey() {
-        return configuration.getGitHubConfig().getSecretKey();
-    }
-
-    public Set<String> getChangelogAvailableClasses() {
-        return configuration.getChangelogConfig().getHtml().getAvailableClasses();
-    }
-
     public String getConfigTimeZone() {
         return configuration.getTimeZone();
     }
