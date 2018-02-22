@@ -21,26 +21,32 @@ class GitHubPathProvider {
         this.configService = configService;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName
     String generalPath(String orgName, String repoName) {
         return GitHubConstants.API + "/" + REPOS + "/" + orgName + "/" + repoName;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/contents/path/to/content
     String contents(String relPath) {
         return getContentsApiPath() + relPath;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/contents/path/to/content
     String contents(String orgName, String repoName, String relPath) {
         return getContentsApiPath(orgName, repoName) + relPath;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/pulls/1/reviews
     String pullReviews(int prNum) {
         return getPullsApiPath() + "/" + prNum + "/" + REVIEWS;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/issues/1/labels
     String issueLabels(int issueNum) {
         return getIssuesApiPath() + "/" + issueNum + "/" + LABELS;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/issues/1/labels/LabelName
     String issueLabel(int issueNum, String labelName) {
         return getIssuesApiPath() + "/" + issueNum + "/" + LABELS + "/" + labelName;
     }
