@@ -48,7 +48,7 @@ class HtmlChangelogGenerator {
         Document parsedChangelog = Jsoup.parse(currentChangelogHtml);
         Element currentChangelogs = parsedChangelog.getElementById(CHANGELOGS_ID);
 
-        ZoneId zoneId = ZoneId.of(configService.getConfigTimeZone());
+        ZoneId zoneId = ZoneId.of(configService.getConfig().getTimeZone());
         String currentDate = LocalDate.now(zoneId).format(FORMATTER);
 
         Element currentDateElement = getCurrentDateElement(currentChangelogs, currentDate);

@@ -6,6 +6,10 @@ import io.github.spair.service.config.ConfigService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -16,15 +20,16 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class HtmlChangelogGeneratorTest {
 
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ConfigService configService;
     private String currentDate;
 
     @Before
     public void setUp() {
-        configService = mock(ConfigService.class);
-        when(configService.getConfigTimeZone()).thenReturn("Europe/Moscow");
+        when(configService.getConfig().getTimeZone()).thenReturn("Europe/Moscow");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
         ZoneId zoneId = ZoneId.of("Europe/Moscow");

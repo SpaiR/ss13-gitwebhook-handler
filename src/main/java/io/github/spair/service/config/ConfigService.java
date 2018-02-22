@@ -74,8 +74,4 @@ public class ConfigService {
     public HandlerConfig getConfig() {
         return configuration;
     }
-
-    public String getConfigTimeZone() {
-        return configuration.getTimeZone();
-    }
 }
