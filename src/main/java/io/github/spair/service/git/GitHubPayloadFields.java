@@ -27,4 +27,9 @@ public interface GitHubPayloadFields {
         String EDITED = "edited";
         String CLOSED = "closed";
     }
+
+    interface ReviewTypes {
+
+        String COMMENT = "COMMENT";
+    }
 }

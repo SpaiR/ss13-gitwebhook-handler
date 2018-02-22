@@ -57,7 +57,7 @@ public class GitHubService {
     public void addReviewComment(int pullRequestNumber, String message) {
         Map<String, String> requestBody = new HashMap<>();
 
-        requestBody.put(GitHubPayloadFields.EVENT, GitHubReviewTypes.COMMENT);
+        requestBody.put(GitHubPayloadFields.EVENT, GitHubPayloadFields.ReviewTypes.COMMENT);
         requestBody.put(GitHubPayloadFields.BODY, message);
 
         restOperations.exchange(pathProvider.pullReviews(pullRequestNumber),
