@@ -34,7 +34,7 @@ public class GitHubService {
         this.pathProvider = pathProvider;
     }
 
-    public String readFileAsString(String relPath) {
+    public String readTextFile(String relPath) {
         ObjectNode responseMap = restOperations.exchange(
                 pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ObjectNode.class
         ).getBody();
