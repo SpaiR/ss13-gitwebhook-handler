@@ -45,7 +45,7 @@ public class IssuesService {
         String action = webhookJson.get(GitHubPayloadFields.ACTION).asText();
 
         switch (action) {
-            case GitHubActions.OPENED:
+            case GitHubPayloadFields.Actions.OPENED:
                 return IssueType.OPENED;
             default:
                 return IssueType.UNDEFINED;

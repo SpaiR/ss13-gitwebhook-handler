@@ -20,4 +20,11 @@ public interface GitHubPayloadFields {
     String DIFF_URL = "diff_url";
     String MERGED = "merged";
     String NAME = "name";
+
+    interface Actions {
+
+        String OPENED = "opened";
+        String EDITED = "edited";
+        String CLOSED = "closed";
+    }
 }

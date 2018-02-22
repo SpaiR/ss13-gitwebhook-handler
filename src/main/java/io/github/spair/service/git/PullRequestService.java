@@ -116,11 +116,11 @@ public class PullRequestService {
         String action = webhookJson.get(GitHubPayloadFields.ACTION).asText();
 
         switch (action) {
-            case GitHubActions.OPENED:
+            case GitHubPayloadFields.Actions.OPENED:
                 return PullRequestType.OPENED;
-            case GitHubActions.EDITED:
+            case GitHubPayloadFields.Actions.EDITED:
                 return PullRequestType.EDITED;
-            case GitHubActions.CLOSED:
+            case GitHubPayloadFields.Actions.CLOSED:
                 if (webhookJson.get(GitHubPayloadFields.PULL_REQUEST).get(GitHubPayloadFields.MERGED).asBoolean()) {
                     return PullRequestType.MERGED;
                 }
