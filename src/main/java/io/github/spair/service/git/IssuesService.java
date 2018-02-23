@@ -2,6 +2,7 @@ package io.github.spair.service.git;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.spair.service.EnumUtil;
 import io.github.spair.service.git.entities.Issue;
 import io.github.spair.service.git.entities.IssueType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,12 +44,6 @@ public class IssuesService {
 
     private IssueType identifyType(ObjectNode webhookJson) {
         String action = webhookJson.get(GitHubPayloadFields.ACTION).asText();
-
-        switch (action) {
-            case GitHubPayloadFields.Actions.OPENED:
-                return IssueType.OPENED;
-            default:
-                return IssueType.UNDEFINED;
-        }
+        return EnumUtil.valueOfOrDefault(IssueType.values(), action, IssueType.UNDEFINED);
     }
 }
