@@ -3,6 +3,7 @@ package io.github.spair.service.git;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.service.EnumUtil;
+import io.github.spair.service.RestService;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.entities.PullRequest;
@@ -19,6 +20,7 @@ public class PullRequestService {
     private final ChangelogService changelogService;
     private final ConfigService configService;
     private final GitHubService gitHubService;
+    private final RestService restService;
 
     private static final Pattern MAP_CHANGES_PATTERN = Pattern.compile("diff.+\\.dmm");
     private static final Pattern ICON_CHANGES_PATTERN = Pattern.compile("diff.+\\.dmi");
@@ -27,10 +29,11 @@ public class PullRequestService {
     private static final String WIP_DAT = "[wip]";
 
     @Autowired
-    public PullRequestService(ChangelogService changelogService, ConfigService configService, GitHubService gitHubService) {
+    public PullRequestService(ChangelogService changelogService, ConfigService configService, GitHubService gitHubService, RestService restService) {
         this.changelogService = changelogService;
         this.configService = configService;
         this.gitHubService = gitHubService;
+        this.restService = restService;
     }
 
     public PullRequest convertWebhookJson(ObjectNode webhookJson) {
@@ -79,7 +82,7 @@ public class PullRequestService {
     private List<String> getLabelsFromDiff(String diffLink) {
         List<String> labelsToAdd = new ArrayList<>();
 
-        String pullRequestDiff = gitHubService.getPullRequestDiff(diffLink);
+        String pullRequestDiff = restService.getForObject(diffLink, String.class);
 
         boolean hasMapChanges = MAP_CHANGES_PATTERN.matcher(pullRequestDiff).find();
         boolean hasIconChanges = ICON_CHANGES_PATTERN.matcher(pullRequestDiff).find();

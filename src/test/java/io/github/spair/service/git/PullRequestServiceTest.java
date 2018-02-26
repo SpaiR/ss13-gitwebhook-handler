@@ -3,6 +3,7 @@ package io.github.spair.service.git;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.spair.service.RestService;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.entities.PullRequest;
@@ -12,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -33,13 +33,15 @@ public class PullRequestServiceTest {
     private ConfigService configService;
     @Mock
     private GitHubService gitHubService;
+    @Mock
+    private RestService restService;
 
     private PullRequestService service;
     private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
-        service = new PullRequestService(changelogService, configService, gitHubService);
+        service = new PullRequestService(changelogService, configService, gitHubService, restService);
         objectMapper = new ObjectMapper();
     }
 
@@ -85,7 +87,7 @@ public class PullRequestServiceTest {
                     }
                 });
         when(changelogService.getChangelogClassesList(any(PullRequest.class))).thenReturn(Sets.newSet("tweak", "map", "fix"));
-        when(gitHubService.getPullRequestDiff(anyString())).thenReturn("\ndiff smthg.dm\ndiff smthg.dmm\ndiff smthg.dmi");
+        when(restService.getForObject(anyString(), eq(String.class))).thenReturn("\ndiff smthg.dm\ndiff smthg.dmm\ndiff smthg.dmi");
         when(configService.getConfig().getGitHubConfig().getLabels().getMapChanges()).thenReturn("Map Edit");
         when(configService.getConfig().getGitHubConfig().getLabels().getIconChanges()).thenReturn("Sprites");
         when(configService.getConfig().getGitHubConfig().getLabels().getDoNotMerge()).thenReturn("Do Not Merge");

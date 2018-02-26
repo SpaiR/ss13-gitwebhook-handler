@@ -1,17 +1,15 @@
 package io.github.spair.service.git;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.spair.service.RestService;
 import io.github.spair.service.config.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
-import org.springframework.web.client.RestOperations;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -20,25 +18,22 @@ import java.util.*;
 @Service
 public class GitHubService {
 
-    private final RestOperations restOperations;
     private final ConfigService configService;
     private final GitHubPathProvider pathProvider;
+    private final RestService restService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
     private static final String TOKEN = "token";
 
     @Autowired
-    public GitHubService(RestOperations restOperations, ConfigService configService, GitHubPathProvider pathProvider) {
-        this.restOperations = restOperations;
+    public GitHubService(ConfigService configService, GitHubPathProvider pathProvider, RestService restService) {
         this.configService = configService;
         this.pathProvider = pathProvider;
+        this.restService = restService;
     }
 
     public String readTextFile(String relPath) {
-        ObjectNode responseMap = restOperations.exchange(
-                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ObjectNode.class
-        ).getBody();
-
+        ObjectNode responseMap = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
         return decodeContent(responseMap.get(GitHubPayloadFields.CONTENT).asText());
     }
 
@@ -50,8 +45,7 @@ public class GitHubService {
         requestBody.put(GitHubPayloadFields.CONTENT, encodeContent(content));
         requestBody.put(GitHubPayloadFields.SHA, getFileSha(path));
 
-        restOperations.exchange(pathProvider.contents(path),
-                HttpMethod.PUT, new HttpEntity<>(requestBody, getHttpHeaders()), HashMap.class);
+        restService.put(pathProvider.contents(path), requestBody, getHttpHeaders());
     }
 
     public void addReviewComment(int pullRequestNumber, String message) {
@@ -60,24 +54,20 @@ public class GitHubService {
         requestBody.put(GitHubPayloadFields.EVENT, GitHubPayloadFields.ReviewTypes.COMMENT);
         requestBody.put(GitHubPayloadFields.BODY, message);
 
-        restOperations.exchange(pathProvider.pullReviews(pullRequestNumber),
-                HttpMethod.POST, new HttpEntity<>(requestBody, getHttpHeaders()), Object.class);
+        restService.post(pathProvider.pullReviews(pullRequestNumber), requestBody, getHttpHeaders());
     }
 
     public void addLabel(int issueNum, String labelName) {
         addLabels(issueNum, Collections.singletonList(labelName));
     }
 
-    @SuppressWarnings("WeakerAccess")
     public void addLabels(int issueNum, List<String> labels) {
-        restOperations.exchange(pathProvider.issueLabels(issueNum),
-                HttpMethod.POST, new HttpEntity<>(labels, getHttpHeaders()), Object.class);
+        restService.post(pathProvider.issueLabels(issueNum), labels, getHttpHeaders());
     }
 
     public void removeLabel(int issueNum, String labelName) {
         try {
-            restOperations.exchange(pathProvider.issueLabel(issueNum, labelName),
-                    HttpMethod.DELETE, new HttpEntity<>(getHttpHeaders()), Object.class);
+            restService.delete(pathProvider.issueLabel(issueNum, labelName), getHttpHeaders());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
                 LOGGER.warn("Removing label fail. Issue number: {}. Label name: {}. Response: {}. Headers: {}",
@@ -90,8 +80,7 @@ public class GitHubService {
         List responseList = new ArrayList();
 
         try {
-            responseList = restOperations.exchange(pathProvider.issueLabels(issueNum),
-                    HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ArrayList.class).getBody();
+            responseList = restService.getForObject(pathProvider.issueLabels(issueNum), getHttpHeaders(), ArrayList.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
                 LOGGER.warn("Removing label fail. Issue number: {}. Response: {}. Headers: {}",
@@ -109,28 +98,21 @@ public class GitHubService {
         return labels;
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public String getPullRequestDiff(String diffLink) {
-        return restOperations.getForObject(diffLink, String.class);
-    }
-
     public boolean isOrgAndRepoExist(String org, String repo) {
         try {
-            restOperations.getForEntity(pathProvider.generalPath(org, repo), null);
+            restService.get(pathProvider.generalPath(org, repo), getHttpHeaders());
         } catch (HttpStatusCodeException e) {
             return false;
         }
-
         return true;
     }
 
     public boolean isFilePathExist(String org, String repo, String relPath) {
         try {
-            restOperations.getForEntity(pathProvider.contents(org, repo, relPath), null);
+            restService.get(pathProvider.contents(org, repo, relPath), getHttpHeaders());
         } catch (HttpStatusCodeException e) {
             return false;
         }
-
         return true;
     }
 
@@ -161,10 +143,7 @@ public class GitHubService {
     }
 
     private String getFileSha(String relPath) {
-        ObjectNode responseMap = restOperations.exchange(
-                pathProvider.contents(relPath), HttpMethod.GET, new HttpEntity<>(getHttpHeaders()), ObjectNode.class
-        ).getBody();
-
+        ObjectNode responseMap = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
         return responseMap.get(GitHubPayloadFields.SHA).asText();
     }
 }
