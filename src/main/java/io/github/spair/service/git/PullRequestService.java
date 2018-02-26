@@ -37,15 +37,15 @@ public class PullRequestService {
     }
 
     public PullRequest convertWebhookJson(ObjectNode webhookJson) {
-        JsonNode pullRequestNode = webhookJson.get(GitHubPayloadFields.PULL_REQUEST);
+        JsonNode pullRequestNode = webhookJson.get(GitHubPayload.Fields.PULL_REQUEST);
 
-        String author = pullRequestNode.get(GitHubPayloadFields.USER).get(GitHubPayloadFields.LOGIN).asText();
-        int number = pullRequestNode.get(GitHubPayloadFields.NUMBER).asInt();
-        String title = pullRequestNode.get(GitHubPayloadFields.TITLE).asText();
+        String author = pullRequestNode.get(GitHubPayload.Fields.USER).get(GitHubPayload.Fields.LOGIN).asText();
+        int number = pullRequestNode.get(GitHubPayload.Fields.NUMBER).asInt();
+        String title = pullRequestNode.get(GitHubPayload.Fields.TITLE).asText();
         PullRequestType type = identifyType(webhookJson);
-        String link = pullRequestNode.get(GitHubPayloadFields.HTML_URL).asText();
-        String diffLink = pullRequestNode.get(GitHubPayloadFields.DIFF_URL).asText();
-        String body = pullRequestNode.get(GitHubPayloadFields.BODY).asText();
+        String link = pullRequestNode.get(GitHubPayload.Fields.HTML_URL).asText();
+        String diffLink = pullRequestNode.get(GitHubPayload.Fields.DIFF_URL).asText();
+        String body = pullRequestNode.get(GitHubPayload.Fields.BODY).asText();
 
         return PullRequest.builder()
                 .author(author).number(number).title(title).type(type).link(link).diffLink(diffLink).body(body)
@@ -117,7 +117,7 @@ public class PullRequestService {
     }
 
     private PullRequestType identifyType(ObjectNode webhookJson) {
-        String action = webhookJson.get(GitHubPayloadFields.ACTION).asText();
+        String action = webhookJson.get(GitHubPayload.Fields.ACTION).asText();
         return EnumUtil.valueOfOrDefault(PullRequestType.values(), action, PullRequestType.UNDEFINED);
     }
 }

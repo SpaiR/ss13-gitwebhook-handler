@@ -34,16 +34,16 @@ public class GitHubService {
 
     public String readTextFile(String relPath) {
         ObjectNode responseMap = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
-        return decodeContent(responseMap.get(GitHubPayloadFields.CONTENT).asText());
+        return decodeContent(responseMap.get(GitHubPayload.Fields.CONTENT).asText());
     }
 
     public void updateFile(String path, String updateMessage, String content) {
         Map<String, String> requestBody = new HashMap<>();
 
-        requestBody.put(GitHubPayloadFields.PATH, path);
-        requestBody.put(GitHubPayloadFields.MESSAGE, updateMessage);
-        requestBody.put(GitHubPayloadFields.CONTENT, encodeContent(content));
-        requestBody.put(GitHubPayloadFields.SHA, getFileSha(path));
+        requestBody.put(GitHubPayload.Fields.PATH, path);
+        requestBody.put(GitHubPayload.Fields.MESSAGE, updateMessage);
+        requestBody.put(GitHubPayload.Fields.CONTENT, encodeContent(content));
+        requestBody.put(GitHubPayload.Fields.SHA, getFileSha(path));
 
         restService.put(pathProvider.contents(path), requestBody, getHttpHeaders());
     }
@@ -51,8 +51,8 @@ public class GitHubService {
     public void addReviewComment(int pullRequestNumber, String message) {
         Map<String, String> requestBody = new HashMap<>();
 
-        requestBody.put(GitHubPayloadFields.EVENT, GitHubPayloadFields.ReviewTypes.COMMENT);
-        requestBody.put(GitHubPayloadFields.BODY, message);
+        requestBody.put(GitHubPayload.Fields.EVENT, GitHubPayload.Values.COMMENT);
+        requestBody.put(GitHubPayload.Fields.BODY, message);
 
         restService.post(pathProvider.pullReviews(pullRequestNumber), requestBody, getHttpHeaders());
     }
@@ -92,7 +92,7 @@ public class GitHubService {
 
         for (Object responseElement : responseList) {
             Map elementMap = (HashMap) responseElement;
-            labels.add((String) elementMap.get(GitHubPayloadFields.NAME));
+            labels.add((String) elementMap.get(GitHubPayload.Fields.NAME));
         }
 
         return labels;
@@ -144,6 +144,6 @@ public class GitHubService {
 
     private String getFileSha(String relPath) {
         ObjectNode responseMap = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
-        return responseMap.get(GitHubPayloadFields.SHA).asText();
+        return responseMap.get(GitHubPayload.Fields.SHA).asText();
     }
 }

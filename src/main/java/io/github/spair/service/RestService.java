@@ -1,6 +1,7 @@
 package io.github.spair.service;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,6 +13,7 @@ public class RestService {
 
     private final RestOperations restOperations;
 
+    @Autowired
     public RestService(final RestOperations restOperations) {
         this.restOperations = restOperations;
     }
