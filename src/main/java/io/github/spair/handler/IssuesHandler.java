@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class IssuesHandler {
+public class IssuesHandler implements Handler {
 
     private final IssuesService issuesService;
 
@@ -16,6 +16,7 @@ public class IssuesHandler {
         this.issuesService = issuesService;
     }
 
+    @Override
     public void handle(ObjectNode webhookJson) {
         Issue issue = issuesService.convertWebhookJson(webhookJson);
 

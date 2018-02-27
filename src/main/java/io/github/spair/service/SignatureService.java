@@ -47,7 +47,6 @@ public class SignatureService {
             for (byte b : bytes) {
                 formatter.format("%02x", b);
             }
-
             return formatter.toString();
         }
     }

@@ -23,10 +23,10 @@ public class IssuesService {
     }
 
     public Issue convertWebhookJson(ObjectNode webhookJson) {
-        JsonNode issueNode = webhookJson.get(GitHubPayload.Fields.ISSUE);
+        JsonNode issueNode = webhookJson.get(GitHubPayload.ISSUE);
 
-        int number = issueNode.get(GitHubPayload.Fields.NUMBER).asInt();
-        String title = issueNode.get(GitHubPayload.Fields.TITLE).asText();
+        int number = issueNode.get(GitHubPayload.NUMBER).asInt();
+        String title = issueNode.get(GitHubPayload.TITLE).asText();
         IssueType issueType = identifyType(webhookJson);
 
         return new Issue(number, title, issueType);
@@ -43,7 +43,7 @@ public class IssuesService {
     }
 
     private IssueType identifyType(ObjectNode webhookJson) {
-        String action = webhookJson.get(GitHubPayload.Fields.ACTION).asText();
+        String action = webhookJson.get(GitHubPayload.ACTION).asText();
         return EnumUtil.valueOfOrDefault(IssueType.values(), action, IssueType.UNDEFINED);
     }
 }

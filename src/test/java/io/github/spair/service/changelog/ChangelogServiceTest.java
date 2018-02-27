@@ -32,13 +32,13 @@ public class ChangelogServiceTest {
     @Mock
     private ChangelogValidator changelogValidator;
     @Mock
-    private ChangelogParser changelogParser;
+    private ChangelogGenerator changelogGenerator;
 
     private ChangelogService service;
 
     @Before
     public void setUp() {
-        service = new ChangelogService(gitHubService, htmlChangelogGenerator, changelogValidator, configService, changelogParser);
+        service = new ChangelogService(gitHubService, htmlChangelogGenerator, changelogValidator, configService, changelogGenerator);
         when(configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog()).thenReturn("Invalid Changelog");
     }
 
@@ -47,13 +47,13 @@ public class ChangelogServiceTest {
         Changelog changelog = new Changelog();
         changelog.setChangelogRows(Lists.newArrayList(new ChangelogRow("map", false, "")));
 
-        when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
         when(changelogValidator.validate(changelog)).thenReturn(new ChangelogValidationStatus());
 
         service.validate(new PullRequest());
 
-        verify(gitHubService, times(0)).addReviewComment(anyInt(), anyString());
+        verify(gitHubService, times(0)).createIssueComment(anyInt(), anyString());
         verify(gitHubService, times(0)).addLabel(anyInt(), anyString());
         verify(gitHubService, times(0)).removeLabel(anyInt(), anyString());
     }
@@ -63,7 +63,7 @@ public class ChangelogServiceTest {
         Changelog changelog = new Changelog();
         changelog.setChangelogRows(Lists.emptyList());
 
-        when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
         when(changelogValidator.validate(changelog)).thenReturn(new ChangelogValidationStatus());
 
@@ -71,7 +71,7 @@ public class ChangelogServiceTest {
         pullRequest.setNumber(1);
         service.validate(pullRequest);
 
-        verify(gitHubService, times(0)).addReviewComment(anyInt(), anyString());
+        verify(gitHubService, times(0)).createIssueComment(anyInt(), anyString());
         verify(gitHubService, times(0)).addLabel(anyInt(), anyString());
         verify(gitHubService).removeLabel(1, "Invalid Changelog");
     }
@@ -85,7 +85,7 @@ public class ChangelogServiceTest {
         validationStatus.setMessage("Reason: empty changelog. Please, check markdown correctness.");
         validationStatus.setStatus(ChangelogValidationStatus.Status.INVALID);
 
-        when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
         when(changelogValidator.validate(changelog)).thenReturn(validationStatus);
 
@@ -93,7 +93,7 @@ public class ChangelogServiceTest {
         pullRequest.setNumber(1);
         service.validate(pullRequest);
 
-        verify(gitHubService).addReviewComment(1,
+        verify(gitHubService).createIssueComment(1,
                 "**Warning!** Invalid changelog detected.\n\n" +
                         "Reason: empty changelog. Please, check markdown correctness.");
         verify(gitHubService).addLabel(1, "Invalid Changelog");
@@ -108,7 +108,7 @@ public class ChangelogServiceTest {
         ChangelogValidationStatus validationStatus = new ChangelogValidationStatus();
         validationStatus.setStatus(ChangelogValidationStatus.Status.INVALID);
 
-        when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
         when(changelogValidator.validate(changelog)).thenReturn(validationStatus);
 
@@ -116,7 +116,7 @@ public class ChangelogServiceTest {
         pullRequest.setNumber(1);
         service.validate(pullRequest);
 
-        verify(gitHubService, times(0)).addReviewComment(anyInt(), anyString());
+        verify(gitHubService, times(0)).createIssueComment(anyInt(), anyString());
         verify(gitHubService, times(0)).addLabel(anyInt(), anyString());
         verify(gitHubService, times(0)).removeLabel(anyInt(), anyString());
     }
@@ -130,7 +130,7 @@ public class ChangelogServiceTest {
         validationStatus.setMessage("Reason: unknown classes detected. Next should be changed or removed: `invalid`.");
         validationStatus.setStatus(ChangelogValidationStatus.Status.INVALID);
 
-        when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
         when(changelogValidator.validate(changelog)).thenReturn(validationStatus);
 
@@ -138,7 +138,7 @@ public class ChangelogServiceTest {
         pullRequest.setNumber(1);
         service.validate(pullRequest);
 
-        verify(gitHubService).addReviewComment(1,
+        verify(gitHubService).createIssueComment(1,
                 "**Warning!** Invalid changelog detected.\n\n" +
                         "Reason: unknown classes detected. Next should be changed or removed: `invalid`.");
         verify(gitHubService).addLabel(1, "Invalid Changelog");
@@ -147,12 +147,12 @@ public class ChangelogServiceTest {
 
     @Test
     public void testValidateWhenNoChangelog() {
-        when(changelogParser.createFromPullRequest(any())).thenReturn(new Changelog());
+        when(changelogGenerator.generate(any())).thenReturn(new Changelog());
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
 
         service.validate(new PullRequest());
 
-        verify(gitHubService, times(0)).addReviewComment(anyInt(), anyString());
+        verify(gitHubService, times(0)).createIssueComment(anyInt(), anyString());
         verify(gitHubService, times(0)).addLabel(anyInt(), anyString());
         verify(gitHubService, times(0)).removeLabel(anyInt(), anyString());
         verify(changelogValidator, times(0)).validate(any());
@@ -167,7 +167,7 @@ public class ChangelogServiceTest {
                 new ChangelogRow("fix", false, null)
         ));
 
-        when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(changelog);
 
         Set<String> expectedList = Sets.newSet("fix", "map");
 
@@ -176,7 +176,7 @@ public class ChangelogServiceTest {
 
     @Test
     public void testGetChangelogClassesListWhenEmpty() {
-        when(changelogParser.createFromPullRequest(any())).thenReturn(new Changelog());
+        when(changelogGenerator.generate(any())).thenReturn(new Changelog());
         assertEquals(0, service.getChangelogClassesList(new PullRequest()).size());
     }
 }

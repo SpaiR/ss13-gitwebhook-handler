@@ -2,7 +2,7 @@ package io.github.spair.service;
 
 import org.springframework.util.ObjectUtils;
 
-public class EnumUtil {
+public final class EnumUtil {
 
     public static <E extends Enum<?>> E valueOfOrDefault(E[] values, String constant, E defaultValue) {
         if (ObjectUtils.containsConstant(values, constant)) {
@@ -12,5 +12,6 @@ public class EnumUtil {
         }
     }
 
-    private EnumUtil() { }
+    private EnumUtil() {
+    }
 }

@@ -33,7 +33,7 @@ public class ConfigService {
     }
 
     @PostConstruct
-    public void initConfigFile() throws IOException {
+    private void initConfigFile() throws IOException {
         File file = new File(CONFIG_NAME);
 
         if (file.exists()) {

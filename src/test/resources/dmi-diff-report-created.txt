@@ -1,0 +1,14 @@
+## DMI Diff Report
+
+<details><summary>icons/file.dmi</summary><hr />
+
+Key | Dir / Frame | Old | New | Status
+--- | :---------: | --- | --- | ------
+state (<a href="http://tauceti.ru/img-diff/?before=old.link.com&after=new.link.com">x1</a> <a href="http://tauceti.ru/img-diff/?before=old.link.com&after=new.link.com">x4</a> <a href="http://tauceti.ru/img-diff/?before=old.link.com&after=new.link.com">x8</a>)|&#x1F87B; S / 1|<img src="old.link.com" title="state-O-dS-f1" />|<img src="new.link.com" title="state-N-dS-f1" />|Created
+
+<details><summary>DMI Metadata Diff</summary>
+
+```
+
+```
+</details><hr /></details>

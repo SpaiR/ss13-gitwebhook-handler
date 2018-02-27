@@ -39,15 +39,15 @@ public class GitHubPathProviderTest {
     }
 
     @Test
-    public void testContentsWithOrgRepoArgs() {
-        String expected = "https://api.github.com/repos/OrgName/RepoName/contents/some/contents";
-        assertEquals(expected, provider.contents("OrgName", "RepoName", "/some/contents"));
+    public void testBlobs() {
+        String expected = "https://api.github.com/repos/GitHub/Handler/git/blobs/12345789";
+        assertEquals(expected, provider.blobs("12345789"));
     }
 
     @Test
-    public void testPullReviews() {
-        String expected = "https://api.github.com/repos/GitHub/Handler/pulls/16/reviews";
-        assertEquals(expected, provider.pullReviews(16));
+    public void testContentsWithOrgRepoArgs() {
+        String expected = "https://api.github.com/repos/OrgName/RepoName/contents/some/contents";
+        assertEquals(expected, provider.contents("OrgName", "RepoName", "/some/contents"));
     }
 
     @Test

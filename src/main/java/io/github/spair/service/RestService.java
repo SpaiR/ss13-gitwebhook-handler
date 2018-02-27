@@ -43,8 +43,16 @@ public class RestService {
         restOperations.exchange(path, HttpMethod.PUT, new HttpEntity<>(body, headers), Void.class);
     }
 
+    public void patch(String path, Object body, HttpHeaders headers) {
+        restOperations.patchForObject(path, new HttpEntity<>(body, headers), Void.class);
+    }
+
     public void post(String path, Object body, HttpHeaders headers) {
-        restOperations.exchange(path, HttpMethod.POST, new HttpEntity<>(body, headers), Void.class);
+        restOperations.postForObject(path, new HttpEntity<>(body, headers), Void.class);
+    }
+
+    public ObjectNode postForJson(String path, Object body, HttpHeaders headers) {
+        return restOperations.postForObject(path, new HttpEntity<>(body, headers), ObjectNode.class);
     }
 
     public void delete(String path, HttpHeaders headers) {

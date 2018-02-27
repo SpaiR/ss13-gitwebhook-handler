@@ -1,15 +1,19 @@
 package io.github.spair.service.git;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.service.EnumUtil;
 import io.github.spair.service.RestService;
 import io.github.spair.service.config.ConfigService;
+import io.github.spair.service.git.entities.IssueComment;
 import io.github.spair.service.git.entities.PullRequestFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -18,6 +22,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +34,6 @@ public class GitHubService {
     private final RestService restService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
-    private static final String TOKEN = "token";
 
     @Autowired
     public GitHubService(ConfigService configService, GitHubPathProvider pathProvider, RestService restService) {
@@ -38,29 +42,55 @@ public class GitHubService {
         this.restService = restService;
     }
 
-    public String readTextFile(String relPath) {
-        ObjectNode responseMap = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
-        return decodeContent(responseMap.get(GitHubPayload.Fields.CONTENT).asText());
+    public String readDecodedFile(String relPath) {
+        return decodeContent(readFile(relPath));
+    }
+
+    public String readEncodedFile(String relPath) {
+        return readFile(relPath);
+    }
+
+    private String readFile(String relPath) {
+        ObjectNode resp;
+
+        try {
+            resp = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
+        } catch (HttpClientErrorException e) {
+            if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
+                LOGGER.info("Blobs API was used to read file data. Path: {}", relPath);
+                resp = restService.getForJson(pathProvider.blobs(getFileSha(relPath)), getHttpHeaders());
+            } else {
+                LOGGER.error("Error on reading file from GitHub. Path: {}", relPath);
+                throw e;
+            }
+        }
+
+        return resp.get(GitHubPayload.CONTENT).asText();
     }
 
     public void updateFile(String path, String updateMessage, String content) {
         Map<String, String> requestBody = new HashMap<>();
 
-        requestBody.put(GitHubPayload.Fields.PATH, path);
-        requestBody.put(GitHubPayload.Fields.MESSAGE, updateMessage);
-        requestBody.put(GitHubPayload.Fields.CONTENT, encodeContent(content));
-        requestBody.put(GitHubPayload.Fields.SHA, getFileSha(path));
+        requestBody.put(GitHubPayload.PATH, path);
+        requestBody.put(GitHubPayload.MESSAGE, updateMessage);
+        requestBody.put(GitHubPayload.CONTENT, encodeContent(content));
+        requestBody.put(GitHubPayload.SHA, getFileSha(path));
 
         restService.put(pathProvider.contents(path), requestBody, getHttpHeaders());
     }
 
-    public void addReviewComment(int pullRequestNumber, String message) {
-        Map<String, String> requestBody = new HashMap<>();
+    public void createIssueComment(int issueNum, String message) {
+        Map<String, String> requestBody = Collections.singletonMap(GitHubPayload.BODY, message);
+        restService.post(pathProvider.issueComments(issueNum), requestBody, getHttpHeaders());
+    }
 
-        requestBody.put(GitHubPayload.Fields.EVENT, GitHubPayload.Values.COMMENT);
-        requestBody.put(GitHubPayload.Fields.BODY, message);
+    public void editIssueComment(int commentId, String newMessage) {
+        Map<String, String> requestBody = Collections.singletonMap(GitHubPayload.BODY, newMessage);
+        restService.patch(pathProvider.issueComment(commentId), requestBody, getHttpHeaders());
+    }
 
-        restService.post(pathProvider.pullReviews(pullRequestNumber), requestBody, getHttpHeaders());
+    public void deleteIssueComment(int commentId) {
+        restService.delete(pathProvider.issueComment(commentId), getHttpHeaders());
     }
 
     public void addLabel(int issueNum, String labelName) {
@@ -83,10 +113,10 @@ public class GitHubService {
     }
 
     public List<String> listIssueLabels(int issueNum) {
-        List responseList = new ArrayList();
+        ArrayNode respList = new ArrayNode(JsonNodeFactory.instance);
 
         try {
-            responseList = restService.getForObject(pathProvider.issueLabels(issueNum), getHttpHeaders(), ArrayList.class);
+            respList = restService.getForObject(pathProvider.issueLabels(issueNum), getHttpHeaders(), ArrayNode.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
                 LOGGER.warn("Removing label fail. Issue number: {}. Response: {}. Headers: {}",
@@ -95,11 +125,7 @@ public class GitHubService {
         }
 
         List<String> labels = new ArrayList<>();
-
-        for (Object responseElement : responseList) {
-            Map elementMap = (HashMap) responseElement;
-            labels.add((String) elementMap.get(GitHubPayload.Fields.NAME));
-        }
+        respList.forEach(respNode -> labels.add(respNode.get(GitHubPayload.NAME).asText()));
 
         return labels;
     }
@@ -123,50 +149,45 @@ public class GitHubService {
     }
 
     public List<PullRequestFile> listPullRequestFiles(int pullRequestNumber) {
-        class LinkProcessor {
+        List<PullRequestFile> pullRequestFiles = new ArrayList<>();
 
-            private final List<PullRequestFile> requestFileList;
-            private final String LINK = "link";
-            private final Pattern NEXT_PR_FILES = Pattern.compile("<([\\w\\d/?=:.]*)>;\\srel=\"next\"");
-
-            private LinkProcessor(List<PullRequestFile> requestFileList) {
-                this.requestFileList = requestFileList;
-            }
-
-            private void recursiveProcess(String link) {
-                ResponseEntity<ArrayNode> res = restService.getForEntity(link, getHttpHeaders(), ArrayNode.class);
-
-                res.getBody().forEach(node -> {
+        new LinkProcessor(
+                respArray -> respArray.forEach(nodeObject -> {
                     PullRequestFile pullRequestFile = new PullRequestFile();
 
-                    pullRequestFile.setSha(node.get(GitHubPayload.Fields.SHA).asText());
-                    pullRequestFile.setFilename(node.get(GitHubPayload.Fields.FILENAME).asText());
+                    pullRequestFile.setSha(nodeObject.get(GitHubPayload.SHA).asText());
+                    pullRequestFile.setFilename(nodeObject.get(GitHubPayload.FILENAME).asText());
                     pullRequestFile.setStatus(
                             EnumUtil.valueOfOrDefault(
                                     PullRequestFile.Status.values(),
-                                    node.get(GitHubPayload.Fields.STATUS).asText(),
+                                    nodeObject.get(GitHubPayload.STATUS).asText(),
                                     PullRequestFile.Status.UNDEFINED)
                     );
-                    pullRequestFile.setRawUrl(node.get(GitHubPayload.Fields.RAW_URL).asText());
+                    pullRequestFile.setRawUrl(nodeObject.get(GitHubPayload.RAW_URL).asText());
 
-                    requestFileList.add(pullRequestFile);
-                });
-
-                String headerLinks = res.getHeaders().getOrDefault(LINK, Collections.emptyList()).toString();
-                Matcher nextLink = NEXT_PR_FILES.matcher(headerLinks);
-
-                if (nextLink.find()) {
-                    recursiveProcess(nextLink.group(1));
-                }
-            }
-        }
-
-        List<PullRequestFile> pullRequestFiles = new ArrayList<>();
-
-        LinkProcessor linkProcessor = new LinkProcessor(pullRequestFiles);
-        linkProcessor.recursiveProcess(pathProvider.pullFiles(pullRequestNumber));
+                    pullRequestFiles.add(pullRequestFile);
+                })
+        ).recursiveProcess(pathProvider.pullFiles(pullRequestNumber));
 
         return pullRequestFiles;
+    }
+
+    public List<IssueComment> listIssueComments(int issueNum) {
+        List<IssueComment> issueComments = new ArrayList<>();
+
+        new LinkProcessor(
+                respArray -> respArray.forEach(nodeObject -> {
+                    IssueComment issueComment = new IssueComment();
+
+                    issueComment.setId(nodeObject.get(GitHubPayload.ID).asInt());
+                    issueComment.setUserName(nodeObject.get(GitHubPayload.USER).get(GitHubPayload.LOGIN).asText());
+                    issueComment.setBody(nodeObject.get(GitHubPayload.BODY).asText());
+
+                    issueComments.add(issueComment);
+                })
+        ).recursiveProcess(pathProvider.issueComments(issueNum));
+
+        return issueComments;
     }
 
     private HttpHeaders getHttpHeaders() {
@@ -176,7 +197,7 @@ public class GitHubService {
         String githubToken = configService.getConfig().getGitHubConfig().getToken();
 
         httpHeaders.set(HttpHeaders.USER_AGENT, agentName);
-        httpHeaders.set(HttpHeaders.AUTHORIZATION, String.format("%s %s", TOKEN, githubToken));
+        httpHeaders.set(HttpHeaders.AUTHORIZATION, "token ".concat(githubToken));
 
         return httpHeaders;
     }
@@ -190,13 +211,59 @@ public class GitHubService {
             byte[] base64decodedBytes = Base64.getMimeDecoder().decode(encodedContent);
             return new String(base64decodedBytes, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            LOGGER.error("Decoding github response content error", e);
+            LOGGER.error("Error on decoding GitHub content", e);
             throw new RuntimeException(e);
         }
     }
 
     private String getFileSha(String relPath) {
-        ObjectNode responseMap = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
-        return responseMap.get(GitHubPayload.Fields.SHA).asText();
+        final Matcher partedPath = Pattern.compile("(.*/)(.*)").matcher(relPath);
+
+        final String dirPath;
+        final String fileName;
+
+        if (partedPath.find()) {
+            dirPath = partedPath.group(1);
+            fileName = partedPath.group(2);
+        } else {
+            dirPath = "/";
+            fileName = relPath;
+        }
+
+        ArrayNode responseArr = restService.getForObject(
+                pathProvider.contents(dirPath), getHttpHeaders(), ArrayNode.class);
+
+        for (JsonNode node : responseArr) {
+            if (node.get(GitHubPayload.NAME).asText().equals(fileName)) {
+                return node.get(GitHubPayload.SHA).asText();
+            }
+        }
+
+        LOGGER.error("The file SHA was not found. Argument: {}. Dir path: {}. File name: {}", relPath, dirPath, fileName);
+        throw new IllegalArgumentException("Exception on getting file sha");
+    }
+
+    private class LinkProcessor {
+
+        private final String LINK = "link";
+        private final Pattern NEXT_PR_FILES = Pattern.compile("<([\\w\\d/?=:.]*)>;\\srel=\"next\"");
+        private final Consumer<ArrayNode> consumer;
+
+        private LinkProcessor(Consumer<ArrayNode> consumer) {
+            this.consumer = consumer;
+        }
+
+        private void recursiveProcess(String link) {
+            ResponseEntity<ArrayNode> resp = restService.getForEntity(link, getHttpHeaders(), ArrayNode.class);
+
+            consumer.accept(resp.getBody());
+
+            String headerLinks = resp.getHeaders().getOrDefault(LINK, Collections.emptyList()).toString();
+            Matcher nextLink = NEXT_PR_FILES.matcher(headerLinks);
+
+            if (nextLink.find()) {
+                recursiveProcess(nextLink.group(1));
+            }
+        }
     }
 }

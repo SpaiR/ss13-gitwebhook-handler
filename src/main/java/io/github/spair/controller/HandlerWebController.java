@@ -44,7 +44,7 @@ public class HandlerWebController {
         // Substring is to cut down 'sha1=' part.
         signatureService.validate(signature.substring(5), webhookPayload);
 
-        ObjectNode webhookJson = objectMapper.readValue(webhookPayload, ObjectNode.class);
+        final ObjectNode webhookJson = objectMapper.readValue(webhookPayload, ObjectNode.class);
 
         switch (event) {
             case GitHubConstants.PING_EVENT:

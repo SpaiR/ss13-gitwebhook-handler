@@ -5,19 +5,23 @@ import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.changelog.entities.ChangelogValidationStatus;
 import io.github.spair.service.config.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Service
+@Component
 class ChangelogValidator {
 
     private final ConfigService configService;
 
+    private static final String UNKNOWN_CLASSES_REASON = "Reason: unknown classes detected. Next should be changed or removed: ";
+    private static final String EMPTY_CHANGELOG_REASON = "Reason: empty changelog. Please, check markdown correctness.";
+    private static final String CODE_QUOTE = "`";
+
     @Autowired
-    public ChangelogValidator(ConfigService configService) {
+    ChangelogValidator(ConfigService configService) {
         this.configService = configService;
     }
 
@@ -28,17 +32,17 @@ class ChangelogValidator {
         if (invalidClasses.size() > 0) {
             StringBuilder sb = new StringBuilder();
 
-            sb.append("Reason: unknown classes detected. Next should be changed or removed: ");
+            sb.append(UNKNOWN_CLASSES_REASON);
 
             for (int i = 0; i < invalidClasses.size() - 1; i++) {
-                sb.append("`").append(invalidClasses.get(i)).append("`, ");
+                sb.append(CODE_QUOTE).append(invalidClasses.get(i)).append(CODE_QUOTE).append(", ");
             }
 
-            sb.append("`").append(invalidClasses.get(invalidClasses.size() - 1)).append("`.");
+            sb.append(CODE_QUOTE).append(invalidClasses.get(invalidClasses.size() - 1)).append(CODE_QUOTE).append('.');
 
             status.setMessage(sb.toString());
         } else if (changelog.isEmpty()) {
-            status.setMessage("Reason: empty changelog. Please, check markdown correctness.");
+            status.setMessage(EMPTY_CHANGELOG_REASON);
         }
 
         if (status.getMessage() != null) {

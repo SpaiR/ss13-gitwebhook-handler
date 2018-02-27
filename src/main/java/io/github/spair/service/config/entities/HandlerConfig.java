@@ -17,6 +17,7 @@ public class HandlerConfig {
 
     private String requestAgentName = "Agent name";
     private String timeZone = "Europe/Moscow";
+    private String imageUploadCode = "1234567890";
     private GitHubConfig gitHubConfig = new GitHubConfig();
     private ChangelogConfig changelogConfig = new ChangelogConfig();
 

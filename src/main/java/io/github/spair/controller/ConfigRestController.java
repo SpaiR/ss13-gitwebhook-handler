@@ -55,7 +55,7 @@ public class ConfigRestController {
         LOGGER.info("Log file downloaded");
 
         String logName = env.getProperty("logging.file");
-        setResponseAsFile(response, env.getProperty(logName));
+        setResponseAsFile(response, logName);
 
         return new FileSystemResource(new File(logName));
 
@@ -65,7 +65,6 @@ public class ConfigRestController {
     public ResponseEntity validateConfig(@RequestBody HandlerConfig config) {
         HandlerConfigStatus configStatus = configService.validateConfig(config);
         HttpStatus responseStatus = configStatus.allOk ? HttpStatus.OK : HttpStatus.NOT_ACCEPTABLE;
-
         return new ResponseEntity<>(configStatus, responseStatus);
     }
 

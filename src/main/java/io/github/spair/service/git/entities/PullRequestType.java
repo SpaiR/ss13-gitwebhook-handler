@@ -4,5 +4,6 @@ public enum PullRequestType {
     UNDEFINED,
     OPENED,
     EDITED,
+    SYNCHRONIZE,
     MERGED
 }

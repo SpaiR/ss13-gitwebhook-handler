@@ -2,20 +2,21 @@ package io.github.spair.service.git;
 
 import io.github.spair.service.config.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 class GitHubPathProvider {
 
     private final ConfigService configService;
 
     private static final String REPOS = "repos";
-    private static final String REVIEWS = "reviews";
     private static final String LABELS = "labels";
     private static final String CONTENTS = "contents";
     private static final String PULLS = "pulls";
     private static final String ISSUES = "issues";
     private static final String FILES = "files";
+    private static final String COMMENTS = "comments";
+    private static final String GIT_BLOBS = "git/blobs";
 
     @Autowired
     GitHubPathProvider(ConfigService configService) {
@@ -37,9 +38,8 @@ class GitHubPathProvider {
         return getContentsApiPath(orgName, repoName) + relPath;
     }
 
-    // https://api.github.com/repos/OrgName/RepoName/pulls/1/reviews
-    String pullReviews(int prNum) {
-        return getPullsApiPath() + "/" + prNum + "/" + REVIEWS;
+    String blobs(String fileSha) {
+        return getBlobsApiPath() + "/" + fileSha;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/issues/1/labels
@@ -52,6 +52,17 @@ class GitHubPathProvider {
         return getIssuesApiPath() + "/" + issueNum + "/" + LABELS + "/" + labelName;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/issues/1/comments
+    String issueComments(int issueNum) {
+        return getIssuesApiPath() + "/" + issueNum + "/" +COMMENTS;
+    }
+
+    // https://api.github.com/repos/OrgName/RepoName/issues/comments/123
+    String issueComment(int commentId) {
+        return getIssuesApiPath() + "/"  +COMMENTS + "/" + commentId;
+    }
+
+
     // https://api.github.com/repos/OrgName/RepoName/pulls/1/files
     String pullFiles(int prNum) {
         return getPullsApiPath() + "/" + prNum + "/" + FILES;
@@ -63,6 +74,10 @@ class GitHubPathProvider {
 
     private String getContentsApiPath(String orgName, String repoName) {
         return generalPath(orgName, repoName) + "/" + CONTENTS;
+    }
+
+    private String getBlobsApiPath() {
+        return getGeneralPath() + "/" + GIT_BLOBS;
     }
 
     private String getPullsApiPath() {

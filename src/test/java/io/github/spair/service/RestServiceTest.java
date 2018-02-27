@@ -92,6 +92,16 @@ public class RestServiceTest {
     }
 
     @Test
+    public void testPatch() {
+        server.expect(requestTo("/test/path"))
+                .andExpect(method(HttpMethod.PATCH)).andExpect(headersMatecher())
+                .andExpect(content().string("Text body"))
+                .andRespond(withSuccess());
+
+        restService.patch("/test/path", "Text body", buildHeaders());
+    }
+
+    @Test
     public void testPost() {
         server.expect(requestTo("/test/path"))
                 .andExpect(method(HttpMethod.POST)).andExpect(headersMatecher())
@@ -99,6 +109,19 @@ public class RestServiceTest {
                 .andRespond(withSuccess());
 
         restService.post("/test/path", "Text body", buildHeaders());
+    }
+
+    @Test
+    public void testPostForJson() {
+        ObjectNode responseJson = objectMapper.createObjectNode();
+        responseJson.set("value", JsonNodeFactory.instance.numberNode(123));
+
+        server.expect(requestTo("/test/path"))
+                .andExpect(method(HttpMethod.POST)).andExpect(headersMatecher())
+                .andExpect(content().string("Text body"))
+                .andRespond(withSuccess(responseJson.toString(), MediaType.APPLICATION_JSON));
+
+        assertEquals(responseJson, restService.postForJson("/test/path", "Text body", buildHeaders()));
     }
 
     @Test
