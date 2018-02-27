@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestOperations;
 
@@ -20,6 +21,10 @@ public class RestService {
 
     public void get(String path, HttpHeaders headers) {
         restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), Void.class);
+    }
+
+    public <T> ResponseEntity<T> getForEntity(String path, HttpHeaders headers, Class<T> tClass) {
+        return restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), tClass);
     }
 
     public <T> T getForObject(String path, Class<T> tClass) {

@@ -48,7 +48,7 @@ public class ChangelogServiceTest {
         changelog.setChangelogRows(Lists.newArrayList(new ChangelogRow("map", false, "")));
 
         when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
-        when(gitHubService.getIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
+        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
         when(changelogValidator.validate(changelog)).thenReturn(new ChangelogValidationStatus());
 
         service.validate(new PullRequest());
@@ -64,7 +64,7 @@ public class ChangelogServiceTest {
         changelog.setChangelogRows(Lists.emptyList());
 
         when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
-        when(gitHubService.getIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
+        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
         when(changelogValidator.validate(changelog)).thenReturn(new ChangelogValidationStatus());
 
         PullRequest pullRequest = new PullRequest();
@@ -86,7 +86,7 @@ public class ChangelogServiceTest {
         validationStatus.setStatus(ChangelogValidationStatus.Status.INVALID);
 
         when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
-        when(gitHubService.getIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
+        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
         when(changelogValidator.validate(changelog)).thenReturn(validationStatus);
 
         PullRequest pullRequest = new PullRequest();
@@ -109,7 +109,7 @@ public class ChangelogServiceTest {
         validationStatus.setStatus(ChangelogValidationStatus.Status.INVALID);
 
         when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
-        when(gitHubService.getIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
+        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
         when(changelogValidator.validate(changelog)).thenReturn(validationStatus);
 
         PullRequest pullRequest = new PullRequest();
@@ -131,7 +131,7 @@ public class ChangelogServiceTest {
         validationStatus.setStatus(ChangelogValidationStatus.Status.INVALID);
 
         when(changelogParser.createFromPullRequest(any())).thenReturn(changelog);
-        when(gitHubService.getIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
+        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
         when(changelogValidator.validate(changelog)).thenReturn(validationStatus);
 
         PullRequest pullRequest = new PullRequest();
@@ -148,7 +148,7 @@ public class ChangelogServiceTest {
     @Test
     public void testValidateWhenNoChangelog() {
         when(changelogParser.createFromPullRequest(any())).thenReturn(new Changelog());
-        when(gitHubService.getIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
+        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
 
         service.validate(new PullRequest());
 

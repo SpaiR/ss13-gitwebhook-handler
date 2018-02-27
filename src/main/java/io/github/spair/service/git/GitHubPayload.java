@@ -19,6 +19,9 @@ public interface GitHubPayload {
         String HTML_URL = "html_url";
         String DIFF_URL = "diff_url";
         String NAME = "name";
+        String FILENAME = "filename";
+        String STATUS = "status";
+        String RAW_URL = "raw_url";
     }
 
     interface Values {

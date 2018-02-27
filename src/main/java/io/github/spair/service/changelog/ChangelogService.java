@@ -56,7 +56,7 @@ public class ChangelogService {
         Changelog changelog = changelogParser.createFromPullRequest(pullRequest);
 
         boolean isValid = true;
-        boolean hasInvalidLabel = gitHubService.getIssueLabels(pullRequest.getNumber()).contains(invalidChangelogLabel);
+        boolean hasInvalidLabel = gitHubService.listIssueLabels(pullRequest.getNumber()).contains(invalidChangelogLabel);
 
         if (Objects.nonNull(changelog.getChangelogRows())) {
             ChangelogValidationStatus validationStatus = changelogValidator.validate(changelog);

@@ -17,51 +17,54 @@ public class GitHubPathProviderTest {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ConfigService configService;
 
+    private GitHubPathProvider provider;
+
     @Before
     public void setUp() {
         when(configService.getConfig().getGitHubConfig().getOrganizationName()).thenReturn("GitHub");
         when(configService.getConfig().getGitHubConfig().getRepositoryName()).thenReturn("Handler");
+        provider = new GitHubPathProvider(configService);
     }
 
     @Test
     public void testGeneralPath() {
-        GitHubPathProvider provider = new GitHubPathProvider(configService);
         String expected = "https://api.github.com/repos/OrgName/RepoName";
         assertEquals(expected, provider.generalPath("OrgName", "RepoName"));
     }
 
     @Test
     public void testContents() {
-        GitHubPathProvider provider = new GitHubPathProvider(configService);
         String expected = "https://api.github.com/repos/GitHub/Handler/contents/some/contents";
         assertEquals(expected, provider.contents("/some/contents"));
     }
 
     @Test
     public void testContentsWithOrgRepoArgs() {
-        GitHubPathProvider provider = new GitHubPathProvider(configService);
         String expected = "https://api.github.com/repos/OrgName/RepoName/contents/some/contents";
         assertEquals(expected, provider.contents("OrgName", "RepoName", "/some/contents"));
     }
 
     @Test
     public void testPullReviews() {
-        GitHubPathProvider provider = new GitHubPathProvider(configService);
         String expected = "https://api.github.com/repos/GitHub/Handler/pulls/16/reviews";
         assertEquals(expected, provider.pullReviews(16));
     }
 
     @Test
     public void testIssueLabels() {
-        GitHubPathProvider provider = new GitHubPathProvider(configService);
         String expected = "https://api.github.com/repos/GitHub/Handler/issues/23/labels";
         assertEquals(expected, provider.issueLabels(23));
     }
 
     @Test
     public void testIssueLabel() {
-        GitHubPathProvider provider = new GitHubPathProvider(configService);
         String expected = "https://api.github.com/repos/GitHub/Handler/issues/120/labels/Label Name";
         assertEquals(expected, provider.issueLabel(120, "Label Name"));
+    }
+
+    @Test
+    public void testPullFiles() {
+        String expected = "https://api.github.com/repos/GitHub/Handler/pulls/120/files";
+        assertEquals(expected, provider.pullFiles(120));
     }
 }

@@ -15,6 +15,7 @@ class GitHubPathProvider {
     private static final String CONTENTS = "contents";
     private static final String PULLS = "pulls";
     private static final String ISSUES = "issues";
+    private static final String FILES = "files";
 
     @Autowired
     GitHubPathProvider(ConfigService configService) {
@@ -49,6 +50,11 @@ class GitHubPathProvider {
     // https://api.github.com/repos/OrgName/RepoName/issues/1/labels/LabelName
     String issueLabel(int issueNum, String labelName) {
         return getIssuesApiPath() + "/" + issueNum + "/" + LABELS + "/" + labelName;
+    }
+
+    // https://api.github.com/repos/OrgName/RepoName/pulls/1/files
+    String pullFiles(int prNum) {
+        return getPullsApiPath() + "/" + prNum + "/" + FILES;
     }
 
     private String getContentsApiPath() {

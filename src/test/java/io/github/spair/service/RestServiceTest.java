@@ -8,15 +8,14 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.client.RequestMatcher;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
 @RunWith(SpringRunner.class)
@@ -37,6 +36,19 @@ public class RestServiceTest {
                 .andExpect(method(HttpMethod.GET)).andExpect(headersMatecher())
                 .andRespond(withSuccess());
         restService.get("/test/path", buildHeaders());
+    }
+
+    @Test
+    public void testGetForEntity() {
+        server.expect(requestTo("/test/path"))
+                .andExpect(method(HttpMethod.GET)).andExpect(headersMatecher())
+                .andRespond(withStatus(HttpStatus.ACCEPTED).body("Response Content").contentType(MediaType.TEXT_PLAIN));
+
+        ResponseEntity<String> resp = restService.getForEntity("/test/path", buildHeaders(), String.class);
+
+        assertEquals(resp.getBody(), "Response Content");
+        assertEquals(resp.getStatusCode(), HttpStatus.ACCEPTED);
+        assertEquals(resp.getHeaders().getContentType(), MediaType.TEXT_PLAIN);
     }
 
     @Test

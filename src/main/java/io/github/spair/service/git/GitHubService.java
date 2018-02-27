@@ -1,12 +1,16 @@
 package io.github.spair.service.git;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.spair.service.EnumUtil;
 import io.github.spair.service.RestService;
 import io.github.spair.service.config.ConfigService;
+import io.github.spair.service.git.entities.PullRequestFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -14,6 +18,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class GitHubService {
@@ -76,7 +82,7 @@ public class GitHubService {
         }
     }
 
-    public List<String> getIssueLabels(int issueNum) {
+    public List<String> listIssueLabels(int issueNum) {
         List responseList = new ArrayList();
 
         try {
@@ -114,6 +120,53 @@ public class GitHubService {
             return false;
         }
         return true;
+    }
+
+    public List<PullRequestFile> listPullRequestFiles(int pullRequestNumber) {
+        class LinkProcessor {
+
+            private final List<PullRequestFile> requestFileList;
+            private final String LINK = "link";
+            private final Pattern NEXT_PR_FILES = Pattern.compile("<([\\w\\d/?=:.]*)>;\\srel=\"next\"");
+
+            private LinkProcessor(List<PullRequestFile> requestFileList) {
+                this.requestFileList = requestFileList;
+            }
+
+            private void recursiveProcess(String link) {
+                ResponseEntity<ArrayNode> res = restService.getForEntity(link, getHttpHeaders(), ArrayNode.class);
+
+                res.getBody().forEach(node -> {
+                    PullRequestFile pullRequestFile = new PullRequestFile();
+
+                    pullRequestFile.setSha(node.get(GitHubPayload.Fields.SHA).asText());
+                    pullRequestFile.setFilename(node.get(GitHubPayload.Fields.FILENAME).asText());
+                    pullRequestFile.setStatus(
+                            EnumUtil.valueOfOrDefault(
+                                    PullRequestFile.Status.values(),
+                                    node.get(GitHubPayload.Fields.STATUS).asText(),
+                                    PullRequestFile.Status.UNDEFINED)
+                    );
+                    pullRequestFile.setRawUrl(node.get(GitHubPayload.Fields.RAW_URL).asText());
+
+                    requestFileList.add(pullRequestFile);
+                });
+
+                String headerLinks = res.getHeaders().getOrDefault(LINK, Collections.emptyList()).toString();
+                Matcher nextLink = NEXT_PR_FILES.matcher(headerLinks);
+
+                if (nextLink.find()) {
+                    recursiveProcess(nextLink.group(1));
+                }
+            }
+        }
+
+        List<PullRequestFile> pullRequestFiles = new ArrayList<>();
+
+        LinkProcessor linkProcessor = new LinkProcessor(pullRequestFiles);
+        linkProcessor.recursiveProcess(pathProvider.pullFiles(pullRequestNumber));
+
+        return pullRequestFiles;
     }
 
     private HttpHeaders getHttpHeaders() {
