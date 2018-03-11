@@ -58,7 +58,7 @@ class ReportPrinter {
     private void appendFilename(final StringBuilder sb, final ReportEntry reportEntry) {
         String filename = reportEntry.getFilename();
 
-        if (!reportEntry.getDuplication().getNewDmiDuplicates().isEmpty()) {
+        if (reportEntry.getDuplication().isHasDuplicates()) {
             filename = filename + " << duplicates";
         }
 
