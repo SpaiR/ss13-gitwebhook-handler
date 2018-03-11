@@ -26,7 +26,7 @@ class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<Re
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportEntryGenerator.class);
 
     @Autowired
-    ReportEntryGenerator(DmiLoader dmiLoader, StateDiffReportGenerator stateDiffReportGenerator) {
+    ReportEntryGenerator(final DmiLoader dmiLoader, final StateDiffReportGenerator stateDiffReportGenerator) {
         this.dmiLoader = dmiLoader;
         this.stateDiffReportGenerator = stateDiffReportGenerator;
     }

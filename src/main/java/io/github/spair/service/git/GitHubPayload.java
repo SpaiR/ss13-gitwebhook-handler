@@ -1,23 +1,27 @@
 package io.github.spair.service.git;
 
-public interface GitHubPayload {
-    String ISSUE = "issue";
-    String PULL_REQUEST = "pull_request";
-    String CONTENT = "content";
-    String SHA = "sha";
-    String MESSAGE = "message";
-    String PATH = "path";
-    String BODY = "body";
-    String TITLE = "title";
-    String NUMBER = "number";
-    String ACTION = "action";
-    String USER = "user";
-    String LOGIN = "login";
-    String HTML_URL = "html_url";
-    String DIFF_URL = "diff_url";
-    String NAME = "name";
-    String FILENAME = "filename";
-    String STATUS = "status";
-    String RAW_URL = "raw_url";
-    String ID = "id";
+public final class GitHubPayload {
+
+    public static final String ISSUE = "issue";
+    public static final String PULL_REQUEST = "pull_request";
+    public static final String CONTENT = "content";
+    public static final String SHA = "sha";
+    public static final String MESSAGE = "message";
+    public static final String PATH = "path";
+    public static final String BODY = "body";
+    public static final String TITLE = "title";
+    public static final String NUMBER = "number";
+    public static final String ACTION = "action";
+    public static final String USER = "user";
+    public static final String LOGIN = "login";
+    public static final String HTML_URL = "html_url";
+    public static final String DIFF_URL = "diff_url";
+    public static final String NAME = "name";
+    public static final String FILENAME = "filename";
+    public static final String STATUS = "status";
+    public static final String RAW_URL = "raw_url";
+    public static final String ID = "id";
+
+    private GitHubPayload() {
+    }
 }

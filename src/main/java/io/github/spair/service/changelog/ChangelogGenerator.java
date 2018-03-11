@@ -6,7 +6,11 @@ import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.git.entities.PullRequest;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -18,7 +22,7 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
     private static final Pattern CHANGELOG_ROW_WITH_CLASS = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
 
     @Override
-    public Changelog generate(PullRequest pullRequest) {
+    public Changelog generate(final PullRequest pullRequest) {
         Changelog changelog = new Changelog();
         String changelogText = findChangelogText(Optional.ofNullable(pullRequest.getBody()).orElse(""));
 
@@ -30,7 +34,7 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         return changelog;
     }
 
-    private String findChangelogText(String prBody) {
+    private String findChangelogText(final String prBody) {
         String changelogWithoutComments = prBody.replaceAll("(?s)<!--.*?-->", "");
         Matcher matcher = CL_TEXT.matcher(changelogWithoutComments);
 
@@ -41,7 +45,7 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         }
     }
 
-    private Changelog parseChangelog(String changelogText) {
+    private Changelog parseChangelog(final String changelogText) {
         Changelog changelog = new Changelog();
 
         changelog.setAuthor(parseAuthor(changelogText));
@@ -50,7 +54,7 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         return changelog;
     }
 
-    private String parseAuthor(String changelogText) {
+    private String parseAuthor(final String changelogText) {
         Matcher matcher = AUTHOR_BEFORE_CHANGES.matcher(changelogText);
 
         if (matcher.find()) {
@@ -60,7 +64,8 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         }
     }
 
-    private List<ChangelogRow> parseChangelogRows(String changelogText) {
+    @SuppressWarnings("checkstyle:MagicNumber")
+    private List<ChangelogRow> parseChangelogRows(final String changelogText) {
         List<ChangelogRow> changelogRows = new ArrayList<>();
 
         try (Scanner scanner = new Scanner(changelogText)) {
@@ -83,7 +88,7 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         return changelogRows;
     }
 
-    private void prepareChangelog(Changelog changelog, PullRequest pullRequest) {
+    private void prepareChangelog(final Changelog changelog, final PullRequest pullRequest) {
         ensureAuthorExist(changelog, pullRequest.getAuthor());
 
         changelog.getChangelogRows().forEach(changelogRow -> {
@@ -100,17 +105,17 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         });
     }
 
-    private void ensureAuthorExist(Changelog changelog, String authorName) {
+    private void ensureAuthorExist(final Changelog changelog, final String authorName) {
         if (changelog.getAuthor().isEmpty()) {
             changelog.setAuthor(authorName);
         }
     }
 
-    private void capitalizeFirstLetter(StringBuilder sb) {
+    private void capitalizeFirstLetter(final StringBuilder sb) {
         sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
     }
 
-    private void ensureDotEnd(StringBuilder sb) {
+    private void ensureDotEnd(final StringBuilder sb) {
         char lastChar = sb.charAt(sb.length() - 1);
 
         if (lastChar != '.' && lastChar != '?' && lastChar != '!') {
@@ -118,7 +123,7 @@ class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
         }
     }
 
-    private void addPullRequestLink(StringBuilder sb, String prLink) {
+    private void addPullRequestLink(final StringBuilder sb, final String prLink) {
         sb.append(" [link:").append(prLink).append("]");
     }
 }

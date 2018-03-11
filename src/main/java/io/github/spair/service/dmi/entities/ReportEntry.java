@@ -1,8 +1,6 @@
 package io.github.spair.service.dmi.entities;
 
-import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
-import io.github.spair.byond.dmi.SpriteDir;
 import lombok.Data;
 
 import javax.annotation.Nonnull;
@@ -37,24 +35,6 @@ public class ReportEntry {
 
         public boolean isHasDuplicates() {
             return !oldDmiDuplicates.isEmpty() || !newDmiDuplicates.isEmpty();
-        }
-    }
-
-    @Data
-    public static class StateDiffReport {
-        private String name;
-        private SpriteDir dir;
-        private int spriteWidth;
-        private int spriteHeight;
-        private int frameNumber;
-        @Nonnull
-        private String oldDmiLink = "";
-        @Nonnull
-        private String newDmiLink = "";
-        private String status;
-
-        public void setStatus(DmiDiff.Status status) {
-            this.status = status.name().charAt(0) + status.name().substring(1).toLowerCase();
         }
     }
 

@@ -11,7 +11,11 @@ import io.github.spair.service.git.entities.PullRequestType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 @Service
@@ -22,21 +26,24 @@ public class PullRequestService {
     private final GitHubService gitHubService;
     private final RestService restService;
 
-    private static final Pattern MAP_CHANGES_PATTERN = Pattern.compile("diff.+\\.dmm");
-    private static final Pattern ICON_CHANGES_PATTERN = Pattern.compile("diff.+\\.dmi");
+    private static final Pattern MAP_CHANGES = Pattern.compile("diff.+\\.dmm");
+    private static final Pattern ICON_CHANGES = Pattern.compile("diff.+\\.dmi");
 
     private static final String DNM_TAG = "[dnm]";
     private static final String WIP_DAT = "[wip]";
 
     @Autowired
-    public PullRequestService(ChangelogService changelogService, ConfigService configService, GitHubService gitHubService, RestService restService) {
+    public PullRequestService(final ChangelogService changelogService,
+                              final ConfigService configService,
+                              final GitHubService gitHubService,
+                              final RestService restService) {
         this.changelogService = changelogService;
         this.configService = configService;
         this.gitHubService = gitHubService;
         this.restService = restService;
     }
 
-    public PullRequest convertWebhookJson(ObjectNode webhookJson) {
+    public PullRequest convertWebhookJson(final ObjectNode webhookJson) {
         JsonNode pullRequestNode = webhookJson.get(GitHubPayload.PULL_REQUEST);
 
         String author = pullRequestNode.get(GitHubPayload.USER).get(GitHubPayload.LOGIN).asText();
@@ -52,7 +59,7 @@ public class PullRequestService {
                 .build();
     }
 
-    public void processLabels(PullRequest pullRequest) {
+    public void processLabels(final PullRequest pullRequest) {
         Set<String> labelsToAdd = new HashSet<>();
 
         labelsToAdd.addAll(getLabelsFromChangelog(pullRequest));
@@ -62,10 +69,11 @@ public class PullRequestService {
         gitHubService.addLabels(pullRequest.getNumber(), new ArrayList<>(labelsToAdd));
     }
 
-    private Set<String> getLabelsFromChangelog(PullRequest pullRequest) {
+    private Set<String> getLabelsFromChangelog(final PullRequest pullRequest) {
         Set<String> labelsToAdd = new HashSet<>();
 
-        Map<String, String> availableClassesLabels = configService.getConfig().getGitHubConfig().getLabels().getAvailableClassesLabels();
+        Map<String, String> availableClassesLabels = configService
+                .getConfig().getGitHubConfig().getLabels().getAvailableClassesLabels();
         Set<String> changelogClasses = changelogService.getChangelogClassesList(pullRequest);
 
         changelogClasses.forEach(className -> {
@@ -79,13 +87,13 @@ public class PullRequestService {
         return labelsToAdd;
     }
 
-    private List<String> getLabelsFromDiff(String diffLink) {
+    private List<String> getLabelsFromDiff(final String diffLink) {
         List<String> labelsToAdd = new ArrayList<>();
 
         String pullRequestDiff = restService.getForObject(diffLink, String.class);
 
-        boolean hasMapChanges = MAP_CHANGES_PATTERN.matcher(pullRequestDiff).find();
-        boolean hasIconChanges = ICON_CHANGES_PATTERN.matcher(pullRequestDiff).find();
+        boolean hasMapChanges = MAP_CHANGES.matcher(pullRequestDiff).find();
+        boolean hasIconChanges = ICON_CHANGES.matcher(pullRequestDiff).find();
 
         if (hasMapChanges) {
             labelsToAdd.add(configService.getConfig().getGitHubConfig().getLabels().getMapChanges());
@@ -98,7 +106,7 @@ public class PullRequestService {
         return labelsToAdd;
     }
 
-    private List<String> getLabelsFromTitle(String title) {
+    private List<String> getLabelsFromTitle(final String title) {
         List<String> labelsToAdd = new ArrayList<>();
         String loweredTitle = title.toLowerCase();
 
@@ -116,7 +124,7 @@ public class PullRequestService {
         return labelsToAdd;
     }
 
-    private PullRequestType identifyType(ObjectNode webhookJson) {
+    private PullRequestType identifyType(final ObjectNode webhookJson) {
         String action = webhookJson.get(GitHubPayload.ACTION).asText();
         return EnumUtil.valueOfOrDefault(PullRequestType.values(), action, PullRequestType.UNDEFINED);
     }

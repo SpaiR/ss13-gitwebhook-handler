@@ -3,6 +3,7 @@ package io.github.spair.service.config.entities;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
+@SuppressWarnings("checkstyle:VisibilityModifier")
 public class HandlerConfigStatus {
 
     public final boolean allOk;

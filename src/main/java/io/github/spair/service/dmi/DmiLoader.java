@@ -24,13 +24,13 @@ class DmiLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DmiLoader.class);
 
     @Autowired
-    DmiLoader(RestService restService, GitHubService gitHubService) {
+    DmiLoader(final RestService restService, final GitHubService gitHubService) {
         this.restService = restService;
         this.gitHubService = gitHubService;
     }
 
     @Async
-    public CompletableFuture<Optional<Dmi>> loadFromGitHub(String dmiName, String filename) {
+    public CompletableFuture<Optional<Dmi>> loadFromGitHub(final String dmiName, final String filename) {
         try {
             String base64image = gitHubService.readEncodedFile(filename);
             return CompletableFuture.completedFuture(Optional.of(DmiSlurper.slurpUp(dmiName, base64image)));
@@ -45,7 +45,7 @@ class DmiLoader {
     }
 
     @Async
-    public CompletableFuture<Optional<Dmi>> loadFromUrl(String dmiName, String url) {
+    public CompletableFuture<Optional<Dmi>> loadFromUrl(final String dmiName, final String url) {
         try {
             byte[] imageBytes = restService.getForObject(url, byte[].class);
             String base64image = Base64.getEncoder().encodeToString(imageBytes);

@@ -22,13 +22,15 @@ public class DmiDiffService {
     private static final String DMI_SUFFIX = ".dmi";
 
     @Autowired
-    public DmiDiffService(GitHubService gitHubService, ReportPrinter reportPrinter, ReportEntryGenerator reportGenerator) {
+    public DmiDiffService(final GitHubService gitHubService,
+                          final ReportPrinter reportPrinter,
+                          final ReportEntryGenerator reportGenerator) {
         this.gitHubService = gitHubService;
         this.reportPrinter = reportPrinter;
         this.reportGenerator = reportGenerator;
     }
 
-    public void generateAndReport(PullRequest pullRequest) {
+    public void generateAndReport(final PullRequest pullRequest) {
         final int prNumber = pullRequest.getNumber();
         final List<PullRequestFile> dmiPrFiles = filterDmiFiles(gitHubService.listPullRequestFiles(prNumber));
 
@@ -48,11 +50,11 @@ public class DmiDiffService {
         }
     }
 
-    private List<PullRequestFile> filterDmiFiles(List<PullRequestFile> allPrFiles) {
+    private List<PullRequestFile> filterDmiFiles(final List<PullRequestFile> allPrFiles) {
         return allPrFiles.stream().filter(file -> file.getFilename().endsWith(DMI_SUFFIX)).collect(Collectors.toList());
     }
 
-    private Optional<Integer> getReportId(List<IssueComment> pullRequestComments) {
+    private Optional<Integer> getReportId(final List<IssueComment> pullRequestComments) {
         for (IssueComment prComment : pullRequestComments) {
             if (prComment.getBody().startsWith(DmiDiffReport.TITLE)) {
                 return Optional.of(prComment.getId());

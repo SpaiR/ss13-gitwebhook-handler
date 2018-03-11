@@ -12,7 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
 
@@ -27,9 +33,12 @@ public class HandlerWebController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HandlerWebController.class);
 
+    // Signature header from GitHub always starts with 'sha1=' part, which should be cut down.
+    private static final int SIGN_PART = "sha1=".length();
+
     @Autowired
-    public HandlerWebController(SignatureService signatureService, ObjectMapper objectMapper,
-                                PullRequestHandler pullRequestHandler, IssuesHandler issuesHandler) {
+    public HandlerWebController(final SignatureService signatureService, final ObjectMapper objectMapper,
+                                final PullRequestHandler pullRequestHandler, final IssuesHandler issuesHandler) {
         this.signatureService = signatureService;
         this.pullRequestHandler = pullRequestHandler;
         this.issuesHandler = issuesHandler;
@@ -38,11 +47,11 @@ public class HandlerWebController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void catchPullRequestWebhook(
-            @RequestHeader(GitHubConstants.SIGNATURE_HEADER) String signature,
-            @RequestHeader(GitHubConstants.EVENT_HEADER) String event,
-            @RequestBody String webhookPayload) throws IOException {
+            final @RequestHeader(GitHubConstants.SIGNATURE_HEADER) String signature,
+            final @RequestHeader(GitHubConstants.EVENT_HEADER) String event,
+            final @RequestBody String webhookPayload) throws IOException {
         // Substring is to cut down 'sha1=' part.
-        signatureService.validate(signature.substring(5), webhookPayload);
+        signatureService.validate(signature.substring(SIGN_PART), webhookPayload);
 
         final ObjectNode webhookJson = objectMapper.readValue(webhookPayload, ObjectNode.class);
 
@@ -56,6 +65,8 @@ public class HandlerWebController {
             case GitHubConstants.ISSUES_EVENT:
                 issuesHandler.handle(webhookJson);
                 break;
+            default:
+                LOGGER.info("Unhandled event caught: " + event);
         }
     }
 
@@ -67,7 +78,7 @@ public class HandlerWebController {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Exception handleGeneralException(Exception e) {
+    public Exception handleGeneralException(final Exception e) {
         LOGGER.error("Uncaught exception happened", e);
         return e;
     }

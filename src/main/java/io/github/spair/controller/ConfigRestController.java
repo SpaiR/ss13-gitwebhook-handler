@@ -12,7 +12,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -28,7 +33,7 @@ public class ConfigRestController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigRestController.class);
 
     @Autowired
-    public ConfigRestController(ConfigService configService, Environment env) {
+    public ConfigRestController(final ConfigService configService, final Environment env) {
         this.configService = configService;
         this.env = env;
     }
@@ -39,19 +44,19 @@ public class ConfigRestController {
     }
 
     @PutMapping("/current")
-    public void saveConfig(@RequestBody HandlerConfig configuration) throws IOException {
+    public void saveConfig(final @RequestBody HandlerConfig configuration) throws IOException {
         configService.importConfig(configuration);
     }
 
     @GetMapping("/file")
-    public FileSystemResource downloadConfigFile(HttpServletResponse response) {
+    public FileSystemResource downloadConfigFile(final HttpServletResponse response) {
         LOGGER.info("Configuration file downloaded");
         setResponseAsFile(response, ConfigService.CONFIG_NAME);
         return new FileSystemResource(configService.exportConfig());
     }
 
     @GetMapping("/log")
-    public FileSystemResource downloadLogFile(HttpServletResponse response) {
+    public FileSystemResource downloadLogFile(final HttpServletResponse response) {
         LOGGER.info("Log file downloaded");
 
         String logName = env.getProperty("logging.file");
@@ -62,13 +67,13 @@ public class ConfigRestController {
     }
 
     @PostMapping("/validation")
-    public ResponseEntity validateConfig(@RequestBody HandlerConfig config) {
+    public ResponseEntity validateConfig(final @RequestBody HandlerConfig config) {
         HandlerConfigStatus configStatus = configService.validateConfig(config);
         HttpStatus responseStatus = configStatus.allOk ? HttpStatus.OK : HttpStatus.NOT_ACCEPTABLE;
         return new ResponseEntity<>(configStatus, responseStatus);
     }
 
-    private void setResponseAsFile(HttpServletResponse response, String fileName) {
+    private void setResponseAsFile(final HttpServletResponse response, final String fileName) {
         response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=".concat(fileName));
     }

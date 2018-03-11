@@ -23,12 +23,12 @@ public class ImageUploaderService {
     private static final String DATA_TYPE_PREFIX = "data:image/png;base64,";
 
     @Autowired
-    ImageUploaderService(RestService restService, ConfigService configService) {
+    ImageUploaderService(final RestService restService, final ConfigService configService) {
         this.restService = restService;
         this.configService = configService;
     }
 
-    public String uploadImage(String base64image) {
+    public String uploadImage(final String base64image) {
         MultiValueMap<String, String> reqBody = new LinkedMultiValueMap<>();
 
         reqBody.add(UPLOAD_CODE, configService.getConfig().getImageUploadCode());

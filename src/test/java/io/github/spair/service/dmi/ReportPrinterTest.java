@@ -4,6 +4,7 @@ import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.SpriteDir;
 import io.github.spair.service.dmi.entities.DmiDiffReport;
 import io.github.spair.service.dmi.entities.ReportEntry;
+import io.github.spair.service.dmi.entities.StateDiffReport;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 import org.springframework.core.io.ClassPathResource;
@@ -63,8 +64,8 @@ public class ReportPrinterTest {
         assertEquals(reportText, printer.printReport(diffReport));
     }
 
-    private ReportEntry.StateDiffReport createStateDiffReport(DmiDiff.Status status) {
-        ReportEntry.StateDiffReport stateDiffReport = new ReportEntry.StateDiffReport();
+    private StateDiffReport createStateDiffReport(DmiDiff.Status status) {
+        StateDiffReport stateDiffReport = new StateDiffReport();
         stateDiffReport.setName("state");
         stateDiffReport.setSpriteWidth(32);
         stateDiffReport.setSpriteHeight(32);

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 public class BeansConfiguration {
 
     @Bean
-    public RestTemplate template(RestTemplateBuilder builder) {
+    public RestTemplate template(final RestTemplateBuilder builder) {
         return builder.requestFactory(new HttpComponentsClientHttpRequestFactory()).build();
     }
 }

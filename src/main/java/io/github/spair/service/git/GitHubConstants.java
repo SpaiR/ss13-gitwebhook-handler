@@ -1,13 +1,16 @@
 package io.github.spair.service.git;
 
-public interface GitHubConstants {
+public final class GitHubConstants {
 
-    String API = "https://api.github.com";
+    public static final String API = "https://api.github.com";
 
-    String SIGNATURE_HEADER = "X-Hub-Signature";
-    String EVENT_HEADER = "X-GitHub-Event";
+    public static final String SIGNATURE_HEADER = "X-Hub-Signature";
+    public static final String EVENT_HEADER = "X-GitHub-Event";
 
-    String PING_EVENT = "ping";
-    String PULL_REQUEST_EVENT = "pull_request";
-    String ISSUES_EVENT = "issues";
+    public static final String PING_EVENT = "ping";
+    public static final String PULL_REQUEST_EVENT = "pull_request";
+    public static final String ISSUES_EVENT = "issues";
+
+    private GitHubConstants() {
+    }
 }

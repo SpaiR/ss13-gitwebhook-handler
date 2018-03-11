@@ -43,13 +43,13 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
     private static final String READ_MORE = "<a class=\"btn btn-xs btn-success link-btn\" href=\"$1\">Read More</a>";
 
     @Autowired
-    HtmlChangelogGenerator(ConfigService configService) {
+    HtmlChangelogGenerator(final ConfigService configService) {
         this.configService = configService;
     }
 
     @Override
-    public String generate(DataHolder holder) {
-        Document parsedChangelog = Jsoup.parse(holder.getCurrentHtmlChangelog());
+    public String generate(final DataHolder holder) {
+        Document parsedChangelog = Jsoup.parse(holder.currentHtmlChangelog);
         Element currentChangelogs = parsedChangelog.getElementById(CHANGELOGS_ID);
 
         ZoneId zoneId = ZoneId.of(configService.getConfig().getTimeZone());
@@ -58,20 +58,20 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
         Element currentDateElement = getCurrentDateElement(currentChangelogs, currentDate);
 
         if (currentDateElement != null) {
-            addChangelogToCurrentDate(holder.getNewChangelog(), currentDateElement);
+            addChangelogToCurrentDate(holder.newChangelog, currentDateElement);
         } else {
             currentChangelogs.prepend(String.format(DATE_ROW_TEMPLATE, currentDate));
 
             Element newDateElement = getCurrentDateElement(currentChangelogs, currentDate);
             newDateElement.append(String.format(DATE_ELEMENT_TEMPLATE, currentDate));
 
-            addChangelogToCurrentDate(holder.getNewChangelog(), newDateElement);
+            addChangelogToCurrentDate(holder.newChangelog, newDateElement);
         }
 
         return parsedChangelog.toString();
     }
 
-    private void addChangelogToCurrentDate(Changelog changelog, Element currentDateElement) {
+    private void addChangelogToCurrentDate(final Changelog changelog, final Element currentDateElement) {
         Element columnAddTo = currentDateElement.getElementsByClass(LARGE_COLUMN).first();
         Element authorElement = getAuthorElement(columnAddTo, changelog.getAuthor());
 
@@ -87,7 +87,7 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
         }
     }
 
-    private void addChangelogRows(List<ChangelogRow> changelogRows, Element authorElement) {
+    private void addChangelogRows(final List<ChangelogRow> changelogRows, final Element authorElement) {
         Element changelogElement = authorElement.getElementsByClass(CHANGELOG_CLASS).first();
 
         changelogRows.forEach(row -> {
@@ -96,22 +96,23 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
         });
     }
 
-    private String linkify(String changesRow) {
+    private String linkify(final String changesRow) {
         return changesRow.replaceAll("\\[link:(.*)]", READ_MORE);
     }
 
-    private Element getCurrentDateElement(Element elementToParse, String currentDate) {
+    private Element getCurrentDateElement(final Element elementToParse, final String currentDate) {
         return elementToParse.getElementsByAttributeValue(DATA_DATE, currentDate).first();
     }
 
-    private Element getAuthorElement(Element elementToParse, String author) {
+    private Element getAuthorElement(final Element elementToParse, final String author) {
         return elementToParse.getElementsByAttributeValue(DATA_AUTHOR, author).first();
     }
 
     @Data
     @AllArgsConstructor
+    @SuppressWarnings("checkstyle:VisibilityModifier")
     static class DataHolder {
-        private String currentHtmlChangelog;
-        private Changelog newChangelog;
+        final String currentHtmlChangelog;
+        final Changelog newChangelog;
     }
 }

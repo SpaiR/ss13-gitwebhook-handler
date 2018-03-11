@@ -4,7 +4,7 @@ import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
 import io.github.spair.byond.dmi.DmiSprite;
 import io.github.spair.service.DataGenerator;
-import io.github.spair.service.dmi.entities.ReportEntry;
+import io.github.spair.service.dmi.entities.StateDiffReport;
 import io.github.spair.service.image.ImageUploaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,29 +16,33 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 @Component
-class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<ReportEntry.StateDiffReport>> {
+class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<StateDiffReport>> {
 
     private final ImageUploaderService imageUploader;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StateDiffReportGenerator.class);
 
     @Autowired
-    StateDiffReportGenerator(ImageUploaderService imageUploader) {
+    StateDiffReportGenerator(final ImageUploaderService imageUploader) {
         this.imageUploader = imageUploader;
     }
 
     @Override
     @Nonnull
-    public List<ReportEntry.StateDiffReport> generate(@Nonnull DmiDiff dmiDiff) {
+    public List<StateDiffReport> generate(final @Nonnull DmiDiff dmiDiff) {
         final List<DmiDiff.DiffEntry> diffEntries = dmiDiff.getDiffEntries();
         final ExecutorService executor = createExecutor(diffEntries.size());
-        final List<Callable<ReportEntry.StateDiffReport>> callableList = createCallableList(dmiDiff);
+        final List<Callable<StateDiffReport>> callableList = createCallableList(dmiDiff);
 
-        List<ReportEntry.StateDiffReport> stateDiffReports = new ArrayList<>();
+        List<StateDiffReport> stateDiffReports = new ArrayList<>();
 
         try {
             executor.invokeAll(callableList, 2, TimeUnit.MINUTES)
@@ -62,7 +66,7 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<ReportEntr
         return stateDiffReports;
     }
 
-    private ExecutorService createExecutor(int diffEntriesSize) {
+    private ExecutorService createExecutor(final int diffEntriesSize) {
         if (diffEntriesSize > 1) {
             return Executors.newFixedThreadPool(diffEntriesSize / 2);
         } else {
@@ -70,12 +74,12 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<ReportEntr
         }
     }
 
-    private List<Callable<ReportEntry.StateDiffReport>> createCallableList(DmiDiff dmiDiff) {
-        List<Callable<ReportEntry.StateDiffReport>> callableList = new ArrayList<>();
+    private List<Callable<StateDiffReport>> createCallableList(final DmiDiff dmiDiff) {
+        List<Callable<StateDiffReport>> callableList = new ArrayList<>();
 
         dmiDiff.getDiffEntries().forEach(diffEntry ->
                 callableList.add(() -> {
-                    ReportEntry.StateDiffReport stateDiffReport = new ReportEntry.StateDiffReport();
+                    StateDiffReport stateDiffReport = new StateDiffReport();
 
                     final String stateName = diffEntry.getStateName();
                     final DmiMeta oldMeta = dmiDiff.getOldMeta();
@@ -99,7 +103,7 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<ReportEntr
         return callableList;
     }
 
-    private <T, V> V determineValue(@Nullable T oldOne, @Nullable T newOne, Function<T, V> function) {
+    private <T, V> V determineValue(final @Nullable T oldOne, final @Nullable T newOne, final Function<T, V> function) {
         if (Objects.nonNull(oldOne)) {
             return function.apply(oldOne);
         } else if (Objects.nonNull(newOne)) {
@@ -110,7 +114,7 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<ReportEntr
         }
     }
 
-    private String getSpriteLink(@Nullable DmiSprite sprite) {
+    private String getSpriteLink(final @Nullable DmiSprite sprite) {
         if (Objects.nonNull(sprite)) {
             return imageUploader.uploadImage(sprite.getSpriteAsBase64());
         } else {

@@ -31,9 +31,11 @@ public class ChangelogService {
     private static final String INVALID_CHANGELOG_WARN = "**Warning!** Invalid changelog detected.\n\n";
 
     @Autowired
-    public ChangelogService(GitHubService gitHubService, HtmlChangelogGenerator htmlChangelogGenerator,
-                            ChangelogValidator changelogValidator, ConfigService configService,
-                            ChangelogGenerator changelogGenerator) {
+    public ChangelogService(final GitHubService gitHubService,
+                            final HtmlChangelogGenerator htmlChangelogGenerator,
+                            final ChangelogValidator changelogValidator,
+                            final ConfigService configService,
+                            final ChangelogGenerator changelogGenerator) {
         this.gitHubService = gitHubService;
         this.htmlChangelogGenerator = htmlChangelogGenerator;
         this.changelogValidator = changelogValidator;
@@ -41,7 +43,7 @@ public class ChangelogService {
         this.changelogGenerator = changelogGenerator;
     }
 
-    public void generateAndUpdate(PullRequest pullRequest) {
+    public void generateAndUpdate(final PullRequest pullRequest) {
         Changelog changelog = changelogGenerator.generate(pullRequest);
 
         if (!changelog.isEmpty()) {
@@ -57,12 +59,13 @@ public class ChangelogService {
         }
     }
 
-    public void validate(PullRequest pullRequest) {
+    public void validate(final PullRequest pullRequest) {
         String invalidChangelogLabel = configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog();
         Changelog changelog = changelogGenerator.generate(pullRequest);
+        int prNumber = pullRequest.getNumber();
 
         boolean isValid = true;
-        boolean hasInvalidLabel = gitHubService.listIssueLabels(pullRequest.getNumber()).contains(invalidChangelogLabel);
+        boolean hasInvalidLabel = gitHubService.listIssueLabels(prNumber).contains(invalidChangelogLabel);
 
         if (Objects.nonNull(changelog.getChangelogRows())) {
             ChangelogValidationStatus validationStatus = changelogValidator.validate(changelog);
@@ -72,19 +75,19 @@ public class ChangelogService {
 
                 if (!hasInvalidLabel) {
                     String message = INVALID_CHANGELOG_WARN + validationStatus.getMessage();
-                    gitHubService.createIssueComment(pullRequest.getNumber(), message);
-                    gitHubService.addLabel(pullRequest.getNumber(), invalidChangelogLabel);
+                    gitHubService.createIssueComment(prNumber, message);
+                    gitHubService.addLabel(prNumber, invalidChangelogLabel);
                     return;
                 }
             }
         }
 
         if (hasInvalidLabel && isValid) {
-            gitHubService.removeLabel(pullRequest.getNumber(), invalidChangelogLabel);
+            gitHubService.removeLabel(prNumber, invalidChangelogLabel);
         }
     }
 
-    public Set<String> getChangelogClassesList(PullRequest pullRequest) {
+    public Set<String> getChangelogClassesList(final PullRequest pullRequest) {
         Changelog changelog = changelogGenerator.generate(pullRequest);
 
         if (changelog.isEmpty()) {

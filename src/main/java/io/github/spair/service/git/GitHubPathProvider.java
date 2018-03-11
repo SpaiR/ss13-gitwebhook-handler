@@ -19,52 +19,52 @@ class GitHubPathProvider {
     private static final String GIT_BLOBS = "git/blobs";
 
     @Autowired
-    GitHubPathProvider(ConfigService configService) {
+    GitHubPathProvider(final ConfigService configService) {
         this.configService = configService;
     }
 
     // https://api.github.com/repos/OrgName/RepoName
-    String generalPath(String orgName, String repoName) {
+    String generalPath(final String orgName, final String repoName) {
         return GitHubConstants.API + "/" + REPOS + "/" + orgName + "/" + repoName;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/contents/path/to/content
-    String contents(String relPath) {
+    String contents(final String relPath) {
         return getContentsApiPath() + relPath;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/contents/path/to/content
-    String contents(String orgName, String repoName, String relPath) {
+    String contents(final String orgName, final String repoName, final String relPath) {
         return getContentsApiPath(orgName, repoName) + relPath;
     }
 
-    String blobs(String fileSha) {
+    String blobs(final String fileSha) {
         return getBlobsApiPath() + "/" + fileSha;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/issues/1/labels
-    String issueLabels(int issueNum) {
+    String issueLabels(final int issueNum) {
         return getIssuesApiPath() + "/" + issueNum + "/" + LABELS;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/issues/1/labels/LabelName
-    String issueLabel(int issueNum, String labelName) {
+    String issueLabel(final int issueNum, final String labelName) {
         return getIssuesApiPath() + "/" + issueNum + "/" + LABELS + "/" + labelName;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/issues/1/comments
-    String issueComments(int issueNum) {
-        return getIssuesApiPath() + "/" + issueNum + "/" +COMMENTS;
+    String issueComments(final int issueNum) {
+        return getIssuesApiPath() + "/" + issueNum + "/" + COMMENTS;
     }
 
     // https://api.github.com/repos/OrgName/RepoName/issues/comments/123
-    String issueComment(int commentId) {
-        return getIssuesApiPath() + "/"  +COMMENTS + "/" + commentId;
+    String issueComment(final int commentId) {
+        return getIssuesApiPath() + "/" + COMMENTS + "/" + commentId;
     }
 
 
     // https://api.github.com/repos/OrgName/RepoName/pulls/1/files
-    String pullFiles(int prNum) {
+    String pullFiles(final int prNum) {
         return getPullsApiPath() + "/" + prNum + "/" + FILES;
     }
 
@@ -72,7 +72,7 @@ class GitHubPathProvider {
         return getGeneralPath() + "/" + CONTENTS;
     }
 
-    private String getContentsApiPath(String orgName, String repoName) {
+    private String getContentsApiPath(final String orgName, final String repoName) {
         return generalPath(orgName, repoName) + "/" + CONTENTS;
     }
 

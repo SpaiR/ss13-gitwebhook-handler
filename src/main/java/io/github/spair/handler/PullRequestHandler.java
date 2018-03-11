@@ -16,14 +16,16 @@ public class PullRequestHandler implements Handler {
     private final DmiDiffService dmiDiffService;
 
     @Autowired
-    public PullRequestHandler(PullRequestService pullRequestService, ChangelogService changelogService, DmiDiffService dmiDiffService) {
+    public PullRequestHandler(final PullRequestService pullRequestService,
+                              final ChangelogService changelogService,
+                              final DmiDiffService dmiDiffService) {
         this.pullRequestService = pullRequestService;
         this.changelogService = changelogService;
         this.dmiDiffService = dmiDiffService;
     }
 
     @Override
-    public void handle(ObjectNode webhookJson) {
+    public void handle(final ObjectNode webhookJson) {
         PullRequest pullRequest = pullRequestService.convertWebhookJson(webhookJson);
 
         switch (pullRequest.getType()) {

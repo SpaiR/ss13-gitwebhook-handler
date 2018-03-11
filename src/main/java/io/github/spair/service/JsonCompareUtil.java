@@ -15,7 +15,7 @@ public final class JsonCompareUtil {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonCompareUtil.class);
 
-    public static String compareObjects(Object before, Object after, boolean prettyPrint) {
+    public static String compareObjects(final Object before, final Object after, final boolean prettyPrint) {
         try {
             JsonNode beforeNode = OBJECT_MAPPER.valueToTree(Optional.ofNullable(before).orElse(Collections.emptyMap()));
             JsonNode afterNode = OBJECT_MAPPER.valueToTree(Optional.ofNullable(after).orElse(Collections.emptyMap()));

@@ -27,7 +27,7 @@ public class ConfigService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
 
     @Autowired
-    public ConfigService(ObjectMapper objectMapper, @Lazy GitHubService gitHubService) {
+    public ConfigService(final ObjectMapper objectMapper, final @Lazy GitHubService gitHubService) {
         this.objectMapper = objectMapper;
         this.gitHubService = gitHubService;
     }
@@ -52,13 +52,14 @@ public class ConfigService {
         return new File(CONFIG_NAME);
     }
 
-    public void importConfig(HandlerConfig configuration) throws IOException {
+    @SuppressWarnings("checkstyle:HiddenField")
+    public void importConfig(final HandlerConfig configuration) throws IOException {
         this.configuration = configuration;
         objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(CONFIG_NAME), configuration);
         LOGGER.info("New configuration saved");
     }
 
-    public HandlerConfigStatus validateConfig(HandlerConfig config) {
+    public HandlerConfigStatus validateConfig(final HandlerConfig config) {
         String orgName = config.getGitHubConfig().getOrganizationName();
         String repoName = config.getGitHubConfig().getRepositoryName();
         String changelogPath = config.getChangelogConfig().getPathToChangelog();

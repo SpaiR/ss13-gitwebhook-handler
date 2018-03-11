@@ -19,43 +19,43 @@ public class RestService {
         this.restOperations = restOperations;
     }
 
-    public void get(String path, HttpHeaders headers) {
+    public void get(final String path, final HttpHeaders headers) {
         restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), Void.class);
     }
 
-    public <T> ResponseEntity<T> getForEntity(String path, HttpHeaders headers, Class<T> tClass) {
+    public <T> ResponseEntity<T> getForEntity(final String path, final HttpHeaders headers, final Class<T> tClass) {
         return restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), tClass);
     }
 
-    public <T> T getForObject(String path, Class<T> tClass) {
+    public <T> T getForObject(final String path, final Class<T> tClass) {
         return restOperations.getForObject(path, tClass);
     }
 
-    public <T> T getForObject(String path, HttpHeaders headers, Class<T> tClass) {
+    public <T> T getForObject(final String path, final HttpHeaders headers, final Class<T> tClass) {
         return restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), tClass).getBody();
     }
 
-    public ObjectNode getForJson(String path, HttpHeaders headers) {
+    public ObjectNode getForJson(final String path, final HttpHeaders headers) {
         return restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), ObjectNode.class).getBody();
     }
 
-    public void put(String path, Object body, HttpHeaders headers) {
+    public void put(final String path, final Object body, final HttpHeaders headers) {
         restOperations.exchange(path, HttpMethod.PUT, new HttpEntity<>(body, headers), Void.class);
     }
 
-    public void patch(String path, Object body, HttpHeaders headers) {
+    public void patch(final String path, final Object body, final HttpHeaders headers) {
         restOperations.patchForObject(path, new HttpEntity<>(body, headers), Void.class);
     }
 
-    public void post(String path, Object body, HttpHeaders headers) {
+    public void post(final String path, final Object body, final HttpHeaders headers) {
         restOperations.postForObject(path, new HttpEntity<>(body, headers), Void.class);
     }
 
-    public ObjectNode postForJson(String path, Object body, HttpHeaders headers) {
+    public ObjectNode postForJson(final String path, final Object body, final HttpHeaders headers) {
         return restOperations.postForObject(path, new HttpEntity<>(body, headers), ObjectNode.class);
     }
 
-    public void delete(String path, HttpHeaders headers) {
+    public void delete(final String path, final HttpHeaders headers) {
         restOperations.exchange(path, HttpMethod.DELETE, new HttpEntity<>(headers), Void.class);
     }
 }

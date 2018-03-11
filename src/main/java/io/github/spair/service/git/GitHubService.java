@@ -21,7 +21,12 @@ import org.springframework.web.client.HttpStatusCodeException;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Base64;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,21 +41,23 @@ public class GitHubService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitHubService.class);
 
     @Autowired
-    public GitHubService(ConfigService configService, GitHubPathProvider pathProvider, RestService restService) {
+    public GitHubService(final ConfigService configService,
+                         final GitHubPathProvider pathProvider,
+                         final RestService restService) {
         this.configService = configService;
         this.pathProvider = pathProvider;
         this.restService = restService;
     }
 
-    public String readDecodedFile(String relPath) {
+    public String readDecodedFile(final String relPath) {
         return decodeContent(readFile(relPath));
     }
 
-    public String readEncodedFile(String relPath) {
+    public String readEncodedFile(final String relPath) {
         return readFile(relPath);
     }
 
-    private String readFile(String relPath) {
+    private String readFile(final String relPath) {
         ObjectNode resp;
 
         try {
@@ -68,7 +75,7 @@ public class GitHubService {
         return resp.get(GitHubPayload.CONTENT).asText();
     }
 
-    public void updateFile(String path, String updateMessage, String content) {
+    public void updateFile(final String path, final String updateMessage, final String content) {
         Map<String, String> requestBody = new HashMap<>();
 
         requestBody.put(GitHubPayload.PATH, path);
@@ -79,29 +86,25 @@ public class GitHubService {
         restService.put(pathProvider.contents(path), requestBody, getHttpHeaders());
     }
 
-    public void createIssueComment(int issueNum, String message) {
+    public void createIssueComment(final int issueNum, final String message) {
         Map<String, String> requestBody = Collections.singletonMap(GitHubPayload.BODY, message);
         restService.post(pathProvider.issueComments(issueNum), requestBody, getHttpHeaders());
     }
 
-    public void editIssueComment(int commentId, String newMessage) {
+    public void editIssueComment(final int commentId, final String newMessage) {
         Map<String, String> requestBody = Collections.singletonMap(GitHubPayload.BODY, newMessage);
         restService.patch(pathProvider.issueComment(commentId), requestBody, getHttpHeaders());
     }
 
-    public void deleteIssueComment(int commentId) {
-        restService.delete(pathProvider.issueComment(commentId), getHttpHeaders());
-    }
-
-    public void addLabel(int issueNum, String labelName) {
+    public void addLabel(final int issueNum, final String labelName) {
         addLabels(issueNum, Collections.singletonList(labelName));
     }
 
-    public void addLabels(int issueNum, List<String> labels) {
+    public void addLabels(final int issueNum, final List<String> labels) {
         restService.post(pathProvider.issueLabels(issueNum), labels, getHttpHeaders());
     }
 
-    public void removeLabel(int issueNum, String labelName) {
+    public void removeLabel(final int issueNum, final String labelName) {
         try {
             restService.delete(pathProvider.issueLabel(issueNum, labelName), getHttpHeaders());
         } catch (HttpClientErrorException e) {
@@ -112,7 +115,7 @@ public class GitHubService {
         }
     }
 
-    public List<String> listIssueLabels(int issueNum) {
+    public List<String> listIssueLabels(final int issueNum) {
         ArrayNode respList = new ArrayNode(JsonNodeFactory.instance);
 
         try {
@@ -130,25 +133,25 @@ public class GitHubService {
         return labels;
     }
 
-    public boolean isOrgAndRepoExist(String org, String repo) {
+    public boolean isOrgAndRepoExist(final String org, final String repo) {
         try {
             restService.get(pathProvider.generalPath(org, repo), getHttpHeaders());
+            return true;
         } catch (HttpStatusCodeException e) {
             return false;
         }
-        return true;
     }
 
-    public boolean isFilePathExist(String org, String repo, String relPath) {
+    public boolean isFilePathExist(final String org, final String repo, final String relPath) {
         try {
             restService.get(pathProvider.contents(org, repo, relPath), getHttpHeaders());
+            return true;
         } catch (HttpStatusCodeException e) {
             return false;
         }
-        return true;
     }
 
-    public List<PullRequestFile> listPullRequestFiles(int pullRequestNumber) {
+    public List<PullRequestFile> listPullRequestFiles(final int prNum) {
         List<PullRequestFile> pullRequestFiles = new ArrayList<>();
 
         new LinkProcessor(
@@ -167,12 +170,12 @@ public class GitHubService {
 
                     pullRequestFiles.add(pullRequestFile);
                 })
-        ).recursiveProcess(pathProvider.pullFiles(pullRequestNumber));
+        ).recursiveProcess(pathProvider.pullFiles(prNum));
 
         return pullRequestFiles;
     }
 
-    public List<IssueComment> listIssueComments(int issueNum) {
+    public List<IssueComment> listIssueComments(final int issueNum) {
         List<IssueComment> issueComments = new ArrayList<>();
 
         new LinkProcessor(
@@ -202,11 +205,11 @@ public class GitHubService {
         return httpHeaders;
     }
 
-    private String encodeContent(String content) {
+    private String encodeContent(final String content) {
         return Base64.getEncoder().encodeToString(content.getBytes());
     }
 
-    private String decodeContent(String encodedContent) {
+    private String decodeContent(final String encodedContent) {
         try {
             byte[] base64decodedBytes = Base64.getMimeDecoder().decode(encodedContent);
             return new String(base64decodedBytes, StandardCharsets.UTF_8.name());
@@ -216,7 +219,7 @@ public class GitHubService {
         }
     }
 
-    private String getFileSha(String relPath) {
+    private String getFileSha(final String relPath) {
         final Matcher partedPath = Pattern.compile("(.*/)(.*)").matcher(relPath);
 
         final String dirPath;
@@ -239,21 +242,23 @@ public class GitHubService {
             }
         }
 
-        LOGGER.error("The file SHA was not found. Argument: {}. Dir path: {}. File name: {}", relPath, dirPath, fileName);
+        LOGGER.error("The file SHA was not found. Rel path argument: {}. Dir path: {}. File name: {}",
+                relPath, dirPath, fileName);
         throw new IllegalArgumentException("Exception on getting file sha");
     }
 
-    private class LinkProcessor {
+    @SuppressWarnings("checkstyle:MemberName")
+    private final class LinkProcessor {
 
         private final String LINK = "link";
         private final Pattern NEXT_PR_FILES = Pattern.compile("<([\\w\\d/?=:.]*)>;\\srel=\"next\"");
         private final Consumer<ArrayNode> consumer;
 
-        private LinkProcessor(Consumer<ArrayNode> consumer) {
+        private LinkProcessor(final Consumer<ArrayNode> consumer) {
             this.consumer = consumer;
         }
 
-        private void recursiveProcess(String link) {
+        private void recursiveProcess(final String link) {
             ResponseEntity<ArrayNode> resp = restService.getForEntity(link, getHttpHeaders(), ArrayNode.class);
 
             consumer.accept(resp.getBody());

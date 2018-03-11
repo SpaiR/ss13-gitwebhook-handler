@@ -16,33 +16,21 @@ class ChangelogValidator {
 
     private final ConfigService configService;
 
-    private static final String UNKNOWN_CLASSES_REASON = "Reason: unknown classes detected. Next should be changed or removed: ";
-    private static final String EMPTY_CHANGELOG_REASON = "Reason: empty changelog. Please, check markdown correctness.";
     private static final String CODE_QUOTE = "`";
 
     @Autowired
-    ChangelogValidator(ConfigService configService) {
+    ChangelogValidator(final ConfigService configService) {
         this.configService = configService;
     }
 
-    ChangelogValidationStatus validate(Changelog changelog) {
+    ChangelogValidationStatus validate(final Changelog changelog) {
         ChangelogValidationStatus status = new ChangelogValidationStatus();
         List<String> invalidClasses = parseInvalidClasses(changelog.getChangelogRows());
 
         if (invalidClasses.size() > 0) {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append(UNKNOWN_CLASSES_REASON);
-
-            for (int i = 0; i < invalidClasses.size() - 1; i++) {
-                sb.append(CODE_QUOTE).append(invalidClasses.get(i)).append(CODE_QUOTE).append(", ");
-            }
-
-            sb.append(CODE_QUOTE).append(invalidClasses.get(invalidClasses.size() - 1)).append(CODE_QUOTE).append('.');
-
-            status.setMessage(sb.toString());
+            status.setMessage(getUnknownClassesReason(invalidClasses));
         } else if (changelog.isEmpty()) {
-            status.setMessage(EMPTY_CHANGELOG_REASON);
+            status.setMessage("Reason: empty changelog. Please, check markdown correctness.");
         }
 
         if (status.getMessage() != null) {
@@ -52,7 +40,7 @@ class ChangelogValidator {
         return status;
     }
 
-    private List<String> parseInvalidClasses(List<ChangelogRow> changelogRow) {
+    private List<String> parseInvalidClasses(final List<ChangelogRow> changelogRow) {
         Set<String> availableClasses = configService.getConfig().getChangelogConfig().getHtml().getAvailableClasses();
         List<String> invalidClasses = new ArrayList<>();
 
@@ -63,5 +51,19 @@ class ChangelogValidator {
         });
 
         return invalidClasses;
+    }
+
+    private String getUnknownClassesReason(final List<String> invalidClasses) {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Reason: unknown classes detected. Next should be changed or removed: ");
+
+        for (int i = 0; i < invalidClasses.size() - 1; i++) {
+            sb.append(CODE_QUOTE).append(invalidClasses.get(i)).append(CODE_QUOTE).append(", ");
+        }
+
+        sb.append(CODE_QUOTE).append(invalidClasses.get(invalidClasses.size() - 1)).append(CODE_QUOTE).append('.');
+
+        return sb.toString();
     }
 }

@@ -18,11 +18,11 @@ public class IssuesService {
     private static final String BUG_LABEL = "Bug";
 
     @Autowired
-    public IssuesService(GitHubService gitHubService) {
+    public IssuesService(final GitHubService gitHubService) {
         this.gitHubService = gitHubService;
     }
 
-    public Issue convertWebhookJson(ObjectNode webhookJson) {
+    public Issue convertWebhookJson(final ObjectNode webhookJson) {
         JsonNode issueNode = webhookJson.get(GitHubPayload.ISSUE);
 
         int number = issueNode.get(GitHubPayload.NUMBER).asInt();
@@ -32,7 +32,7 @@ public class IssuesService {
         return new Issue(number, title, issueType);
     }
 
-    public void processLabels(Issue issue) {
+    public void processLabels(final Issue issue) {
         boolean isProposal = issue.getTitle().toLowerCase().contains(PROPOSAL_TAG);
 
         if (isProposal) {
@@ -42,7 +42,7 @@ public class IssuesService {
         }
     }
 
-    private IssueType identifyType(ObjectNode webhookJson) {
+    private IssueType identifyType(final ObjectNode webhookJson) {
         String action = webhookJson.get(GitHubPayload.ACTION).asText();
         return EnumUtil.valueOfOrDefault(IssueType.values(), action, IssueType.UNDEFINED);
     }

@@ -3,6 +3,7 @@ package io.github.spair.service.dmi;
 import io.github.spair.byond.dmi.SpriteDir;
 import io.github.spair.service.dmi.entities.DmiDiffReport;
 import io.github.spair.service.dmi.entities.ReportEntry;
+import io.github.spair.service.dmi.entities.StateDiffReport;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nonnull;
@@ -12,10 +13,7 @@ import java.util.Set;
 @Component
 class ReportPrinter {
 
-    private static final String IMG_DIFF_API = "http://tauceti.ru/img-diff/?";
     private static final String ORG_URL_SUFFIX = "org/";
-    private static final String BEFORE_URL_PARAM = "before=";
-    private static final String AFTER_URL_PARAM = "after=";
 
     private static final String DETAILS_OPEN = "<details>";
     private static final String DETAILS_CLOSE = "</details>";
@@ -23,11 +21,12 @@ class ReportPrinter {
     private static final String LINE_HORIZONTAL = "<hr />";
     private static final String NEW_LINE = System.getProperty("line.separator");
     private static final String IMG_TEMPLATE = "<img src=\"%s\" title=\"%s\" />";
-    private static final String LINK_NAME_TEMPLATE = "%s (<a href=\"%s\">x1</a> <a href=\"%s\">x4</a> <a href=\"%s\">x8</a>)";
     private static final String CODE_QUOTES = "```";
     private static final String TABLE_DELIMITER = "|";
 
-    String printReport(DmiDiffReport report) {
+    private static final int[] MULTIPLIERS = new int[]{1, 4, 8};
+
+    String printReport(final DmiDiffReport report) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(DmiDiffReport.TITLE).append(NEW_LINE);
@@ -56,7 +55,7 @@ class ReportPrinter {
         return sb.toString();
     }
 
-    private void appendFilename(StringBuilder sb, ReportEntry reportEntry) {
+    private void appendFilename(final StringBuilder sb, final ReportEntry reportEntry) {
         String filename = reportEntry.getFilename();
 
         if (!reportEntry.getDuplication().getNewDmiDuplicates().isEmpty()) {
@@ -66,7 +65,7 @@ class ReportPrinter {
         sb.append(String.format(SUMMARY_TEMPLATE, filename));
     }
 
-    private void appendDuplication(StringBuilder sb, ReportEntry reportEntry) {
+    private void appendDuplication(final StringBuilder sb, final ReportEntry reportEntry) {
         sb.append("**Warning!** States duplication detected:").append(NEW_LINE);
 
         final Set<String> oldDuplicates = reportEntry.getDuplication().getOldDmiDuplicates();
@@ -86,22 +85,23 @@ class ReportPrinter {
         sb.append(NEW_LINE);
     }
 
-    private void appendStatesTable(StringBuilder sb, List<ReportEntry.StateDiffReport> stateDiffReports) {
+    private void appendStatesTable(final StringBuilder sb, final List<StateDiffReport> stateDiffReports) {
         sb.append("Key | Dir / Frame | Old | New | Status").append(NEW_LINE);
         sb.append("--- | :---------: | --- | --- | ------").append(NEW_LINE);
 
         stateDiffReports.forEach(stateDiffReport -> appendStatesRows(sb, stateDiffReport));
     }
 
-    private void appendStatesRows(StringBuilder stringBuilder, ReportEntry.StateDiffReport stateDiffReport) {
+    private void appendStatesRows(final StringBuilder sb, final StateDiffReport stateDiffReport) {
         final String simpleName = stateDiffReport.getName();
         final String nameWithLink = createLinkName(stateDiffReport);
 
         final String dirShortName = stateDiffReport.getDir().shortName;
         final int frame = stateDiffReport.getFrameNumber();
 
-        final String titleForOldImage = simpleName + "-O-d" + dirShortName + "-f" + frame;
-        final String titleForNewImage = simpleName + "-N-d" + dirShortName + "-f" + frame;
+        final String title = simpleName + "-%s-d" + dirShortName + "-f" + frame;
+        final String titleForOldImage = String.format(title, "O");
+        final String titleForNewImage = String.format(title, "N");
 
         final String dirArrow = ArrowDirCreator.create(stateDiffReport.getDir());
 
@@ -110,7 +110,7 @@ class ReportPrinter {
 
         final String status = stateDiffReport.getStatus();
 
-        stringBuilder
+        sb
                 .append(nameWithLink).append(TABLE_DELIMITER)
                 .append(dirArrow).append(" ").append(dirShortName).append(" / ").append(frame).append(TABLE_DELIMITER)
                 .append(oldImgTag).append(TABLE_DELIMITER)
@@ -118,27 +118,31 @@ class ReportPrinter {
                 .append(status).append(NEW_LINE);
     }
 
-    private String createLinkName(ReportEntry.StateDiffReport report) {
-        return String.format(LINK_NAME_TEMPLATE,
-                report.getName(),
-                createHref(report, 1),
-                createHref(report, 4),
-                createHref(report, 8)
-        );
+    private String createLinkName(final StateDiffReport report) {
+        StringBuilder multipliedLinks = new StringBuilder();
+
+        for (int mult : MULTIPLIERS) {
+            multipliedLinks.append(String.format("<a href=\"%s\">x%d</a>", createHref(report, mult), mult));
+            multipliedLinks.append(" ");
+        }
+
+        multipliedLinks.deleteCharAt(multipliedLinks.length() - 1);
+
+        return String.format("%s (%s)", report.getName(), multipliedLinks.toString());
     }
 
-    private String createHref(ReportEntry.StateDiffReport report, int multiplier) {
+    private String createHref(final StateDiffReport report, final int multiplier) {
         int resizedWidth = report.getSpriteWidth() * multiplier;
         int resizedHeight = report.getSpriteHeight() * multiplier;
 
         final String resizePrefix = resizedWidth + "x" + resizedHeight + "/forceresize/";
 
-        StringBuilder link = new StringBuilder(IMG_DIFF_API);
+        StringBuilder link = new StringBuilder("http://tauceti.ru/img-diff/?");
         boolean hasBeforeLink = !report.getOldDmiLink().isEmpty();
         boolean hasAfterLink = !report.getNewDmiLink().isEmpty();
 
         if (hasBeforeLink) {
-            link.append(BEFORE_URL_PARAM).append(
+            link.append("before=").append(
                     report.getOldDmiLink().replaceAll(ORG_URL_SUFFIX, ORG_URL_SUFFIX.concat(resizePrefix))
             );
         }
@@ -148,7 +152,7 @@ class ReportPrinter {
                 link.append('&');
             }
 
-            link.append(AFTER_URL_PARAM).append(
+            link.append("after=").append(
                     report.getNewDmiLink().replaceAll(ORG_URL_SUFFIX, ORG_URL_SUFFIX.concat(resizePrefix))
             );
         }
@@ -156,7 +160,7 @@ class ReportPrinter {
         return link.toString();
     }
 
-    private String createImgTag(@Nonnull String imageLink, String title) {
+    private String createImgTag(final @Nonnull String imageLink, final String title) {
         if (!imageLink.isEmpty()) {
             return String.format(IMG_TEMPLATE, imageLink, title);
         } else {
@@ -164,7 +168,7 @@ class ReportPrinter {
         }
     }
 
-    private void appendMetadataTableDiff(StringBuilder sb, ReportEntry reportEntry) {
+    private void appendMetadataTableDiff(final StringBuilder sb, final ReportEntry reportEntry) {
         sb.append(DETAILS_OPEN);
         sb.append(String.format(SUMMARY_TEMPLATE, "DMI Metadata Diff")).append(NEW_LINE);
         sb.append(NEW_LINE);
@@ -174,9 +178,9 @@ class ReportPrinter {
         sb.append(DETAILS_CLOSE);
     }
 
-    private final static class ArrowDirCreator {
+    private static final class ArrowDirCreator {
 
-        private static String create(SpriteDir dir) {
+        private static String create(final SpriteDir dir) {
             switch (dir) {
                 case SOUTH:
                     return "&#x1F87B;";  // 🡻

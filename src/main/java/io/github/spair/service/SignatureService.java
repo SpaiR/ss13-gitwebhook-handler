@@ -21,11 +21,11 @@ public class SignatureService {
     private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
 
     @Autowired
-    public SignatureService(ConfigService configService) {
+    public SignatureService(final ConfigService configService) {
         this.configService = configService;
     }
 
-    public void validate(String signature, String data) throws InvalidSignatureException {
+    public void validate(final String signature, final String data) throws InvalidSignatureException {
         try {
             String realSecretKey = configService.getConfig().getGitHubConfig().getSecretKey();
             SecretKeySpec signingKey = new SecretKeySpec(realSecretKey.getBytes(), HMAC_SHA1_ALGORITHM);
@@ -42,7 +42,7 @@ public class SignatureService {
         }
     }
 
-    private String bytesToString(byte[] bytes) {
+    private String bytesToString(final byte[] bytes) {
         try (Formatter formatter = new Formatter()) {
             for (byte b : bytes) {
                 formatter.format("%02x", b);
