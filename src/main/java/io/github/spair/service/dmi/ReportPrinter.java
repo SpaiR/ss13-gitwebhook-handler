@@ -24,7 +24,7 @@ class ReportPrinter {
     private static final String CODE_QUOTES = "```";
     private static final String TABLE_DELIMITER = "|";
 
-    private static final int[] MULTIPLIERS = new int[]{1, 4, 8};
+    private static final int[] IMG_RESIZE_MULTIPLIERS = new int[]{1, 4, 8};
 
     String printReport(final DmiDiffReport report) {
         StringBuilder sb = new StringBuilder();
@@ -121,7 +121,7 @@ class ReportPrinter {
     private String createLinkName(final StateDiffReport report) {
         StringBuilder multipliedLinks = new StringBuilder();
 
-        for (int mult : MULTIPLIERS) {
+        for (int mult : IMG_RESIZE_MULTIPLIERS) {
             multipliedLinks.append(String.format("<a href=\"%s\">x%d</a>", createHref(report, mult), mult));
             multipliedLinks.append(" ");
         }
@@ -160,7 +160,7 @@ class ReportPrinter {
         return link.toString();
     }
 
-    private String createImgTag(final @Nonnull String imageLink, final String title) {
+    private String createImgTag(@Nonnull final String imageLink, final String title) {
         if (!imageLink.isEmpty()) {
             return String.format(IMG_TEMPLATE, imageLink, title);
         } else {

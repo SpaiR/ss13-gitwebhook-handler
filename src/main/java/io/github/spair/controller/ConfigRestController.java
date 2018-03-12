@@ -44,7 +44,7 @@ public class ConfigRestController {
     }
 
     @PutMapping("/current")
-    public void saveConfig(final @RequestBody HandlerConfig configuration) throws IOException {
+    public void saveConfig(@RequestBody final HandlerConfig configuration) throws IOException {
         configService.importConfig(configuration);
     }
 
@@ -67,7 +67,7 @@ public class ConfigRestController {
     }
 
     @PostMapping("/validation")
-    public ResponseEntity validateConfig(final @RequestBody HandlerConfig config) {
+    public ResponseEntity validateConfig(@RequestBody final HandlerConfig config) {
         HandlerConfigStatus configStatus = configService.validateConfig(config);
         HttpStatus responseStatus = configStatus.allOk ? HttpStatus.OK : HttpStatus.NOT_ACCEPTABLE;
         return new ResponseEntity<>(configStatus, responseStatus);

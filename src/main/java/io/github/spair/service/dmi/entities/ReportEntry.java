@@ -22,7 +22,7 @@ public class ReportEntry {
     @Nonnull
     private Metadata metadata = new Metadata();
 
-    public ReportEntry(final @Nonnull String filename) {
+    public ReportEntry(@Nonnull final String filename) {
         this.filename = filename;
     }
 

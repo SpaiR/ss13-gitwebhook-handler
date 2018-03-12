@@ -62,7 +62,7 @@ class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<Re
             oldDmi = newDmiFuture.get();
             newDmi = oldDmiFuture.get();
         } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Error during downloading DMI's from GitHub. DMI name: {}", realName, e);
+            LOGGER.error("Error during downloading DMI's. DMI name: {}", realName, e);
             throw new RuntimeException(e);
         }
 

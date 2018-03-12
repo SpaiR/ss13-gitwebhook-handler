@@ -5,7 +5,6 @@ import io.github.spair.service.changelog.entities.Changelog;
 import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.config.ConfigService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -108,7 +107,6 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
         return elementToParse.getElementsByAttributeValue(DATA_AUTHOR, author).first();
     }
 
-    @Data
     @AllArgsConstructor
     @SuppressWarnings("checkstyle:VisibilityModifier")
     static class DataHolder {

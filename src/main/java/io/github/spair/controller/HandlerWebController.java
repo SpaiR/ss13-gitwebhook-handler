@@ -33,9 +33,6 @@ public class HandlerWebController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HandlerWebController.class);
 
-    // Signature header from GitHub always starts with 'sha1=' part, which should be cut down.
-    private static final int SIGN_PART = "sha1=".length();
-
     @Autowired
     public HandlerWebController(final SignatureService signatureService, final ObjectMapper objectMapper,
                                 final PullRequestHandler pullRequestHandler, final IssuesHandler issuesHandler) {
@@ -47,11 +44,11 @@ public class HandlerWebController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public void catchPullRequestWebhook(
-            final @RequestHeader(GitHubConstants.SIGNATURE_HEADER) String signature,
-            final @RequestHeader(GitHubConstants.EVENT_HEADER) String event,
-            final @RequestBody String webhookPayload) throws IOException {
+            @RequestHeader(GitHubConstants.SIGNATURE_HEADER) final String signature,
+            @RequestHeader(GitHubConstants.EVENT_HEADER) final String event,
+            @RequestBody final String webhookPayload) throws IOException {
         // Substring is to cut down 'sha1=' part.
-        signatureService.validate(signature.substring(SIGN_PART), webhookPayload);
+        signatureService.validate(sanitizeSignature(signature), webhookPayload);
 
         final ObjectNode webhookJson = objectMapper.readValue(webhookPayload, ObjectNode.class);
 
@@ -81,5 +78,10 @@ public class HandlerWebController {
     public Exception handleGeneralException(final Exception e) {
         LOGGER.error("Uncaught exception happened", e);
         return e;
+    }
+
+    // Signature header from GitHub always starts with 'sha1=' part, which should be cut down.
+    private String sanitizeSignature(final String sign) {
+        return sign.substring("sha1=".length());
     }
 }

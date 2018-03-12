@@ -27,9 +27,6 @@ public class ChangelogService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChangelogService.class);
 
-    private static final String CHANGELOG_UPD_MSG = "Automatic changelog generation for PR #";
-    private static final String INVALID_CHANGELOG_WARN = "**Warning!** Invalid changelog detected.\n\n";
-
     @Autowired
     public ChangelogService(final GitHubService gitHubService,
                             final HtmlChangelogGenerator htmlChangelogGenerator,
@@ -52,7 +49,7 @@ public class ChangelogService {
             String newChangelogHtml = htmlChangelogGenerator.generate(
                     new HtmlChangelogGenerator.DataHolder(currentChangelogHtml, changelog));
 
-            String updateMessage = CHANGELOG_UPD_MSG + pullRequest.getNumber();
+            String updateMessage = "Automatic changelog generation for PR #" + pullRequest.getNumber();
             gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);
 
             LOGGER.info("Changelog generated for PR #" + pullRequest.getNumber());
@@ -74,7 +71,7 @@ public class ChangelogService {
                 isValid = false;
 
                 if (!hasInvalidLabel) {
-                    String message = INVALID_CHANGELOG_WARN + validationStatus.getMessage();
+                    String message = "**Warning!** Invalid changelog detected.\n\n" + validationStatus.getMessage();
                     gitHubService.createIssueComment(prNumber, message);
                     gitHubService.addLabel(prNumber, invalidChangelogLabel);
                     return;

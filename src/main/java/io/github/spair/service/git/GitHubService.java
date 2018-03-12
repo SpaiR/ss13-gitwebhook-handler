@@ -247,6 +247,10 @@ public class GitHubService {
         throw new IllegalArgumentException("Exception on getting file sha");
     }
 
+    /**
+     * Some responses from GitHub are divided into pages, where next page link provided in 'link' header.
+     * This class process those responses.
+     */
     @SuppressWarnings("checkstyle:MemberName")
     private final class LinkProcessor {
 

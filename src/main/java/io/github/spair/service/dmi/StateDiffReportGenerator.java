@@ -37,7 +37,7 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<StateDiffR
 
     @Override
     @Nonnull
-    public List<StateDiffReport> generate(final @Nonnull DmiDiff dmiDiff) {
+    public List<StateDiffReport> generate(@Nonnull final DmiDiff dmiDiff) {
         final List<DmiDiff.DiffEntry> diffEntries = dmiDiff.getDiffEntries();
         final ExecutorService executor = createExecutor(diffEntries.size());
         final List<Callable<StateDiffReport>> callableList = createCallableList(dmiDiff);
@@ -103,7 +103,7 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<StateDiffR
         return callableList;
     }
 
-    private <T, V> V determineValue(final @Nullable T oldOne, final @Nullable T newOne, final Function<T, V> function) {
+    private <T, V> V determineValue(@Nullable final T oldOne, @Nullable final T newOne, final Function<T, V> function) {
         if (Objects.nonNull(oldOne)) {
             return function.apply(oldOne);
         } else if (Objects.nonNull(newOne)) {
@@ -114,7 +114,7 @@ class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<StateDiffR
         }
     }
 
-    private String getSpriteLink(final @Nullable DmiSprite sprite) {
+    private String getSpriteLink(@Nullable final DmiSprite sprite) {
         if (Objects.nonNull(sprite)) {
             return imageUploader.uploadImage(sprite.getSpriteAsBase64());
         } else {

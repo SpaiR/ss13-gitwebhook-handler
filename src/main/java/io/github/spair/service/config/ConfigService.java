@@ -27,7 +27,7 @@ public class ConfigService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigService.class);
 
     @Autowired
-    public ConfigService(final ObjectMapper objectMapper, final @Lazy GitHubService gitHubService) {
+    public ConfigService(final ObjectMapper objectMapper, @Lazy final GitHubService gitHubService) {
         this.objectMapper = objectMapper;
         this.gitHubService = gitHubService;
     }
