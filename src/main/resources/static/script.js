@@ -104,6 +104,7 @@ function showToast(message) {
 var configObject = {
     requestAgentName: '',
     timeZone: '',
+    imageUploadCode: '',
     gitHubConfig: {
         organizationName: '',
         repositoryName: '',
@@ -127,9 +128,9 @@ var configObject = {
 };
 
 function initForms() {
-    initFirstTabForms();
-    initSecondTabForms();
-    initThirdTabForms();
+    initGeneralTabForms();
+    initGitHubTabForms();
+    initChangelogTabForms();
 
     // Check all fields for changes, to make labels float.
     $('.mdl-textfield').each(function () {
@@ -181,15 +182,19 @@ function addClassToList(className) {
     });
 }
 
-function initFirstTabForms() {
+function initGeneralTabForms() {
     var $requestAgentNameInput = $('#request-agent-name');
     $requestAgentNameInput.val(configObject.requestAgentName);
     $requestAgentNameInput.keyup(function () { configObject.requestAgentName = $requestAgentNameInput.val(); });
 
+    var $imageUploadCodeInput = $('#image-upload-code');
+    $imageUploadCodeInput.val(configObject.imageUploadCode);
+    $imageUploadCodeInput.keyup(function () { configObject.imageUploadCode = $imageUploadCodeInput.val(); });
+
     $('#time-zone').val(configObject.timeZone).change(function () { configObject.timeZone = $('#time-zone').val(); });
 }
 
-function initSecondTabForms() {
+function initGitHubTabForms() {
     var $organizationName = $('#organization-name');
     $organizationName.val(configObject.gitHubConfig.organizationName);
     $organizationName.keyup(function () {
@@ -233,7 +238,7 @@ function initSecondTabForms() {
     $doNotMerge.keyup(function () { configObject.gitHubConfig.labels.doNotMerge = $doNotMerge.val() });
 }
 
-function initThirdTabForms() {
+function initChangelogTabForms() {
     var $pathToChangelog = $('#path-to-changelog');
     $pathToChangelog.val(configObject.changelogConfig.pathToChangelog);
     $pathToChangelog.keyup(function () {

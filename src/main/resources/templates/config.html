@@ -14,27 +14,27 @@
         </form>
       </div>
       <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-        <a href="#fixed-tab-1" class="mdl-layout__tab is-active">GENERAL</a>
-        <a href="#fixed-tab-2" class="mdl-layout__tab">
+        <a href="#fixed-tab-general" class="mdl-layout__tab is-active">GENERAL</a>
+        <a href="#fixed-tab-github" class="mdl-layout__tab">
           <span><i id="github-fail" class="fail-icon material-icons">warning</i>GITHUB</span>
         </a>
-        <a href="#fixed-tab-3" class="mdl-layout__tab">
+        <a href="#fixed-tab-changelog" class="mdl-layout__tab">
           <span><i id="changelog-fail" class="fail-icon material-icons">warning</i>CHANGELOG</span>
         </a>
       </div>
     </header>
 
     <main class="mdl-layout__content">
-      <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
-        <div th:replace="fragments/tab_1 :: tab"></div>
+      <section class="mdl-layout__tab-panel is-active" id="fixed-tab-general">
+        <div th:replace="fragments/tab_general :: tab"></div>
       </section>
 
-      <section class="mdl-layout__tab-panel" id="fixed-tab-2">
-        <div th:replace="fragments/tab_2 :: tab"></div>
+      <section class="mdl-layout__tab-panel" id="fixed-tab-github">
+        <div th:replace="fragments/tab_github :: tab"></div>
       </section>
 
-      <section class="mdl-layout__tab-panel" id="fixed-tab-3">
-        <div th:replace="fragments/tab_3 :: tab"></div>
+      <section class="mdl-layout__tab-panel" id="fixed-tab-changelog">
+        <div th:replace="fragments/tab_changelog :: tab"></div>
       </section>
     </main>
 
