@@ -79,6 +79,7 @@ class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<Re
 
             oldDmi.ifPresent(dmi -> {
                 reportMetadata.setOldMeta(dmi.getMetadata());
+                reportEntry.setOldStatesNumber(dmi.getStates().size());
 
                 if (dmi.isHasDuplicates()) {
                     reportDuplication.setOldDmiDuplicates(dmi.getDuplicateStatesNames());
@@ -87,6 +88,7 @@ class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<Re
 
             newDmi.ifPresent(dmi -> {
                 reportMetadata.setNewMeta(dmi.getMetadata());
+                reportEntry.setNewStatesNumber(dmi.getStates().size());
 
                 if (dmi.isHasDuplicates()) {
                     reportDuplication.setNewDmiDuplicates(dmi.getDuplicateStatesNames());

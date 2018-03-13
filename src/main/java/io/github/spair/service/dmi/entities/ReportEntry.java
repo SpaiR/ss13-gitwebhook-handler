@@ -1,5 +1,6 @@
 package io.github.spair.service.dmi.entities;
 
+import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.byond.dmi.DmiMeta;
 import lombok.Data;
 
@@ -15,6 +16,8 @@ public class ReportEntry {
 
     @Nonnull
     private String filename;
+    private int oldStatesNumber;
+    private int newStatesNumber;
     @Nonnull
     private Duplication duplication = new Duplication();
     @Nonnull
@@ -24,6 +27,10 @@ public class ReportEntry {
 
     public ReportEntry(@Nonnull final String filename) {
         this.filename = filename;
+    }
+
+    public boolean isStateOverflow() {
+        return oldStatesNumber > Dmi.MAX_STATES || newStatesNumber > Dmi.MAX_STATES;
     }
 
     @Data

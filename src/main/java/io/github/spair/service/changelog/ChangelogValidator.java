@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 class ChangelogValidator {
@@ -54,16 +55,9 @@ class ChangelogValidator {
     }
 
     private String getUnknownClassesReason(final List<String> invalidClasses) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("Reason: unknown classes detected. Next should be changed or removed: ");
-
-        for (int i = 0; i < invalidClasses.size() - 1; i++) {
-            sb.append(CODE_QUOTE).append(invalidClasses.get(i)).append(CODE_QUOTE).append(", ");
-        }
-
-        sb.append(CODE_QUOTE).append(invalidClasses.get(invalidClasses.size() - 1)).append(CODE_QUOTE).append('.');
-
-        return sb.toString();
+        return "Reason: unknown classes detected. Next should be changed or removed: ".concat(
+                invalidClasses.stream().map(invalidClass -> CODE_QUOTE.concat(invalidClass).concat(CODE_QUOTE))
+                        .collect(Collectors.joining(", ")).concat(".")
+        );
     }
 }
