@@ -5,7 +5,7 @@
         <div class="mdl-cell">
 
           <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-            <input id="path-to-changelog" class="mdl-textfield__input" pattern="[/].+">
+            <input id="path-to-changelog" class="mdl-textfield__input">
             <label for="path-to-changelog" class="mdl-textfield__label">Changelog Path</label>
           </div>
 
@@ -28,13 +28,13 @@
         <div class="md-cell">
           <h5>Changelog path:</h5>
           <p>
-            Path to your changelog from root of repository. <i><b>Should starts with '/'</b></i>
+            Path to your changelog from root of repository.
           </p>
 
           <h5>Available classes and fields below:</h5>
           <p>
-            All of these use in validation process of changelog, when PR created or edited.<br />
-            List can't have repeatable values.
+            During changelog validation handler look into this list of classes.<br />
+            If cahngelog containt class which is not presented here, it will be marked as invalid.
           </p>
         </div>
       </div>
