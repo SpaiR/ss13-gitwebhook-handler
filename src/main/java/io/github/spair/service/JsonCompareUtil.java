@@ -7,6 +7,7 @@ import com.flipkart.zjsonpatch.JsonDiff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -15,7 +16,8 @@ public final class JsonCompareUtil {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonCompareUtil.class);
 
-    public static String compareObjects(final Object before, final Object after, final boolean prettyPrint) {
+    public static String compareObjects(
+            @Nullable final Object before, @Nullable final Object after, final boolean prettyPrint) {
         try {
             JsonNode beforeNode = OBJECT_MAPPER.valueToTree(Optional.ofNullable(before).orElse(Collections.emptyMap()));
             JsonNode afterNode = OBJECT_MAPPER.valueToTree(Optional.ofNullable(after).orElse(Collections.emptyMap()));

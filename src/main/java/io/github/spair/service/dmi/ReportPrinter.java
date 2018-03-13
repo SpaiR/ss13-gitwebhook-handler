@@ -29,7 +29,8 @@ class ReportPrinter {
 
             filenameAppender.append(sb, reportEntry);
 
-            sb.append(LINE_HORIZONTAL).append(NEW_LINE).append(NEW_LINE);
+            sb.append(LINE_HORIZONTAL);
+            sb.append(NEW_LINE).append(NEW_LINE);
 
             duplicationAppender.append(sb, reportEntry);
             statesTableAppender.append(sb, reportEntry);
@@ -37,7 +38,8 @@ class ReportPrinter {
             statesNumberAppender.append(sb, reportEntry);
             metadataAppender.append(sb, reportEntry);
 
-            sb.append(LINE_HORIZONTAL).append(DETAILS_CLOSE);
+            sb.append(LINE_HORIZONTAL);
+            sb.append(DETAILS_CLOSE);
         });
 
         return sb.toString();

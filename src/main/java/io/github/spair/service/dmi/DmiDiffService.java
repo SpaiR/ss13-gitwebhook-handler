@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class DmiDiffService {
 
     private final GitHubService gitHubService;
-    private final ReportEntryGenerator reportGenerator;
+    private final ReportEntryGenerator reportEntryGenerator;
     private final ReportPrinter reportPrinter;
 
     private static final String DMI_SUFFIX = ".dmi";
@@ -24,10 +24,10 @@ public class DmiDiffService {
     @Autowired
     public DmiDiffService(final GitHubService gitHubService,
                           final ReportPrinter reportPrinter,
-                          final ReportEntryGenerator reportGenerator) {
+                          final ReportEntryGenerator reportEntryGenerator) {
         this.gitHubService = gitHubService;
         this.reportPrinter = reportPrinter;
-        this.reportGenerator = reportGenerator;
+        this.reportEntryGenerator = reportEntryGenerator;
     }
 
     public void generateAndReport(final PullRequest pullRequest) {
@@ -36,7 +36,7 @@ public class DmiDiffService {
 
         DmiDiffReport dmiDiffReport = new DmiDiffReport();
 
-        dmiPrFiles.forEach(dmiPrFile -> reportGenerator.generate(dmiPrFile)
+        dmiPrFiles.forEach(dmiPrFile -> reportEntryGenerator.generate(dmiPrFile)
                 .ifPresent(dmiDiffReport.getReportEntries()::add)
         );
 

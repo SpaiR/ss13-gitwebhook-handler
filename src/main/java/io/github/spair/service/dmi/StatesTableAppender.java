@@ -18,13 +18,15 @@ public class StatesTableAppender implements ReportAppender {
 
     @Override
     public void append(final StringBuilder sb, final ReportEntry reportEntry) {
-        if (!reportEntry.getStateDiffReports().isEmpty()) {
-            sb.append("Key | Dir / Frame | Old | New | Status").append(NEW_LINE);
-            sb.append("--- | :---------: | --- | --- | ------").append(NEW_LINE);
-
-            reportEntry.getStateDiffReports().forEach(stateDiffReport -> appendStatesRows(sb, stateDiffReport));
-            sb.append(NEW_LINE);
+        if (reportEntry.getStateDiffReports().isEmpty()) {
+            return;
         }
+
+        sb.append("Key | Dir / Frame | Old | New | Status").append(NEW_LINE);
+        sb.append("--- | :---------: | --- | --- | ------").append(NEW_LINE);
+
+        reportEntry.getStateDiffReports().forEach(stateDiffReport -> appendStatesRows(sb, stateDiffReport));
+        sb.append(NEW_LINE);
     }
 
     private void appendStatesRows(final StringBuilder sb, final StateDiffReport stateDiffReport) {

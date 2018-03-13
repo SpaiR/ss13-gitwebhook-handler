@@ -1,92 +1,75 @@
 package io.github.spair.service.dmi;
 
-import io.github.spair.byond.dmi.DmiDiff;
-import io.github.spair.byond.dmi.SpriteDir;
+import io.github.spair.ReadFileUtil;
 import io.github.spair.service.dmi.entities.DmiDiffReport;
 import io.github.spair.service.dmi.entities.ReportEntry;
-import io.github.spair.service.dmi.entities.StateDiffReport;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.util.collections.Sets;
-import org.springframework.core.io.ClassPathResource;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.util.Collections;
-import java.util.Set;
+import java.lang.reflect.Field;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ReportPrinterTest {
 
     private final ReportPrinter printer = new ReportPrinter();
+    private final String NEW_LINE = System.getProperty("line.separator");
 
-    @Test
-    public void testPrintReportCreated() throws Exception {
-        ReportEntry reportEntry = new ReportEntry("icons/file.dmi");
-        reportEntry.setStateDiffReports(Collections.singletonList(createStateDiffReport(DmiDiff.Status.CREATED)));
+    @Mock
+    private FilenameAppender filenameAppender;
+    @Mock
+    private DuplicationAppender duplicationAppender;
+    @Mock
+    private StatesTableAppender statesTableAppender;
+    @Mock
+    private StatesNumberAppender statesNumberAppender;
+    @Mock
+    private MetadataAppender metadataAppender;
 
-        DmiDiffReport diffReport = new DmiDiffReport();
-        diffReport.setReportEntries(Collections.singletonList(reportEntry));
+    @Before
+    public void setUp() throws Exception {
+        setField("filenameAppender", filenameAppender);
+        setField("duplicationAppender", duplicationAppender);
+        setField("statesTableAppender", statesTableAppender);
+        setField("statesNumberAppender", statesNumberAppender);
+        setField("metadataAppender", metadataAppender);
 
-        File reportFile = new ClassPathResource("dmi-diff-report-created.txt").getFile();
-        String reportText = new String(Files.readAllBytes(reportFile.toPath()));
-
-        assertEquals(reportText, printer.printReport(diffReport));
+        mockAppender("mocked filename", filenameAppender);
+        mockAppender("mocked duplication" + NEW_LINE, duplicationAppender);
+        mockAppender("mocked states table" + NEW_LINE, statesTableAppender);
+        mockAppender("mocked states number" + NEW_LINE, statesNumberAppender);
+        mockAppender("mocked metadata" + NEW_LINE + NEW_LINE, metadataAppender);
     }
 
     @Test
-    public void testPrintReportModifiedWithDuplicate() throws Exception {
-        ReportEntry reportEntry = new ReportEntry("icons/file.dmi");
-        reportEntry.setStateDiffReports(Collections.singletonList(createStateDiffReport(DmiDiff.Status.MODIFIED)));
-        reportEntry.setDuplication(createDuplicate(Sets.newSet("state, state2"), Sets.newSet("state2")));
+    public void testPrintReport() {
+        String expectedReport = ReadFileUtil.readFile("report-printer-result.txt");
+        DmiDiffReport dmiDiffReport = new DmiDiffReport();
+        dmiDiffReport.getReportEntries().add(mock(ReportEntry.class));
+        dmiDiffReport.getReportEntries().add(mock(ReportEntry.class));
 
-        DmiDiffReport diffReport = new DmiDiffReport();
-        diffReport.setReportEntries(Collections.singletonList(reportEntry));
-
-        File reportFile = new ClassPathResource("dmi-diff-report-modified-with-duplicates.txt").getFile();
-        String reportText = new String(Files.readAllBytes(reportFile.toPath()));
-
-        assertEquals(reportText, printer.printReport(diffReport));
+        assertEquals(expectedReport, printer.printReport(dmiDiffReport));
     }
 
-    @Test
-    public void testPrintReportDeletedWithMetadataDiff() throws Exception {
-        ReportEntry reportEntry = new ReportEntry("icons/file.dmi");
-        reportEntry.setStateDiffReports(Collections.singletonList(createStateDiffReport(DmiDiff.Status.DELETED)));
-        reportEntry.setMetadata(createMeta());
-
-        DmiDiffReport diffReport = new DmiDiffReport();
-        diffReport.setReportEntries(Collections.singletonList(reportEntry));
-
-        File reportFile = new ClassPathResource("dmi-diff-report-deleted-with-meta-diff.txt").getFile();
-        String reportText = new String(Files.readAllBytes(reportFile.toPath()));
-
-        assertEquals(reportText, printer.printReport(diffReport));
+    private void setField(String fieldName, ReportAppender value) throws Exception {
+        Class<?> c = printer.getClass();
+        Field f = c.getDeclaredField(fieldName);
+        f.setAccessible(true);
+        f.set(printer, value);
     }
 
-    private StateDiffReport createStateDiffReport(DmiDiff.Status status) {
-        StateDiffReport stateDiffReport = new StateDiffReport();
-        stateDiffReport.setName("state");
-        stateDiffReport.setSpriteWidth(32);
-        stateDiffReport.setSpriteHeight(32);
-        stateDiffReport.setDir(SpriteDir.SOUTH);
-        stateDiffReport.setOldDmiLink("old.link.com");
-        stateDiffReport.setNewDmiLink("new.link.com");
-        stateDiffReport.setStatus(status);
-        stateDiffReport.setFrameNumber(1);
-        return stateDiffReport;
-    }
-
-    private ReportEntry.Duplication createDuplicate(Set<String> oldDupls, Set<String> newDupls) {
-        ReportEntry.Duplication duplication = new ReportEntry.Duplication();
-        duplication.setOldDmiDuplicates(oldDupls);
-        duplication.setNewDmiDuplicates(newDupls);
-        return duplication;
-    }
-
-    private ReportEntry.Metadata createMeta() {
-        ReportEntry.Metadata metadata = new ReportEntry.Metadata();
-        metadata.setMetadataDiff("[ { 'mocked' : 'diff' } ]");
-        return metadata;
+    private void mockAppender(String appendText, ReportAppender appender) {
+        doAnswer(invok -> {
+            StringBuilder sb = (StringBuilder) invok.getArguments()[0];
+            sb.append(appendText);
+            return null;
+        }).when(appender).append(any(StringBuilder.class), any(ReportEntry.class));
     }
 }

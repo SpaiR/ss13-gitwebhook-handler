@@ -1,0 +1,6 @@
+Key | Dir / Frame | Old | New | Status
+--- | :---------: | --- | --- | ------
+state1 (<a href="http://tauceti.ru/img-diff/?after=img.org/32x32/forceresize/state1.NEW">x1</a> <a href="http://tauceti.ru/img-diff/?after=img.org/128x128/forceresize/state1.NEW">x4</a> <a href="http://tauceti.ru/img-diff/?after=img.org/256x256/forceresize/state1.NEW">x8</a>)|&#x1F87B; S / 1||<img src="img.org/state1.NEW" title="state1-N-dS-f1" />|Created
+state2 (<a href="http://tauceti.ru/img-diff/?before=img.org/32x32/forceresize/state2.OLD&after=img.org/32x32/forceresize/state2.NEW">x1</a> <a href="http://tauceti.ru/img-diff/?before=img.org/128x128/forceresize/state2.OLD&after=img.org/128x128/forceresize/state2.NEW">x4</a> <a href="http://tauceti.ru/img-diff/?before=img.org/256x256/forceresize/state2.OLD&after=img.org/256x256/forceresize/state2.NEW">x8</a>)|&#x1F87B; S / 1|<img src="img.org/state2.OLD" title="state2-O-dS-f1" />|<img src="img.org/state2.NEW" title="state2-N-dS-f1" />|Modified
+state3 (<a href="http://tauceti.ru/img-diff/?after=img.org/32x32/forceresize/state3.NEW">x1</a> <a href="http://tauceti.ru/img-diff/?after=img.org/128x128/forceresize/state3.NEW">x4</a> <a href="http://tauceti.ru/img-diff/?after=img.org/256x256/forceresize/state3.NEW">x8</a>)|&#x1F879; N / 2||<img src="img.org/state3.NEW" title="state3-N-dN-f2" />|Deleted
+
