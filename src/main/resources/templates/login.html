@@ -1,31 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
-  <title id="pageTitle">Handler Login</title>
+    <title id="pageTitle">Handler Login</title>
 </head>
 <body>
-  <div class="mdl-grid">
+<div class="mdl-grid">
     <div class="mdl-cell mdl-cell--5-col mdl-cell--hide-tablet"></div>
     <div class="mdl-cell mdl-cell--3-col">
-      <h4>Authentication</h4>
-      <p>
-        Authentication is needed to work with handler configuration.<br />
-        Name and password should be provided on application startup.
-      </p>
-      <form th:action="@{/login}" method="post">
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input name="username" id="username" class="mdl-textfield__input" required autofocus />
-          <label class="mdl-textfield__label" for="username">Login</label>
-        </div>
-        <br />
-        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-          <input type="password" name="password" id="password" class="mdl-textfield__input" required />
-          <label class="mdl-textfield__label" for="password">Password</label>
-        </div>
-        <br />
-        <input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" value="SIGN IN"/>
-      </form>
+        <h4>Authentication</h4>
+        <p>
+            Authentication is needed to work with handler configuration.<br/>
+            Name and password should be provided on application startup.
+        </p>
+        <form th:action="@{/login}" method="post">
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input name="username" id="username" class="mdl-textfield__input" required autofocus/>
+                <label class="mdl-textfield__label" for="username">Login</label>
+            </div>
+            <br/>
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input type="password" name="password" id="password" class="mdl-textfield__input" required/>
+                <label class="mdl-textfield__label" for="password">Password</label>
+            </div>
+            <br/>
+            <input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored"
+                   value="SIGN IN"/>
+        </form>
     </div>
-  </div>
+</div>
 </body>
 </html>

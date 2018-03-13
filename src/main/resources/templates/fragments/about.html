@@ -1,39 +1,42 @@
 <html xmlns:th="http://www.thymeleaf.org">
-  <div th:fragment="about">
+<div th:fragment="about">
     <div id="about-text">
-      <div id="about-card" class="demo-card-wide mdl-card mdl-shadow--2dp">
-        <div class="mdl-card__title">
-          <h2 class="mdl-card__title-text">About</h2>
+        <div id="about-card" class="demo-card-wide mdl-card mdl-shadow--2dp">
+            <div class="mdl-card__title">
+                <h2 class="mdl-card__title-text">About</h2>
+            </div>
+            <div class="mdl-card__supporting-text">
+                <h5>How to work with it:</h5>
+                <ol>
+                    <li>Fill all fields in all tabs with values you need. Description of each field is given in right
+                        part.
+                    </li>
+                    <li>Press validate button in "GENERAL" tab.</li>
+                    <ul>
+                        <li>If validation passed successful "SAVE CONFIG" will become enabled.</li>
+                        <li>
+                            Otherwise tab with invalid values will be marked with warning icon.<br/>
+                            Read "Validate config" description to get more info.
+                        </li>
+                    </ul>
+                    <li>Press "SAVE CONFIG" to save your new configuration on server.</li>
+                    <ul>
+                        <li>Saved configuration will become active instantly.</li>
+                    </ul>
+                </ol>
+                <h5>Additional info:</h5>
+                <p>
+                    Additional info may be found on GitHub repository of source code: <a
+                        href="https://github.com/SpaiR/ss13-gitwebhook-handler">https://github.com/SpaiR/ss13-gitwebhook-handler</a><br/>
+                </p>
+                <p><b>Contact:</b> klimbetoo@gmail.com, Ilya</p>
+            </div>
+            <div class="mdl-card__menu">
+                <button id="close-about-button" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
+                    <i class="material-icons">close</i>
+                </button>
+            </div>
         </div>
-        <div class="mdl-card__supporting-text">
-          <h5>How to work with it:</h5>
-          <ol>
-            <li>Fill all fields in all tabs with values you need. Description of each field is given in right part.</li>
-            <li>Press validate button in "GENERAL" tab.</li>
-            <ul>
-              <li>If validation passed successful "SAVE CONFIG" will become enabled.</li>
-              <li>
-                Otherwise tab with invalid values will be marked with warning icon.<br />
-                Read "Validate config" description to get more info.
-              </li>
-            </ul>
-            <li>Press "SAVE CONFIG" to save your new configuration on server.</li>
-            <ul>
-              <li>Saved configuration will become active instantly.</li>
-            </ul>
-          </ol>
-          <h5>Additional info:</h5>
-          <p>
-            Additional info may be found on GitHub repository of source code: <a href="https://github.com/SpaiR/ss13-gitwebhook-handler">https://github.com/SpaiR/ss13-gitwebhook-handler</a><br />
-          </p>
-          <p><b>Contact:</b> klimbetoo@gmail.com, Ilya</p>
-        </div>
-        <div class="mdl-card__menu">
-          <button id="close-about-button" class="mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect">
-            <i class="material-icons">close</i>
-          </button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 </html>

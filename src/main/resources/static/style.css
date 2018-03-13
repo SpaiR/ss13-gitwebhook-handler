@@ -1,3 +1,12 @@
+.mdl-layout__content {
+    flex: 1 0 auto;
+    overflow: hidden;
+}
+
+.mdl-mini-footer {
+    flex: 0 0 auto;
+}
+
 #overlay {
     display: none;
     position: fixed;
@@ -13,7 +22,7 @@
 
 #about-text {
     display: none;
-    position: absolute;
+    position: fixed;
     z-index: 10000;
     left: 50%;
     top: 20%;
@@ -25,7 +34,17 @@
 }
 
 .page-content .mdl-grid {
-    padding: 32px;
+    padding: 0 32px 32px;
+}
+
+.mdl-cell .cell-content {
+    width: 50%;
+    margin: auto;
+    padding-top: 32px;
+}
+
+.cell-content .mdl-textfield {
+    width: 100%;
 }
 
 #github-icon {
@@ -34,6 +53,7 @@
 
 .functional-buttons .mdl-button {
     margin-top: 10px;
+    margin-right: 10px;
 }
 
 #save-config[disabled] {
@@ -51,23 +71,19 @@
     display: none;
 }
 
-ul#available-classes-list {
-    overflow: auto;
-    width: 300px;
-    height: 300px;
-}
-
 ul#available-classes-list li {
     padding: 0;
+    width: 200px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .function-buttons-separator {
-    width: 90%;
     margin-top: 20px;
 }
 
 #progress-bar {
-    width: 90%;
+    width: 100%;
     display: none;
 }
 
@@ -88,20 +104,51 @@ ul#available-classes-list li {
     background-color: rgb(33,150,243) !important;
 }
 
-.download-button {
-    width: 140px;
-}
-
 .class-labels-wrap {
-    max-height: 400px;
-    width: 317px;
-    overflow-y: auto;
+    width: 70%;
+    margin: auto;
 }
 
 .class-labels-table {
-    width: 300px;
+    width: 100%;
 }
 
 .class-labels-table th, .class-labels-table input, .class-labels-table td {
     font-size: 14px;
+}
+
+.tab-help {
+    position: absolute;
+    top: 0;
+    overflow: auto;
+    right: 0;
+    height: 100%;
+    width: 50%;
+    background: white;
+    display: none;
+    box-shadow: -1px 0 20px 0 #a8a8a8;
+}
+
+.help-text {
+    position: relative;
+    right: 0;
+    padding-right: 32px;
+    padding-left: 32px;
+    height: 100%;
+}
+
+.help-button {
+    position: absolute;
+    top: 0;
+    right: 16px;
+    margin-top: 16px;
+    z-index: 100;
+}
+
+footer {
+    z-index: 100;
+}
+
+#snackbar {
+    z-index: 200;
 }

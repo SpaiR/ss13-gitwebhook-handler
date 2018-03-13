@@ -1,68 +1,69 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
-  <title id="pageTitle">Handler Config</title>
+    <title id="pageTitle">Handler Config</title>
 </head>
 <body>
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs mdl-layout--no-drawer-button">
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs mdl-layout--no-drawer-button">
     <header class="mdl-layout__header">
-      <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title">Handler Configuration</span>
-        <div class="mdl-layout-spacer"></div>
-        <form th:action="@{/logout}" method="post">
-          <input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" value="SIGN OUT" />
-        </form>
-      </div>
-      <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-        <a href="#fixed-tab-general" class="mdl-layout__tab is-active">GENERAL</a>
-        <a href="#fixed-tab-github" class="mdl-layout__tab">
-          <span><i id="github-fail" class="fail-icon material-icons">warning</i>GITHUB</span>
-        </a>
-        <a href="#fixed-tab-changelog" class="mdl-layout__tab">
-          <span><i id="changelog-fail" class="fail-icon material-icons">warning</i>CHANGELOG</span>
-        </a>
-      </div>
+        <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">Handler Configuration</span>
+            <div class="mdl-layout-spacer"></div>
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent"
+                       value="SIGN OUT"/>
+            </form>
+        </div>
+        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+            <a href="#fixed-tab-general" class="mdl-layout__tab is-active">GENERAL</a>
+            <a href="#fixed-tab-github" class="mdl-layout__tab">
+                <span><i id="github-fail" class="fail-icon material-icons">warning</i>GITHUB</span>
+            </a>
+            <a href="#fixed-tab-changelog" class="mdl-layout__tab">
+                <span><i id="changelog-fail" class="fail-icon material-icons">warning</i>CHANGELOG</span>
+            </a>
+        </div>
     </header>
 
     <main class="mdl-layout__content">
-      <section class="mdl-layout__tab-panel is-active" id="fixed-tab-general">
-        <div th:replace="fragments/tab_general :: tab"></div>
-      </section>
+        <section class="mdl-layout__tab-panel is-active" id="fixed-tab-general">
+            <div th:replace="fragments/tabs/general :: tab"></div>
+        </section>
 
-      <section class="mdl-layout__tab-panel" id="fixed-tab-github">
-        <div th:replace="fragments/tab_github :: tab"></div>
-      </section>
+        <section class="mdl-layout__tab-panel" id="fixed-tab-github">
+            <div th:replace="fragments/tabs/github :: tab"></div>
+        </section>
 
-      <section class="mdl-layout__tab-panel" id="fixed-tab-changelog">
-        <div th:replace="fragments/tab_changelog :: tab"></div>
-      </section>
+        <section class="mdl-layout__tab-panel" id="fixed-tab-changelog">
+            <div th:replace="fragments/tabs/changelog :: tab"></div>
+        </section>
     </main>
 
     <div th:include="fragments/about :: about"></div>
 
     <footer class="mdl-mini-footer">
-      <div class="mdl-mini-footer__left-section">
-        <ul class="mdl-mini-footer__link-list">
-          <li>
-            <a href="https://github.com/SpaiR/ss13-gitwebhook-handler"><img id="github-icon" src="github.png" /></a>
-            <span>&nbsp;Code licensed under an MIT-style License.</span>
-          </li>
-        </ul>
-      </div>
-      <div class="mdl-mini-footer__right-section">
-        <button id="open-about-button" class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">help_outline</i>
-        </button>
-      </div>
+        <div class="mdl-mini-footer__left-section">
+            <ul class="mdl-mini-footer__link-list">
+                <li>
+                    <a href="https://github.com/SpaiR/ss13-gitwebhook-handler"><img id="github-icon" src="github.png"/></a>
+                    <span>&nbsp;Code licensed under an MIT-style License.</span>
+                </li>
+            </ul>
+        </div>
+        <div class="mdl-mini-footer__right-section">
+            <button id="open-about-button" class="mdl-button mdl-js-button mdl-button--icon">
+                <i class="material-icons">info_outline</i>
+            </button>
+        </div>
     </footer>
-  </div>
+</div>
 
-  <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+<div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
     <div class="mdl-snackbar__text"></div>
     <button class="mdl-snackbar__action" type="button"></button>
-  </div>
+</div>
 
-  <div id="overlay"></div>
-  <script defer src="script.js"></script>
+<div id="overlay"></div>
+<script defer src="script.js"></script>
 </body>
 </html>

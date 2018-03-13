@@ -17,6 +17,18 @@ $('document').ready(function () {
     });
 
 
+    $('.help-button').click(function () {
+        var $icon = $(this).find('.material-icons');
+
+        if ($icon.html() === 'help') {
+            $icon.html('close');
+        } else {
+            $icon.html('help');
+        }
+
+        $('#' + $(this).data('for')).fadeToggle('fast');
+    });
+
     $('#save-config').click(function () {
         $.ajax({
             url: '/config/rest/current',
@@ -24,7 +36,7 @@ $('document').ready(function () {
             contentType: 'application/json',
             data: JSON.stringify(configObject)
         }).done(function () {
-            showToast('Configuration saved');
+            showToast('Configuration saved.');
             $('#save-config').prop('disabled', true);
         });
     });
@@ -35,35 +47,31 @@ $('document').ready(function () {
         $('#changelog-fail').hide();
         $('#save-config').prop('disabled', true);
 
-        if ($('#path-to-changelog').val().charAt(0) !== '/') {
-            showToast('Warning! Changelog path should start with "/"');
-        } else {
-            $('#progress-bar').slideDown('fast');
+        $('#progress-bar').slideDown('fast');
 
-            $.ajax({
-                url: '/config/rest/validation',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(configObject)
-            }).done(function () {
-                showToast('Configuration is valid');
-                $('#save-config').prop('disabled', false);
-            }).fail(function (jqXHR) {
-                showToast('Error! Configuration is invalid');
+        $.ajax({
+            url: '/config/rest/validation',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(configObject)
+        }).done(function () {
+            showToast('Configuration is valid.');
+            $('#save-config').prop('disabled', false);
+        }).fail(function (jqXHR) {
+            showToast('Error! Configuration is invalid.');
 
-                var responseObject = JSON.parse(jqXHR.responseText);
+            var responseObject = JSON.parse(jqXHR.responseText);
 
-                if (!responseObject.gitHubOk) {
-                    $('#github-fail').show();
-                }
+            if (!responseObject.gitHubOk) {
+                $('#github-fail').show();
+            }
 
-                if (!responseObject.changelogOk) {
-                    $('#changelog-fail').show();
-                }
-            }).always(function () {
-                $('#progress-bar').slideUp('fast');
-            });
-        }
+            if (!responseObject.changelogOk) {
+                $('#changelog-fail').show();
+            }
+        }).always(function () {
+            $('#progress-bar').slideUp('fast');
+        });
     });
 
 
@@ -86,7 +94,7 @@ function addClassAction() {
 
     if (fieldValue.length > 0) {
         if (classesArray.indexOf(fieldValue) !== -1) {
-            showToast('Class \'' + fieldValue + '\' already available!');
+            showToast('Class "' + fieldValue + '" already presented in list!');
         } else {
             addClassToList(fieldValue);
             classesArray.push(fieldValue);
@@ -134,7 +142,8 @@ function initForms() {
 
     // Check all fields for changes, to make labels float.
     $('.mdl-textfield').each(function () {
-        this.MaterialTextfield.checkDirty();
+        if (this.MaterialTextfield)
+            this.MaterialTextfield.checkDirty();
     });
 }
 

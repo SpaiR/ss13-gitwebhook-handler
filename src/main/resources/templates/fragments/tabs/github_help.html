@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="tab">
+    <button data-for="github-tab" class="help-button mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">help</i>
+    </button>
+
+    <div id="github-tab" class="tab-help">
+        <div class="help-text">
+            <h5>Organization name:</h5>
+            <p>GitHub organization name where your repository stored.</p>
+
+            <h5>Repository name:</h5>
+            <p>GitHub repository where your build stored.</p>
+
+            <h5>API Token:</h5>
+            <p>API token generated for access to your Repository. Should at least have <b>repo</b> rights.</p>
+
+            <h5>Secret key:</h5>
+            <p>Secret key generated for your webhook.</p>
+
+            <h5>Labels:</h5>
+            <p>
+                Labels are used by auto-labeling feature. All fields are names of labels used during PR marking.<br/>
+                Full description below:
+                <u>
+                    <li>Invalid Changelog - for PR with invalid "in body" changelog.</li>
+                    <li>Map Changes - handler automatically check PR diff and react on "dmm" files changes with this
+                        label.
+                    </li>
+                    <li>Icon Changes - same as Map Changes, but reaction on "dmi".</li>
+                    <li>Work In Progress - PR with [WIP] in title will be marked with this.</li>
+                    <li>Do Not Merge - same as Work in Progress, but for [DNM].</li>
+                </u>
+                <br/>
+                About "Class/Label" table. Label names to add are also taken from "in body" changelog, by checking
+                classes in it.<br/>
+                This table gives ability to bind any class from changelog to label name you like. If label name is
+                empty, no label
+                for this class will be added.<br/>
+                Table is constructed from "Available classes" list in "CHANGELOG" tab.
+            </p>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,92 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="tab">
+    <div class="page-content">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <div class="cell-content">
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="organization-name" class="mdl-textfield__input">
+                        <label for="organization-name" class="mdl-textfield__label">Organization Name</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="repository-name" class="mdl-textfield__input">
+                        <label for="repository-name" class="mdl-textfield__label">Repository Name</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="api-token" class="mdl-textfield__input">
+                        <label for="api-token" class="mdl-textfield__label">Api Token</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="secret-key" class="mdl-textfield__input">
+                        <label for="secret-key" class="mdl-textfield__label">Secret Key</label>
+                    </div>
+
+                    <br/>
+                    <h6><b>Labels:</b></h6>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="invalid-changelog" class="mdl-textfield__input">
+                        <label for="invalid-changelog" class="mdl-textfield__label">Invalid Changelog</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="map-changes" class="mdl-textfield__input">
+                        <label for="map-changes" class="mdl-textfield__label">Map Changes</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="icon-changes" class="mdl-textfield__input">
+                        <label for="icon-changes" class="mdl-textfield__label">Icon Changes</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="work-in-progress" class="mdl-textfield__input">
+                        <label for="work-in-progress" class="mdl-textfield__label">Work In Progress</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="do-not-merge" class="mdl-textfield__input">
+                        <label for="do-not-merge" class="mdl-textfield__label">Do Not Merge</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="class-labels-wrap">
+                        <table class="class-labels-table mdl-data-table mdl-js-data-table">
+                            <thead>
+                            <tr>
+                                <th class="mdl-data-table__cell--non-numeric"><b>Class</b></th>
+                                <th><b>Label</b></th>
+                            </tr>
+                            </thead>
+                            <tbody id="available-classes-labels"></tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/tabs/github_help :: tab"></div>
+
+    </div>
+</div>
+</html>

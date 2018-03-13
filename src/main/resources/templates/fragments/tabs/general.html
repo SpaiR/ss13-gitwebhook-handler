@@ -1,0 +1,65 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="tab">
+    <div class="page-content">
+        <div class="mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <div class="cell-content">
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="request-agent-name" class="mdl-textfield__input">
+                        <label for="request-agent-name" class="mdl-textfield__label">Agent Name</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <select class="mdl-textfield__input" id="time-zone" name="timeZone">
+                            <option>Europe/Moscow</option>
+                            <option>Europe/London</option>
+                            <option>America/New_York</option>
+                            <option>America/Los_Angeles</option>
+                        </select>
+                        <label class="mdl-textfield__label" for="time-zone">Time Zone</label>
+                    </div>
+
+                    <br/>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="image-upload-code" class="mdl-textfield__input">
+                        <label for="image-upload-code" class="mdl-textfield__label">Image Upload Code</label>
+                    </div>
+
+                    <hr class="function-buttons-separator"/>
+                    <div id="progress-bar" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+
+                    <div class="functional-buttons">
+                        <button id="validate-config"
+                                class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
+                            VALIDATE CONFIG
+                        </button>
+                        <button id="save-config"
+                                class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored"
+                                disabled>
+                            SAVE CONFIG
+                        </button>
+
+                        <hr class="function-buttons-separator"/>
+
+                        <a href="/config/rest/file"
+                           class="blue-button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--accent">
+                            DOWNLOAD CONFIG
+                        </a>
+                        <a href="/config/rest/log"
+                           class="orange-button mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--raised mdl-button--colored">
+                            DOWNLOAD LOG
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/tabs/general_help :: tab"></div>
+
+    </div>
+</div>
+</html>
