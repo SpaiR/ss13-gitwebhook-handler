@@ -43,7 +43,7 @@ public class HandlerWebController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void catchPullRequestWebhook(
+    public String catchPullRequestWebhook(
             @RequestHeader(GitHubConstants.SIGNATURE_HEADER) final String signature,
             @RequestHeader(GitHubConstants.EVENT_HEADER) final String event,
             @RequestBody final String webhookPayload) throws IOException {
@@ -54,16 +54,18 @@ public class HandlerWebController {
 
         switch (event) {
             case GitHubConstants.PING_EVENT:
-                LOGGER.info("Ping event caught. Zen: " + webhookJson.get("zen"));
-                break;
+                String zen = webhookJson.get("zen").asText();
+                LOGGER.info("Ping event caught. Zen: " + zen);
+                return "Pong. Zen was: " + zen;
             case GitHubConstants.PULL_REQUEST_EVENT:
                 pullRequestHandler.handle(webhookJson);
-                break;
+                return "Pull Request handled";
             case GitHubConstants.ISSUES_EVENT:
                 issuesHandler.handle(webhookJson);
-                break;
+                return "Issue handled";
             default:
                 LOGGER.info("Unhandled event caught: " + event);
+                return "Unhandled event caught. Event: " + event;
         }
     }
 

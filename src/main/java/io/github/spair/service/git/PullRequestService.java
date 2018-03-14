@@ -125,7 +125,11 @@ public class PullRequestService {
     }
 
     private PullRequestType identifyType(final ObjectNode webhookJson) {
-        String action = webhookJson.get(GitHubPayload.ACTION).asText();
-        return EnumUtil.valueOfOrDefault(PullRequestType.values(), action, PullRequestType.UNDEFINED);
+        if (webhookJson.get(GitHubPayload.PULL_REQUEST).get(GitHubPayload.MERGED).asBoolean()) {
+            return PullRequestType.MERGED;
+        } else {
+            String action = webhookJson.get(GitHubPayload.ACTION).asText();
+            return EnumUtil.valueOfOrDefault(PullRequestType.values(), action, PullRequestType.UNDEFINED);
+        }
     }
 }

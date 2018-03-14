@@ -61,11 +61,11 @@ public class GitHubService {
         ObjectNode resp;
 
         try {
-            resp = restService.getForJson(pathProvider.contents(relPath), getHttpHeaders());
+            resp = restService.getForJson(pathProvider.contents(relPath), getAuthHeaders());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
                 LOGGER.info("Blobs API was used to read file data. Path: {}", relPath);
-                resp = restService.getForJson(pathProvider.blobs(getFileSha(relPath)), getHttpHeaders());
+                resp = restService.getForJson(pathProvider.blobs(getFileSha(relPath)), getAuthHeaders());
             } else {
                 LOGGER.error("Error on reading file from GitHub. Path: {}", relPath);
                 throw e;
@@ -83,17 +83,17 @@ public class GitHubService {
         requestBody.put(GitHubPayload.CONTENT, encodeContent(content));
         requestBody.put(GitHubPayload.SHA, getFileSha(path));
 
-        restService.put(pathProvider.contents(path), requestBody, getHttpHeaders());
+        restService.put(pathProvider.contents(path), requestBody, getAuthHeaders());
     }
 
     public void createIssueComment(final int issueNum, final String message) {
         Map<String, String> requestBody = Collections.singletonMap(GitHubPayload.BODY, message);
-        restService.post(pathProvider.issueComments(issueNum), requestBody, getHttpHeaders());
+        restService.post(pathProvider.issueComments(issueNum), requestBody, getAuthHeaders());
     }
 
     public void editIssueComment(final int commentId, final String newMessage) {
         Map<String, String> requestBody = Collections.singletonMap(GitHubPayload.BODY, newMessage);
-        restService.patch(pathProvider.issueComment(commentId), requestBody, getHttpHeaders());
+        restService.patch(pathProvider.issueComment(commentId), requestBody, getAuthHeaders());
     }
 
     public void addLabel(final int issueNum, final String labelName) {
@@ -101,12 +101,12 @@ public class GitHubService {
     }
 
     public void addLabels(final int issueNum, final List<String> labels) {
-        restService.post(pathProvider.issueLabels(issueNum), labels, getHttpHeaders());
+        restService.post(pathProvider.issueLabels(issueNum), labels, getAuthHeaders());
     }
 
     public void removeLabel(final int issueNum, final String labelName) {
         try {
-            restService.delete(pathProvider.issueLabel(issueNum, labelName), getHttpHeaders());
+            restService.delete(pathProvider.issueLabel(issueNum, labelName), getAuthHeaders());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
                 LOGGER.warn("Removing label fail. Issue number: {}. Label name: {}. Response: {}. Headers: {}",
@@ -119,7 +119,7 @@ public class GitHubService {
         ArrayNode respList = new ArrayNode(JsonNodeFactory.instance);
 
         try {
-            respList = restService.getForObject(pathProvider.issueLabels(issueNum), getHttpHeaders(), ArrayNode.class);
+            respList = restService.getForObject(pathProvider.issueLabels(issueNum), getAuthHeaders(), ArrayNode.class);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().is4xxClientError()) {
                 LOGGER.warn("Removing label fail. Issue number: {}. Response: {}. Headers: {}",
@@ -135,7 +135,7 @@ public class GitHubService {
 
     public boolean isOrgAndRepoExist(final String org, final String repo) {
         try {
-            restService.get(pathProvider.generalPath(org, repo), getHttpHeaders());
+            restService.get(pathProvider.generalPath(org, repo), getNonAuthHeaders());
             return true;
         } catch (HttpStatusCodeException e) {
             return false;
@@ -144,7 +144,7 @@ public class GitHubService {
 
     public boolean isFilePathExist(final String org, final String repo, final String relPath) {
         try {
-            restService.get(pathProvider.contents(org, repo, relPath), getHttpHeaders());
+            restService.get(pathProvider.contents(org, repo, relPath), getNonAuthHeaders());
             return true;
         } catch (HttpStatusCodeException e) {
             return false;
@@ -193,7 +193,16 @@ public class GitHubService {
         return issueComments;
     }
 
-    private HttpHeaders getHttpHeaders() {
+    private HttpHeaders getNonAuthHeaders() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        String agentName = configService.getConfig().getRequestAgentName();
+        httpHeaders.set(HttpHeaders.USER_AGENT, agentName);
+
+        return httpHeaders;
+    }
+
+    private HttpHeaders getAuthHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
 
         String agentName = configService.getConfig().getRequestAgentName();
@@ -234,7 +243,7 @@ public class GitHubService {
         }
 
         ArrayNode responseArr = restService.getForObject(
-                pathProvider.contents(dirPath), getHttpHeaders(), ArrayNode.class);
+                pathProvider.contents(dirPath), getAuthHeaders(), ArrayNode.class);
 
         for (JsonNode node : responseArr) {
             if (node.get(GitHubPayload.NAME).asText().equals(fileName)) {
@@ -263,7 +272,7 @@ public class GitHubService {
         }
 
         private void recursiveProcess(final String link) {
-            ResponseEntity<ArrayNode> resp = restService.getForEntity(link, getHttpHeaders(), ArrayNode.class);
+            ResponseEntity<ArrayNode> resp = restService.getForEntity(link, getAuthHeaders(), ArrayNode.class);
 
             consumer.accept(resp.getBody());
 

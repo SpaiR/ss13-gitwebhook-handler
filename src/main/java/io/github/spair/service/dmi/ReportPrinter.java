@@ -10,13 +10,12 @@ class ReportPrinter {
     private final ReportAppender duplicationAppender = new DuplicationAppender();
     private final ReportAppender statesTableAppender = new StatesTableAppender();
     private final ReportAppender statesNumberAppender = new StatesNumberAppender();
-    private final ReportAppender metadataAppender = new MetadataAppender();
 
-    static final String DETAILS_OPEN = "<details>";
-    static final String DETAILS_CLOSE = "</details>";
     static final String SUMMARY_TEMPLATE = "<summary>%s</summary>";
     static final String NEW_LINE = System.getProperty("line.separator");
 
+    private static final String DETAILS_OPEN = "<details>";
+    private static final String DETAILS_CLOSE = "</details>";
     private static final String LINE_HORIZONTAL = "<hr />";
 
     String printReport(final DmiDiffReport report) {
@@ -36,12 +35,16 @@ class ReportPrinter {
             statesTableAppender.append(sb, reportEntry);
 
             statesNumberAppender.append(sb, reportEntry);
-            metadataAppender.append(sb, reportEntry);
 
             sb.append(LINE_HORIZONTAL);
             sb.append(DETAILS_CLOSE);
         });
 
         return sb.toString();
+    }
+
+    String printErrorReason() {
+        return DmiDiffReport.TITLE + NEW_LINE + NEW_LINE
+                + "Report is too long, it can't be print. Make PR more atomic, please.";
     }
 }

@@ -21,6 +21,7 @@ public final class GitHubPayload {
     public static final String STATUS = "status";
     public static final String RAW_URL = "raw_url";
     public static final String ID = "id";
+    public static final String MERGED = "merged";
 
     private GitHubPayload() {
     }

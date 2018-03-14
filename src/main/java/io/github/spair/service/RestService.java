@@ -20,7 +20,7 @@ public class RestService {
     }
 
     public void get(final String path, final HttpHeaders headers) {
-        restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), Void.class);
+        restOperations.exchange(path, HttpMethod.GET, new HttpEntity<>(headers), Object.class);
     }
 
     public <T> ResponseEntity<T> getForEntity(final String path, final HttpHeaders headers, final Class<T> tClass) {
@@ -40,15 +40,15 @@ public class RestService {
     }
 
     public void put(final String path, final Object body, final HttpHeaders headers) {
-        restOperations.exchange(path, HttpMethod.PUT, new HttpEntity<>(body, headers), Void.class);
+        restOperations.exchange(path, HttpMethod.PUT, new HttpEntity<>(body, headers), Object.class);
     }
 
     public void patch(final String path, final Object body, final HttpHeaders headers) {
-        restOperations.patchForObject(path, new HttpEntity<>(body, headers), Void.class);
+        restOperations.patchForObject(path, new HttpEntity<>(body, headers), Object.class);
     }
 
     public void post(final String path, final Object body, final HttpHeaders headers) {
-        restOperations.postForObject(path, new HttpEntity<>(body, headers), Void.class);
+        restOperations.postForObject(path, new HttpEntity<>(body, headers), Object.class);
     }
 
     public ObjectNode postForJson(final String path, final Object body, final HttpHeaders headers) {
@@ -56,6 +56,6 @@ public class RestService {
     }
 
     public void delete(final String path, final HttpHeaders headers) {
-        restOperations.exchange(path, HttpMethod.DELETE, new HttpEntity<>(headers), Void.class);
+        restOperations.exchange(path, HttpMethod.DELETE, new HttpEntity<>(headers), Object.class);
     }
 }

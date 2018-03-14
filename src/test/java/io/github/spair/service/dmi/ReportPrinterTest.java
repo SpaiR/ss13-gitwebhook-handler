@@ -30,22 +30,17 @@ public class ReportPrinterTest {
     private StatesTableAppender statesTableAppender;
     @Mock
     private StatesNumberAppender statesNumberAppender;
-    @Mock
-    private MetadataAppender metadataAppender;
-
     @Before
     public void setUp() throws Exception {
         setField("filenameAppender", filenameAppender);
         setField("duplicationAppender", duplicationAppender);
         setField("statesTableAppender", statesTableAppender);
         setField("statesNumberAppender", statesNumberAppender);
-        setField("metadataAppender", metadataAppender);
 
         mockAppender("mocked filename", filenameAppender);
         mockAppender("mocked duplication" + NEW_LINE, duplicationAppender);
         mockAppender("mocked states table" + NEW_LINE, statesTableAppender);
         mockAppender("mocked states number" + NEW_LINE, statesNumberAppender);
-        mockAppender("mocked metadata" + NEW_LINE + NEW_LINE, metadataAppender);
     }
 
     @Test

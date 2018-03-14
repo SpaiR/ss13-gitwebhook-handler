@@ -5,13 +5,9 @@
 mocked duplication
 mocked states table
 mocked states number
-mocked metadata
-
 <hr /></details><details>mocked filename<hr />
 
 mocked duplication
 mocked states table
 mocked states number
-mocked metadata
-
 <hr /></details>
