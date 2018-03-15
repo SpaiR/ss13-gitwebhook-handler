@@ -1,66 +1,66 @@
 # SS13 Gitwebhook Handler
-## About
-Gitwebhook Handler is an automation tool, oriented on GitHub repositories with any kind of game built on [BYOND](http://www.byond.com/).
-Mainly for Space Station 13 repositories. It can do next things:
-- Parse pull request body description for special markup and create from it changelog, 
-with instant modification of `.html` file with actual changelog. No need of additional scripts and etc.
-- Validate changelog written in pull request and notify if any mistake found.
-- Auto-label issues and pull requests.
 
-Also, unlike similar tool called `github_webhook_processor.php`, which do sort of same things,
-this handler has [**Web UI**](https://imgur.com/a/Z8tQa) and easy way configuration handling, without redeploying and other annoying stuff.
+## About
+
+SS13 Gitwebhook Handler is an automation tool for maintaining [TauCeti](https://github.com/TauCetiStation/TauCetiClassic) repository. 
+This handler is built with orientation on [BYOND](http://www.byond.com/) games, mainly for Space Station 13,
+so with minor changes it could be used for any compatible codebase.
+
+Handler include next functionality:
+ - Changelog generation from PR description markup.
+ - Validation of changelog markup in PR.
+ - Auto-labeling of PRs and Issues.
+ - `.dmi` diff report.
+ - Web UI interface. (Configuration without recompiling or redeploying.)
+
+Tool may look similar to `github_webhook_processor.php`, which do sort of same things,
+but unlike it this handler gives more complex and flexible solution, which could be extended in any way, without maintenance problems.
 
 ## Installation
-**Before:** ensure that machine where you gonna start the app has installed at least Java 8.
 
-1. [Download](https://github.com/SpaiR/ss13-gitwebhook-handler/releases) 'jar' archive to your server.
+**Important:** application needs Java (at least 8 version).
 
-2. Start it with next command:
-    - `java -jar ss13-gitwebhook-handler-1.1.jar --security.user.name=[your login name] --security.user.password=[your login password]`
-    
-   In root where you started the app two files will be created: `GWHConfig.json` and `GWHLog.log` for configuration and logging store respectively.
-
-3. Go to configuration UI in browser and change all properties as you need. Path to UI should look like this:
-   - `[server ip]:[port]/config` or `[server dns]/config`
-
-4. Config your Repo to send webhook to handler.
+1. [Download](https://github.com/SpaiR/ss13-gitwebhook-handler/releases) 'jar' file.
+2. Start it with any next command:
+    - `java -jar ss13-gitwebhook-handler-${version}.jar --security.user.name=${login} --security.user.password=${password}`
+    - `java -jar ss13-gitwebhook-handler-${version}.jar --server.port=${port} --security.user.name=${login} --security.user.password=${password}`
+3. Go to configuration UI in browser and change all properties as you need. Config page located on address: `/config`.
+4. Configure your repository to send webhook to handler.
 
 While filling of some fields questions about what value it should contain may appear. 
-In the right part of the page (believe me, you won't miss it) you can find pretty full description about every field.
-Also, additional info may be found in `About` window. Click question mark in the bottom-right part of the footer to see it.
+In the right part of the page can be found pretty full description about every field. (Question mark in the top-right part.)
+Additional info may be found in `About` window. (Info mark in the bottom-right part.)
+
+Also, during application startup two files will be created: GWHLog.log and GWHConfig.json for logs and configuration storing.
 
 ### GitHub configuration
-To do something handler should receive so called webhooks from GitHub. (That is why it's called webhook handler...)
-I won't go into details about how to create them, but it's important to tell, that:
-- Your webhook should send `pull_request` and `issues` events.
-- Your GitHub API token should has at least `repo` rights.
 
-URL to send webhook is next: `[server ip]:[port]/handler` or `[server dns]/handler`.
+To work handler should receive so called webhooks from GitHub and it should have token to interact with GitHub API.
+ - Webhook should send `pull_request` and `issues` events.
+ - Webhook should send data in `application/json` format.
+ - GitHub API token should have at least `repo` rights.
+
+Endpoint to send webhooks: `/handler`.
 
 ## How To Work With...
+
 ### ...Changelog Generation
-To patch your `.html` file with new changes it **should** has `<div id="changelogs"></div>` element.
-For example:
+
+To patch `.html` file with new changes it **should** have `<div id="changelogs"></div>` element. For example:
 ```
-<!doctype html>
-<html>
-<head></head>
-<body>
-  <div id="changelogs"></div>
-</body>
-</html>
+<div id="changelogs"></div>
 ```
 
-Everything inside it will be generated automatically.
+All the rest will be generated automatically.
 
 Example of PR description with changelog markup:
 ```
 ...Some PR description...
 :cl:
-- bugfix: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ - bugfix: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 ```
 
-After pull request merge next will appear in your changelog file:
+After pull request will be merged next will appear in changelog file:
 ```
 <!doctype html>
 <html>
@@ -83,36 +83,65 @@ After pull request merge next will appear in your changelog file:
 </html>
 ```
 
-`author name` value by default is GitHub nickname of contributor. Custom name can be provided in a next way:
+#### About syntax
+
+1. All text after `:cl:`will be parsed as changelog, so it should be in the end of PR body.
+2. Changelog entry is a list entry in GitHub markdown. So, if your changelog does not look like a list it's probably invalid.
+3. Entry should not contain explicit newlines. If entry is too long GitHub may visually stretch it, but it's fine.
+4. ` - class: Text.` Space before dash, after it and after colon.
+
+#### Custom Author name
+
+By default handler takes author name value as GitHub login. This could be modified by setting custom name after `:cl:` symbol.
 ```
 ...Some PR description...
 :cl: Custom name goes here
-- bugfix: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ - bugfix: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 ```
 
-**Note:** to be valid markup should contain space after `-` and `:`, and after GitHub procession it should look like list.
+#### PR linking
+
+Adding of `[link]` tag after changelog class will result into linking with PR, by adding link button.
+
+This: ` - bugfix[link]: Lorem ipsum dolor sit amet, consectetur adipiscing elit.`
+Will result into this:
+ ```
+ <li class="bugfix">Lorem ipsum dolor sit amet, consectetur adipiscing elit.<a class="btn btn-xs btn-success link-btn" href="PR url">Read More</a></li>
+ ```
 
 ### ...Validation
-There is no need to work directly with it.
-If changelog markup is invalid handler will mark PR with `Invalid Changelog` label (can be changed in Web UI)
-and leave comment with problem description. After markup fix label will be removed automatically.
 
-Validation process happens on PR creation and description edit.
+There is no need to work with it directly, all process, after configuration, is automatic.
+If changelog markup is invalid, handler will mark PR with `Invalid Changelog` label (can be changed in Web UI)
+and leave comment with problem description. After markup fixing, label will be removed automatically.
+
+Validation process happens on PR creation and description editing.
 
 ### ...Auto-labeling
-Auto-labeling works with pull requests and issues. Process happens only once on issue/pull request creation.
+
+Auto-labeling works with pull requests and issues. Process happens **only once** on issue/pull request creation.
 
 #### Issues
+
 All issues would automatically labeled with `Bug` label. Issue with `[Proposal]` tag in title will be labeled with `Proposal` label.
 
 #### Pull Requests
+
 List of labels to add to PR depends on three things:
-1. If PR diff has changes in `.dmi` or `.dmm` files `Icon Changes` and `Map Changes` labels will be added.
-2. If `[DNM]` or `[WIP]` tags exists in title `Do Not Merge` and `Work In Progress` labels will be added.
-3. Changelog classes are used to determine label. Read more in Web UI.
+ 1. If PR diff has changes in `.dmi` or `.dmm` files `Icon Changes` and `Map Changes` labels will be added.
+ 2. If `[DNM]` or `[WIP]` tags exists in title `Do Not Merge` and `Work In Progress` labels will be added.
+ 3. Changelog classes are used to determine label to add.
+ 
+Read more in Web UI.
 
-Every label for can be configured.
+### Dmi Diff Report
 
-<hr>
+If handler found changes in `.dmi` files, diff report will be generated automatically.
+Report generation happens on PR creation and new commits pushing events.
+
+To store images handler use self hosted image sharing service [PictShare](https://github.com/chrisiaut/pictshare) with `upload_code` check.
+Current configured endpoint is `img.taucetistation.org`. It can't be changed without app recompiling.
+
+<hr />
 
 Current work of handler can be seen here [TauCetiStation/TauCetiClassic](https://github.com/TauCetiStation/TauCetiClassic).
