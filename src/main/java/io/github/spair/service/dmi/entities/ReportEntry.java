@@ -51,7 +51,5 @@ public class ReportEntry {
         private DmiMeta oldMeta;
         @Nullable
         private DmiMeta newMeta;
-        @Nonnull
-        private String metadataDiff = "";
     }
 }

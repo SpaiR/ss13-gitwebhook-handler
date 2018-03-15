@@ -4,7 +4,6 @@ import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.byond.dmi.DmiComparator;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.service.DataGenerator;
-import io.github.spair.service.JsonCompareUtil;
 import io.github.spair.service.dmi.entities.ReportEntry;
 import io.github.spair.service.git.entities.PullRequestFile;
 import org.slf4j.Logger;
@@ -94,10 +93,6 @@ class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<Re
                     reportDuplication.setNewDmiDuplicates(dmi.getDuplicateStatesNames());
                 }
             });
-
-            reportMetadata.setMetadataDiff(
-                    JsonCompareUtil.compareObjects(reportMetadata.getOldMeta(), reportMetadata.getNewMeta(), true)
-            );
 
             return Optional.of(reportEntry);
         } else {

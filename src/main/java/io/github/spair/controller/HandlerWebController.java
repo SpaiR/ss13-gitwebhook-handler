@@ -47,7 +47,6 @@ public class HandlerWebController {
             @RequestHeader(GitHubConstants.SIGNATURE_HEADER) final String signature,
             @RequestHeader(GitHubConstants.EVENT_HEADER) final String event,
             @RequestBody final String webhookPayload) throws IOException {
-        // Substring is to cut down 'sha1=' part.
         signatureService.validate(sanitizeSignature(signature), webhookPayload);
 
         final ObjectNode webhookJson = objectMapper.readValue(webhookPayload, ObjectNode.class);
