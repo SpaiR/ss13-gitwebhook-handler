@@ -64,9 +64,7 @@
         <dependency>
             <groupId>io.github.spair</groupId>
             <artifactId>byond-dmi-util</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/main/resources/byond-dmi-util-1.0-SNAPSHOT.jar</systemPath>
+            <version>1.0</version>
         </dependency>
 
         <dependency>
