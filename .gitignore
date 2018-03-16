@@ -26,4 +26,4 @@ nbdist/
 ### Project Files ###
 GWHConfig.json
 GWHLog.log
-/imgur-data
+src/main/resources/static/*.min*

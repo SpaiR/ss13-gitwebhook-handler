@@ -114,18 +114,124 @@
                     <execution>
                         <id>validate</id>
                         <phase>validate</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
                         <configuration>
                             <configLocation>src/main/checkstyle.xml</configLocation>
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
                             <failsOnError>true</failsOnError>
                         </configuration>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>src/main/resources/static</directory>
+                            <includes>
+                                <include>**/*.min.*</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>uiCompile</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.warmuuh</groupId>
+                        <artifactId>libsass-maven-plugin</artifactId>
+                        <version>0.2.9-libsass_3.4.7</version>
+                        <executions>
+                            <execution>
+                                <id>compile-scss</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <inputPath>${basedir}/src/main/ui</inputPath>
+                            <outputPath>${basedir}/src/main/ui</outputPath>
+                            <generateSourceMap>false</generateSourceMap>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>net.alchim31.maven</groupId>
+                        <artifactId>yuicompressor-maven-plugin</artifactId>
+                        <version>1.5.1</version>
+                        <executions>
+                            <execution>
+                                <id>compress-static-resources</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>compress</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <jswarn>false</jswarn>
+                            <suffix>.min</suffix>
+                            <force>true</force>
+                            <sourceDirectory>${basedir}/src/main/ui</sourceDirectory>
+                            <outputDirectory>${basedir}/src/main/resources/static</outputDirectory>
+                            <excludes>
+                                <exclude>**/*.min.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-clean-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>clean-compiled-css</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>clean</goal>
+                                </goals>
+                                <configuration>
+                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
+                                    <filesets>
+                                        <fileset>
+                                            <directory>src/main/ui</directory>
+                                            <includes>
+                                                <include>**/style.css</include>
+                                            </includes>
+                                        </fileset>
+                                    </filesets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>skipChecks</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-checkstyle-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
