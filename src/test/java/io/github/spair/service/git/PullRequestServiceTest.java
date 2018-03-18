@@ -3,11 +3,12 @@ package io.github.spair.service.git;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.spair.service.RestService;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.entities.PullRequest;
+import io.github.spair.service.git.entities.PullRequestFile;
 import io.github.spair.service.git.entities.PullRequestType;
+import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,15 +34,13 @@ public class PullRequestServiceTest {
     private ConfigService configService;
     @Mock
     private GitHubService gitHubService;
-    @Mock
-    private RestService restService;
 
     private PullRequestService service;
     private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
-        service = new PullRequestService(changelogService, configService, gitHubService, restService);
+        service = new PullRequestService(changelogService, configService, gitHubService);
         objectMapper = new ObjectMapper();
     }
 
@@ -87,7 +86,14 @@ public class PullRequestServiceTest {
                     }
                 });
         when(changelogService.getChangelogClassesList(any(PullRequest.class))).thenReturn(Sets.newSet("tweak", "map", "fix"));
-        when(restService.getForObject(anyString(), eq(String.class))).thenReturn("\ndiff smthg.dm\ndiff smthg.dmm\ndiff smthg.dmi");
+        when(gitHubService.listPullRequestFiles(anyInt()))
+                .thenReturn(
+                        Lists.newArrayList(
+                                createPullRequestFile("icon.dmi"),
+                                createPullRequestFile("map.dmm"),
+                                createPullRequestFile("code.dm")
+                        )
+                );
         when(configService.getConfig().getGitHubConfig().getLabels().getMapChanges()).thenReturn("Map Edit");
         when(configService.getConfig().getGitHubConfig().getLabels().getIconChanges()).thenReturn("Sprites");
         when(configService.getConfig().getGitHubConfig().getLabels().getDoNotMerge()).thenReturn("Do Not Merge");
@@ -96,5 +102,11 @@ public class PullRequestServiceTest {
         service.processLabels(pullRequest);
 
         verify(gitHubService).addLabels(2, Arrays.asList("Fix", "Sprites", "Map Edit", "Do Not Merge", "WIP"));
+    }
+
+    private PullRequestFile createPullRequestFile(String filename) {
+        PullRequestFile pullRequestFile = new PullRequestFile();
+        pullRequestFile.setFilename(filename);
+        return pullRequestFile;
     }
 }
