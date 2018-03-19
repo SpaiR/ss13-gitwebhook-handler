@@ -1,0 +1,32 @@
+.tab-content {
+    &__grid {
+        padding: 0 32px 32px;
+    }
+
+    &__header {
+        margin-bottom: 0;
+        font-weight: 500;
+    }
+
+    &__cell {
+        width: 50%;
+        padding-top: 32px;
+        margin: auto;
+
+        & > .mdl-textfield {
+            width: 100%;
+        }
+    }
+
+    &__line {
+        margin-top: 20px;
+    }
+
+    &__progress-bar {
+        width: 100%;
+
+        &--hidden {
+            display: none;
+        }
+    }
+}

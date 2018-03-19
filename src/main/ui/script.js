@@ -13,11 +13,11 @@ $('document').ready(function () {
 
     $('#open-about-button, #close-about-button').click(function () {
         $('#overlay').fadeToggle('fast');
-        $('#about-text').fadeToggle('fast');
+        $('#about-block').fadeToggle('fast');
     });
 
 
-    $('.help-button').click(function () {
+    $('.help__button').click(function () {
         var $icon = $(this).find('.material-icons');
 
         if ($icon.html() === 'help') {
@@ -149,7 +149,7 @@ function initForms() {
 
 function addClassToList(className) {
     $('#available-classes-list').append(
-        '<li class="mdl-list__item">' +
+        '<li class="mdl-list__item classes-list__item">' +
         ' <button id="remove-class-button" data-class-to-remove="' + className + '" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">' +
         '  <i class="material-icons">clear</i>' +
         ' </button>' +
@@ -173,7 +173,7 @@ function addClassToList(className) {
         '<tr>' +
         ' <td>' + className + '</td>' +
         ' <td>' +
-        '   <input data-class-label="' + className + '" class="mdl-textfield__input">' +
+        '  <input data-class-label="' + className + '" class="mdl-textfield__input">' +
         ' </td>' +
         '</tr>'
     );

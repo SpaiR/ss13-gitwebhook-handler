@@ -1,0 +1,14 @@
+@import 'variables.scss';
+
+.about {
+    display: none;
+    position: fixed;
+    z-index: $above-all-index;
+    left: 50%;
+    top: 20%;
+
+    &__card {
+        left: -50%;
+        width: 50vw;
+    }
+}

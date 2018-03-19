@@ -1,0 +1,5 @@
+@import '../variables.scss';
+
+.mdl-snackbar {
+    z-index: $snackbar-index;
+}

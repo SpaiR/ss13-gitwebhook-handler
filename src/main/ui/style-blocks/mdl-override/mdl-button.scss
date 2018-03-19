@@ -1,0 +1,41 @@
+.mdl-button {
+    &--white-text {
+        color: #fff;
+    }
+
+    &--grey-disable[disabled] {
+        background-color: rgba(0,0,0,.12);
+    }
+
+    &--green {
+        background-color: rgb(76,175,80);
+
+        &:hover {
+            background-color: rgb(92, 175, 77);
+        }
+    }
+
+    &--orange {
+        background-color: rgb(255,171,64);
+
+        &:hover {
+            background-color: rgb(255, 196, 52);
+        }
+    }
+
+    &--blue {
+        background-color: rgb(33,150,243);
+
+        &:hover {
+            background-color: rgb(23, 164, 243);
+        }
+    }
+
+    &--dark-blue {
+        background-color: rgb(63, 81, 181);
+
+        &:hover {
+            background-color: rgb(65, 100, 181);
+        }
+    }
+}

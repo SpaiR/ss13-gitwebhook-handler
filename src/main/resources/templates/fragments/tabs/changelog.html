@@ -1,9 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="tab">
-    <div class="page-content">
-        <div class="mdl-grid">
+    <div class="tab-content">
+        <div class="tab-content__grid mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
-                <div class="cell-content">
+                <div class="tab-content__cell">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input id="path-to-changelog" class="mdl-textfield__input">
@@ -12,7 +12,7 @@
 
                     <br/>
 
-                    <h6 class="available-classes-header"><b>Available classes:</b></h6>
+                    <h6 class="tab-content__header">Available classes:</h6>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input id="add-class-field" class="mdl-textfield__input">
@@ -22,14 +22,13 @@
                         <i class="material-icons">add</i>
                     </button>
 
-                    <ul id="available-classes-list" class="mdl-list"></ul>
+                    <ul id="available-classes-list" class="classes-list mdl-list"></ul>
 
                 </div>
             </div>
         </div>
 
         <div th:replace="fragments/tabs/changelog_help :: tab"></div>
-
     </div>
 </div>
 </html>

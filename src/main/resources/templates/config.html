@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/header :: header">
-    <title id="pageTitle">Handler Config</title>
+    <title id="page-title">Handler Config</title>
 </head>
 <body>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header mdl-layout--fixed-tabs mdl-layout--no-drawer-button">
@@ -13,13 +13,13 @@
                 <input type="submit" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--accent" value="SIGN OUT"/>
             </form>
         </div>
-        <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+        <div class="tab mdl-layout__tab-bar mdl-js-ripple-effect">
             <a href="#fixed-tab-general" class="mdl-layout__tab is-active">GENERAL</a>
             <a href="#fixed-tab-github" class="mdl-layout__tab">
-                <span><i id="github-fail" class="fail-icon material-icons">warning</i>GITHUB</span>
+                <span><i id="github-fail" class="material-icons tab__icon tab__icon--fail">warning</i>GITHUB</span>
             </a>
             <a href="#fixed-tab-changelog" class="mdl-layout__tab">
-                <span><i id="changelog-fail" class="fail-icon material-icons">warning</i>CHANGELOG</span>
+                <span><i id="changelog-fail" class="material-icons tab__icon tab__icon--fail">warning</i>CHANGELOG</span>
             </a>
         </div>
     </header>
@@ -40,11 +40,11 @@
 
     <div th:include="fragments/about :: about"></div>
 
-    <footer class="mdl-mini-footer">
+    <footer class="mdl-layout__footer mdl-mini-footer">
         <div class="mdl-mini-footer__left-section">
             <ul class="mdl-mini-footer__link-list">
                 <li>
-                    <a href="https://github.com/SpaiR/ss13-gitwebhook-handler"><img id="github-icon" src="github.png"/></a>
+                    <a href="https://github.com/SpaiR/ss13-gitwebhook-handler"><img class="mdl-mini-footer__link-image" src="github.png"/></a>
                     <span>&nbsp;Code licensed under an MIT-style License.</span>
                 </li>
             </ul>
@@ -62,7 +62,8 @@
     <button class="mdl-snackbar__action" type="button"></button>
 </div>
 
-<div id="overlay"></div>
+<div id="overlay" class="overlay"></div>
+
 <script defer src="script.min.js"></script>
 </body>
 </html>

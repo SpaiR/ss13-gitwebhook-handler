@@ -1,9 +1,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <div th:fragment="tab">
-    <div class="page-content">
-        <div class="mdl-grid">
+    <div class="tab-content">
+        <div class="tab-content__grid mdl-grid">
             <div class="mdl-cell mdl-cell--12-col">
-                <div class="cell-content">
+                <div class="tab-content__cell">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input id="organization-name" class="mdl-textfield__input">
@@ -32,7 +32,7 @@
                     </div>
 
                     <br/>
-                    <h6><b>Labels:</b></h6>
+                    <h6 class="tab-content__header">Labels:</h6>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input id="invalid-changelog" class="mdl-textfield__input">
@@ -69,8 +69,8 @@
 
                     <br/>
 
-                    <div class="class-labels-wrap">
-                        <table class="class-labels-table mdl-data-table mdl-js-data-table">
+                    <div class="classes-labels">
+                        <table class="classes-labels__table mdl-data-table mdl-js-data-table">
                             <thead>
                             <tr>
                                 <th class="mdl-data-table__cell--non-numeric"><b>Class</b></th>
@@ -86,7 +86,6 @@
         </div>
 
         <div th:replace="fragments/tabs/github_help :: tab"></div>
-
     </div>
 </div>
 </html>

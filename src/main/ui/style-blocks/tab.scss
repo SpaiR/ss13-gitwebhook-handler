@@ -1,0 +1,11 @@
+.tab {
+    &__icon {
+        vertical-align: -12%;
+        margin-right: 5px;
+        display: none;
+
+        &--fail {
+            color: #f44336;
+        }
+    }
+}

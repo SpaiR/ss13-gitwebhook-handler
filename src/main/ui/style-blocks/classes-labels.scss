@@ -1,0 +1,12 @@
+.classes-labels {
+    width: 70%;
+    margin: auto;
+
+    &__table {
+        width: 100%;
+
+        th, input, td {
+            font-size: 14px;
+        }
+    }
+}

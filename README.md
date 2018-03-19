@@ -134,7 +134,7 @@ List of labels to add to PR depends on three things:
  
 Read more in Web UI.
 
-### Dmi Diff Report
+### ...Dmi Diff Report
 
 If handler found changes in `.dmi` files, diff report will be generated automatically.
 Report generation happens on PR creation and new commits pushing events.

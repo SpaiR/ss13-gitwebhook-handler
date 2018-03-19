@@ -1,0 +1,10 @@
+.classes-list {
+    margin-top: 0;
+
+    &__item {
+        padding: 0;
+        width: 200px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+}

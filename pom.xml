@@ -187,17 +187,33 @@
                             <suffix>.min</suffix>
                             <force>true</force>
                             <sourceDirectory>${basedir}/src/main/ui</sourceDirectory>
-                            <outputDirectory>${basedir}/src/main/resources/static</outputDirectory>
+                            <outputDirectory>${basedir}/src/main/ui</outputDirectory>
                             <excludes>
                                 <exclude>**/*.min.*</exclude>
                             </excludes>
+                            <aggregations>
+                                <aggregation>
+                                    <inputDir>${basedir}/src/main/ui</inputDir>
+                                    <output>${basedir}/src/main/resources/static/style.min.css</output>
+                                    <includes>
+                                        <include>**/*.min.css</include>
+                                    </includes>
+                                </aggregation>
+                                <aggregation>
+                                    <inputDir>${basedir}/src/main/ui</inputDir>
+                                    <output>${basedir}/src/main/resources/static/script.min.js</output>
+                                    <includes>
+                                        <include>**/*.min.js</include>
+                                    </includes>
+                                </aggregation>
+                            </aggregations>
                         </configuration>
                     </plugin>
                     <plugin>
                         <artifactId>maven-clean-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>clean-compiled-css</id>
+                                <id>clean-compiled-resources</id>
                                 <phase>generate-resources</phase>
                                 <goals>
                                     <goal>clean</goal>
@@ -208,7 +224,8 @@
                                         <fileset>
                                             <directory>src/main/ui</directory>
                                             <includes>
-                                                <include>**/style.css</include>
+                                                <include>**/*.css</include>
+                                                <include>**/*.min.js</include>
                                             </includes>
                                         </fileset>
                                     </filesets>

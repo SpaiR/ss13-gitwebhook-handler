@@ -1,0 +1,31 @@
+@import 'variables.scss';
+
+.help {
+    &__tab {
+        display: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        overflow: auto;
+        height: 100%;
+        width: 50%;
+        background: white;
+        box-shadow: -1px 0 20px 0 #a8a8a8;
+    }
+
+    &__button {
+        position: absolute;
+        top: 0;
+        right: 16px;
+        margin-top: 16px;
+        z-index: $footer-index - 1;
+    }
+
+    &__text {
+        position: relative;
+        right: 0;
+        padding-right: 32px;
+        padding-left: 32px;
+        height: 100%;
+    }
+}
