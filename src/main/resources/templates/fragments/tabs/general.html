@@ -6,14 +6,14 @@
                 <div class="tab-content__cell">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="request-agent-name" class="mdl-textfield__input">
+                        <input rv-value="config.requestAgentName" id="request-agent-name" class="mdl-textfield__input">
                         <label for="request-agent-name" class="mdl-textfield__label">Agent Name</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <select class="mdl-textfield__input" id="time-zone" name="timeZone">
+                        <select rv-value="config.timeZone" class="mdl-textfield__input" id="time-zone" name="Time Zone">
                             <option>Europe/Moscow</option>
                             <option>Europe/London</option>
                             <option>America/New_York</option>
@@ -25,7 +25,7 @@
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="image-upload-code" class="mdl-textfield__input">
+                        <input rv-value="config.imageUploadCode" id="image-upload-code" class="mdl-textfield__input">
                         <label for="image-upload-code" class="mdl-textfield__label">Image Upload Code</label>
                     </div>
 

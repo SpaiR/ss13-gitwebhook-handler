@@ -78,7 +78,7 @@ public class PullRequestServiceTest {
                 .diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
-        when(configService.getConfig().getGitHubConfig().getLabels().getAvailableClassesLabels())
+        when(configService.getConfig().getGitHubConfig().getLabels().getLabelsForClasses())
                 .thenReturn(new HashMap<String, String>(){
                     {
                         put("map", "Map Edit");

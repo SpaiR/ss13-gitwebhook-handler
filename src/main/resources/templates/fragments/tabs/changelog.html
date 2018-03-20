@@ -6,7 +6,7 @@
                 <div class="tab-content__cell">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="path-to-changelog" class="mdl-textfield__input">
+                        <input rv-value="config.changelogConfig.pathToChangelog" rv-on-keyup="ctrl.disableSaveBtn" id="path-to-changelog" class="mdl-textfield__input">
                         <label for="path-to-changelog" class="mdl-textfield__label">Changelog Path</label>
                     </div>
 
@@ -17,13 +17,19 @@
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                         <input id="add-class-field" class="mdl-textfield__input">
                         <label for="add-class-field" class="mdl-textfield__label">Add class</label>
+                        <button id="add-class-button" class="mdl-button mdl-button--right mdl-js-button mdl-button--icon mdl-button--colored">
+                            <i class="material-icons">add</i>
+                        </button>
                     </div>
-                    <button id="add-class-button" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
-                        <i class="material-icons">add</i>
-                    </button>
 
-                    <ul id="available-classes-list" class="classes-list mdl-list"></ul>
-
+                    <ul class="classes-list mdl-list">
+                        <li rv-each-item="config.changelogConfig.html.availableClasses" class="mdl-list__item classes-list__item">
+                            <button id="remove-class-button" rv-on-click="ctrl.removeClass" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">
+                                <i class="material-icons">clear</i>
+                            </button>
+                            &nbsp;{item}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

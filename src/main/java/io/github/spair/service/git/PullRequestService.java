@@ -68,12 +68,12 @@ public class PullRequestService {
     private Set<String> getLabelsFromChangelog(final PullRequest pullRequest) {
         Set<String> labelsToAdd = new HashSet<>();
 
-        Map<String, String> availableClassesLabels = configService
-                .getConfig().getGitHubConfig().getLabels().getAvailableClassesLabels();
+        Map<String, String> labelsForClasses = configService
+                .getConfig().getGitHubConfig().getLabels().getLabelsForClasses();
         Set<String> changelogClasses = changelogService.getChangelogClassesList(pullRequest);
 
         changelogClasses.forEach(className -> {
-            String classLabel = availableClassesLabels.getOrDefault(className, "");
+            String classLabel = labelsForClasses.getOrDefault(className, "");
 
             if (!classLabel.isEmpty()) {
                 labelsToAdd.add(classLabel);

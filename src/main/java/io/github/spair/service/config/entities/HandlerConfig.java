@@ -40,7 +40,7 @@ public class HandlerConfig {
             private String iconChanges = "Sprites";
             private String workInProgress = "Work In Progress";
             private String doNotMerge = "DO NOT MERGE";
-            private Map<String, String> availableClassesLabels = new HashMap<>();
+            private Map<String, String> labelsForClasses = new HashMap<>();
         }
     }
 

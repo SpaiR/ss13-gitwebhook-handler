@@ -6,28 +6,28 @@
                 <div class="tab-content__cell">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="organization-name" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.organizationName" rv-on-keyup="ctrl.disableSaveBtn" id="organization-name" class="mdl-textfield__input">
                         <label for="organization-name" class="mdl-textfield__label">Organization Name</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="repository-name" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.repositoryName" rv-on-keyup="ctrl.disableSaveBtn" id="repository-name" class="mdl-textfield__input">
                         <label for="repository-name" class="mdl-textfield__label">Repository Name</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="api-token" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.token" id="api-token" class="mdl-textfield__input">
                         <label for="api-token" class="mdl-textfield__label">Api Token</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="secret-key" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.secretKey" id="secret-key" class="mdl-textfield__input">
                         <label for="secret-key" class="mdl-textfield__label">Secret Key</label>
                     </div>
 
@@ -35,35 +35,35 @@
                     <h6 class="tab-content__header">Labels:</h6>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="invalid-changelog" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.labels.invalidChangelog" id="invalid-changelog" class="mdl-textfield__input">
                         <label for="invalid-changelog" class="mdl-textfield__label">Invalid Changelog</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="map-changes" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.labels.mapChanges" id="map-changes" class="mdl-textfield__input">
                         <label for="map-changes" class="mdl-textfield__label">Map Changes</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="icon-changes" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.labels.iconChanges" id="icon-changes" class="mdl-textfield__input">
                         <label for="icon-changes" class="mdl-textfield__label">Icon Changes</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="work-in-progress" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.labels.workInProgress" id="work-in-progress" class="mdl-textfield__input">
                         <label for="work-in-progress" class="mdl-textfield__label">Work In Progress</label>
                     </div>
 
                     <br/>
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input id="do-not-merge" class="mdl-textfield__input">
+                        <input rv-value="config.gitHubConfig.labels.doNotMerge" id="do-not-merge" class="mdl-textfield__input">
                         <label for="do-not-merge" class="mdl-textfield__label">Do Not Merge</label>
                     </div>
 
@@ -77,7 +77,14 @@
                                 <th><b>Label</b></th>
                             </tr>
                             </thead>
-                            <tbody id="available-classes-labels"></tbody>
+                            <tbody>
+                                <tr rv-each-item="config.changelogConfig.html.availableClasses">
+                                    <td>{item}</td>
+                                    <td>
+                                        <input rv-label-for-class-value="item" class="mdl-textfield__input">
+                                    </td>
+                                </tr>
+                            </tbody>
                         </table>
                     </div>
 
