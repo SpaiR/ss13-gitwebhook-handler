@@ -135,11 +135,14 @@ public class PullRequestService {
     }
 
     private PullRequestType identifyType(final ObjectNode webhookJson) {
-        if (webhookJson.get(GitHubPayload.PULL_REQUEST).get(GitHubPayload.MERGED).asBoolean()) {
+        String action = webhookJson.get(GitHubPayload.ACTION).asText();
+        PullRequestType prType = EnumUtil.valueOfOrDefault(PullRequestType.values(), action, PullRequestType.UNDEFINED);
+        boolean isMerged = webhookJson.get(GitHubPayload.PULL_REQUEST).get(GitHubPayload.MERGED).asBoolean();
+
+        if (prType == PullRequestType.CLOSED && isMerged) {
             return PullRequestType.MERGED;
         } else {
-            String action = webhookJson.get(GitHubPayload.ACTION).asText();
-            return EnumUtil.valueOfOrDefault(PullRequestType.values(), action, PullRequestType.UNDEFINED);
+            return prType;
         }
     }
 }

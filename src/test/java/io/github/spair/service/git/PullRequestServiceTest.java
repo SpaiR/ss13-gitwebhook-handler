@@ -72,6 +72,45 @@ public class PullRequestServiceTest {
     }
 
     @Test
+    public void testConvertWebhookJsonWhenClosed() throws Exception {
+        File jsonFile = new ClassPathResource("pull-request-webhook-payload-closed.json").getFile();
+        ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
+
+        PullRequest expectedPullRequest = PullRequest.builder()
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.CLOSED)
+                .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
+                .body("This is a pretty simple change that we need to pull into master.").build();
+
+        assertEquals(expectedPullRequest, service.convertWebhookJson(pullRequestPayload));
+    }
+
+    @Test
+    public void testConvertWebhookJsonWhenMerged() throws Exception {
+        File jsonFile = new ClassPathResource("pull-request-webhook-payload-merged.json").getFile();
+        ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
+
+        PullRequest expectedPullRequest = PullRequest.builder()
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.MERGED)
+                .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
+                .body("This is a pretty simple change that we need to pull into master.").build();
+
+        assertEquals(expectedPullRequest, service.convertWebhookJson(pullRequestPayload));
+    }
+
+    @Test
+    public void testConvertWebhookJsonWhenLabeledMerged() throws Exception {
+        File jsonFile = new ClassPathResource("pull-request-webhook-payload-labeled-merged.json").getFile();
+        ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
+
+        PullRequest expectedPullRequest = PullRequest.builder()
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.UNDEFINED)
+                .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
+                .body("This is a pretty simple change that we need to pull into master.").build();
+
+        assertEquals(expectedPullRequest, service.convertWebhookJson(pullRequestPayload));
+    }
+
+    @Test
     public void testProcessLabels() {
         PullRequest pullRequest = PullRequest.builder()
                 .number(2).title("[WiP][DNM]Update the README with new information")

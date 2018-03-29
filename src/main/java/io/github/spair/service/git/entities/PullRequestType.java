@@ -5,5 +5,6 @@ public enum PullRequestType {
     OPENED,
     EDITED,
     SYNCHRONIZE,
-    MERGED
+    MERGED,
+    CLOSED
 }
