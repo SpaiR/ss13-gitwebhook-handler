@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/SpaiR/ss13-gitwebhook-handler.svg?branch=master)](https://travis-ci.org/SpaiR/ss13-gitwebhook-handler)
+
 # SS13 Gitwebhook Handler
 
 ## About
