@@ -70,34 +70,35 @@ public class ReportEntryGenerator implements DataGenerator<PullRequestFile, Opti
             final DmiDiff dmiDiff = DmiComparator.compare(oldDmi.orElse(null), newDmi.orElse(null));
 
             ReportEntry reportEntry = new ReportEntry(filename);
-            ReportEntry.Metadata reportMetadata = reportEntry.getMetadata();
-            ReportEntry.Duplication reportDuplication = reportEntry.getDuplication();
 
             if (!dmiDiff.isSame()) {
                 reportEntry.setStateDiffReports(stateDiffReportGenerator.generate(dmiDiff));
             }
 
-            oldDmi.ifPresent(dmi -> {
-                reportMetadata.setOldMeta(dmi.getMetadata());
-                reportEntry.setOldStatesNumber(dmi.getStates().size());
-
-                if (dmi.isHasDuplicates()) {
-                    reportDuplication.setOldDmiDuplicates(dmi.getDuplicateStatesNames());
-                }
-            });
-
-            newDmi.ifPresent(dmi -> {
-                reportMetadata.setNewMeta(dmi.getMetadata());
-                reportEntry.setNewStatesNumber(dmi.getStates().size());
-
-                if (dmi.isHasDuplicates()) {
-                    reportDuplication.setNewDmiDuplicates(dmi.getDuplicateStatesNames());
-                }
-            });
+            oldDmi.ifPresent(dmi -> setOldDmiInfoToReport(reportEntry, dmi));
+            newDmi.ifPresent(dmi -> setNewDmiInfoToReport(reportEntry, dmi));
 
             return Optional.of(reportEntry);
         } else {
             return Optional.empty();
+        }
+    }
+
+    private void setOldDmiInfoToReport(final ReportEntry report, final Dmi oldDmi) {
+        report.setOldMetadata(oldDmi.getMetadata());
+        report.setOldStatesNumber(oldDmi.getStates().size());
+
+        if (oldDmi.isHasDuplicates()) {
+            report.setOldDmiDuplicates(oldDmi.getDuplicateStatesNames());
+        }
+    }
+
+    private void setNewDmiInfoToReport(final ReportEntry report, final Dmi newDmi) {
+        report.setNewMetadata(newDmi.getMetadata());
+        report.setNewStatesNumber(newDmi.getStates().size());
+
+        if (newDmi.isHasDuplicates()) {
+            report.setNewDmiDuplicates(newDmi.getDuplicateStatesNames());
         }
     }
 }
