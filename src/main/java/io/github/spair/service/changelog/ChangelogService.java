@@ -46,8 +46,7 @@ public class ChangelogService {
         if (!changelog.isEmpty()) {
             String changelogPath = configService.getConfig().getChangelogConfig().getPathToChangelog();
             String currentChangelogHtml = gitHubService.readDecodedFile(changelogPath);
-            String newChangelogHtml = htmlChangelogGenerator.generate(
-                    new HtmlChangelogGenerator.DataHolder(currentChangelogHtml, changelog));
+            String newChangelogHtml = htmlChangelogGenerator.generate(currentChangelogHtml, changelog);
 
             String updateMessage = "Automatic changelog generation for PR #" + pullRequest.getNumber();
             gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);

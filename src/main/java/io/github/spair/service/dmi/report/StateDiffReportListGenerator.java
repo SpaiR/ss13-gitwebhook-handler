@@ -3,7 +3,6 @@ package io.github.spair.service.dmi.report;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
 import io.github.spair.byond.dmi.DmiSprite;
-import io.github.spair.service.DataGenerator;
 import io.github.spair.service.dmi.entities.StateDiffReport;
 import io.github.spair.service.image.ImageUploaderService;
 import org.slf4j.Logger;
@@ -24,7 +23,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 @Component
-class StateDiffReportListGenerator implements DataGenerator<DmiDiff, List<StateDiffReport>> {
+class StateDiffReportListGenerator {
 
     private final ImageUploaderService imageUploader;
 
@@ -35,9 +34,8 @@ class StateDiffReportListGenerator implements DataGenerator<DmiDiff, List<StateD
         this.imageUploader = imageUploader;
     }
 
-    @Override
     @Nonnull
-    public List<StateDiffReport> generate(@Nonnull final DmiDiff dmiDiff) {
+    List<StateDiffReport> generate(@Nonnull final DmiDiff dmiDiff) {
         final List<DmiDiff.DiffEntry> diffEntries = dmiDiff.getDiffEntries();
         final ExecutorService executor = createExecutor(diffEntries.size());
         final List<Callable<StateDiffReport>> callableList = createCallableList(dmiDiff);

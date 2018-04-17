@@ -61,7 +61,7 @@ public class HtmlChangelogGeneratorTest {
         changelog.setAuthor("Author Name");
         changelog.setChangelogRows(changelogRows);
 
-        String resultHtml = generator.generate(new HtmlChangelogGenerator.DataHolder("<div id=\"changelogs\"></div>", changelog));
+        String resultHtml = generator.generate("<div id=\"changelogs\"></div>", changelog);
         String assertHtml =
                 "<html>\n" +
                 " <head></head>\n" +

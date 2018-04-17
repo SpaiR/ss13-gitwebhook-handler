@@ -1,10 +1,8 @@
 package io.github.spair.service.changelog;
 
-import io.github.spair.service.DataGenerator;
 import io.github.spair.service.changelog.entities.Changelog;
 import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.config.ConfigService;
-import lombok.AllArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
-class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.DataHolder, String> {
+class HtmlChangelogGenerator {
 
     private final ConfigService configService;
 
@@ -46,9 +44,8 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
         this.configService = configService;
     }
 
-    @Override
-    public String generate(final DataHolder holder) {
-        Document parsedChangelog = Jsoup.parse(holder.currentHtmlChangelog);
+    String generate(final String currentChangelogHtml, final Changelog newChangelog) {
+        Document parsedChangelog = Jsoup.parse(currentChangelogHtml);
         Element currentChangelogs = parsedChangelog.getElementById(CHANGELOGS_ID);
 
         ZoneId zoneId = ZoneId.of(configService.getConfig().getTimeZone());
@@ -57,14 +54,14 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
         Element currentDateElement = getCurrentDateElement(currentChangelogs, currentDate);
 
         if (currentDateElement != null) {
-            addChangelogToCurrentDate(holder.newChangelog, currentDateElement);
+            addChangelogToCurrentDate(newChangelog, currentDateElement);
         } else {
             currentChangelogs.prepend(String.format(DATE_ROW_TEMPLATE, currentDate));
 
             Element newDateElement = getCurrentDateElement(currentChangelogs, currentDate);
             newDateElement.append(String.format(DATE_ELEMENT_TEMPLATE, currentDate));
 
-            addChangelogToCurrentDate(holder.newChangelog, newDateElement);
+            addChangelogToCurrentDate(newChangelog, newDateElement);
         }
 
         return parsedChangelog.toString();
@@ -105,12 +102,5 @@ class HtmlChangelogGenerator implements DataGenerator<HtmlChangelogGenerator.Dat
 
     private Element getAuthorElement(final Element elementToParse, final String author) {
         return elementToParse.getElementsByAttributeValue(DATA_AUTHOR, author).first();
-    }
-
-    @AllArgsConstructor
-    @SuppressWarnings("checkstyle:VisibilityModifier")
-    static class DataHolder {
-        final String currentHtmlChangelog;
-        final Changelog newChangelog;
     }
 }

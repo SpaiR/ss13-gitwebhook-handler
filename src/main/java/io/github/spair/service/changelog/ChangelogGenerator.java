@@ -1,6 +1,5 @@
 package io.github.spair.service.changelog;
 
-import io.github.spair.service.DataGenerator;
 import io.github.spair.service.changelog.entities.Changelog;
 import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.git.entities.PullRequest;
@@ -15,14 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-class ChangelogGenerator implements DataGenerator<PullRequest, Changelog> {
+class ChangelogGenerator {
 
     private static final Pattern CL_TEXT = Pattern.compile(":cl:((?:.|\\n|\\r)*+)|\uD83C\uDD91((?:.|\\n|\\r)*+)");
     private static final Pattern AUTHOR_BEFORE_CHANGES = Pattern.compile(".*");
     private static final Pattern CHANGELOG_ROW_WITH_CLASS = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
 
-    @Override
-    public Changelog generate(final PullRequest pullRequest) {
+    Changelog generate(final PullRequest pullRequest) {
         Changelog changelog = new Changelog();
         String changelogText = findChangelogText(Optional.ofNullable(pullRequest.getBody()).orElse(""));
 

@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PullRequestHandler implements Handler {
+public class PullRequestHandler {
 
     private final PullRequestService pullRequestService;
     private final ChangelogService changelogService;
@@ -24,7 +24,6 @@ public class PullRequestHandler implements Handler {
         this.dmiDiffService = dmiDiffService;
     }
 
-    @Override
     public void handle(final ObjectNode webhookJson) {
         PullRequest pullRequest = pullRequestService.convertWebhookJson(webhookJson);
 

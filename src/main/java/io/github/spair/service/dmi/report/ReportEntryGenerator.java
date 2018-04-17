@@ -3,7 +3,6 @@ package io.github.spair.service.dmi.report;
 import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.byond.dmi.DmiComparator;
 import io.github.spair.byond.dmi.DmiDiff;
-import io.github.spair.service.DataGenerator;
 import io.github.spair.service.dmi.DmiLoader;
 import io.github.spair.service.dmi.entities.ReportEntry;
 import io.github.spair.service.git.entities.PullRequestFile;
@@ -18,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<ReportEntry>> {
+public class ReportEntryGenerator {
 
     private final DmiLoader dmiLoader;
     private final StateDiffReportListGenerator stateDiffReportGenerator;
@@ -26,12 +25,12 @@ public class ReportEntryGenerator implements DataGenerator<PullRequestFile, Opti
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportEntryGenerator.class);
 
     @Autowired
-    ReportEntryGenerator(final DmiLoader dmiLoader, final StateDiffReportListGenerator stateDiffReportGenerator) {
+    public ReportEntryGenerator(
+            final DmiLoader dmiLoader, final StateDiffReportListGenerator stateDiffReportGenerator) {
         this.dmiLoader = dmiLoader;
         this.stateDiffReportGenerator = stateDiffReportGenerator;
     }
 
-    @Override
     public Optional<ReportEntry> generate(@Nonnull final PullRequestFile dmiFile) {
         final Optional<Dmi> oldDmi;
         final Optional<Dmi> newDmi;
