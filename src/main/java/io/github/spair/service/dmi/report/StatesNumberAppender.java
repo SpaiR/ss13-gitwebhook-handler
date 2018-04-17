@@ -1,11 +1,11 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.service.dmi.entities.ReportEntry;
 
-import static io.github.spair.service.dmi.ReportPrinter.NEW_LINE;
+import static io.github.spair.service.dmi.report.DmiReportCreator.NEW_LINE;
 
-public class StatesNumberAppender implements ReportAppender {
+class StatesNumberAppender implements ReportAppender {
 
     private static final String OVERFLOW_MESSAGE = " (overflow)";
     private static final String OLD_DMI = "Old";

@@ -1,4 +1,4 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
@@ -24,14 +24,14 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 @Component
-class StateDiffReportGenerator implements DataGenerator<DmiDiff, List<StateDiffReport>> {
+class StateDiffReportListGenerator implements DataGenerator<DmiDiff, List<StateDiffReport>> {
 
     private final ImageUploaderService imageUploader;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(StateDiffReportGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(StateDiffReportListGenerator.class);
 
     @Autowired
-    StateDiffReportGenerator(final ImageUploaderService imageUploader) {
+    StateDiffReportListGenerator(final ImageUploaderService imageUploader) {
         this.imageUploader = imageUploader;
     }
 

@@ -1,6 +1,8 @@
 package io.github.spair.service.dmi;
 
 import io.github.spair.service.dmi.entities.DmiDiffReport;
+import io.github.spair.service.dmi.report.DmiReportCreator;
+import io.github.spair.service.dmi.report.ReportEntryGenerator;
 import io.github.spair.service.git.GitHubService;
 import io.github.spair.service.git.entities.IssueComment;
 import io.github.spair.service.git.entities.PullRequest;
@@ -22,17 +24,17 @@ public class DmiDiffService {
 
     private final GitHubService gitHubService;
     private final ReportEntryGenerator reportEntryGenerator;
-    private final ReportPrinter reportPrinter;
+    private final DmiReportCreator reportCreator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmiDiffService.class);
     private static final String DMI_SUFFIX = ".dmi";
 
     @Autowired
     public DmiDiffService(final GitHubService gitHubService,
-                          final ReportPrinter reportPrinter,
+                          final DmiReportCreator reportCreator,
                           final ReportEntryGenerator reportEntryGenerator) {
         this.gitHubService = gitHubService;
-        this.reportPrinter = reportPrinter;
+        this.reportCreator = reportCreator;
         this.reportEntryGenerator = reportEntryGenerator;
     }
 
@@ -50,14 +52,14 @@ public class DmiDiffService {
                 .ifPresent(dmiDiffReport.getReportEntries()::add)
         );
 
-        final String report = reportPrinter.printReport(dmiDiffReport);
+        final String report = reportCreator.createReport(dmiDiffReport);
         final Integer reportId = getReportId(gitHubService.listIssueComments(prNumber));
 
         try {
             sendReport(report, prNumber, reportId);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.UNPROCESSABLE_ENTITY) {
-                sendReport(reportPrinter.printErrorReason(), prNumber, reportId);
+                sendReport(reportCreator.createErrorReason(), prNumber, reportId);
             } else {
                 LOGGER.error("Error on sending DMI diff report. Resp headers: {}. Resp body: {}",
                         e.getResponseHeaders(), e.getResponseBodyAsString());

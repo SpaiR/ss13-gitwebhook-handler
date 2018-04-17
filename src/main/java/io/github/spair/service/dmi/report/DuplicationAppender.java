@@ -1,12 +1,12 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.service.dmi.entities.ReportEntry;
 
 import java.util.Set;
 
-import static io.github.spair.service.dmi.ReportPrinter.NEW_LINE;
+import static io.github.spair.service.dmi.report.DmiReportCreator.NEW_LINE;
 
-public class DuplicationAppender implements ReportAppender {
+class DuplicationAppender implements ReportAppender {
 
     @Override
     public void append(final StringBuilder sb, final ReportEntry reportEntry) {

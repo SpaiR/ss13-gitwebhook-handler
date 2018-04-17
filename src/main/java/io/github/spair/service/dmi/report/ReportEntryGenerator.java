@@ -1,9 +1,10 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.byond.dmi.DmiComparator;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.service.DataGenerator;
+import io.github.spair.service.dmi.DmiLoader;
 import io.github.spair.service.dmi.entities.ReportEntry;
 import io.github.spair.service.git.entities.PullRequestFile;
 import org.slf4j.Logger;
@@ -17,15 +18,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<ReportEntry>> {
+public class ReportEntryGenerator implements DataGenerator<PullRequestFile, Optional<ReportEntry>> {
 
     private final DmiLoader dmiLoader;
-    private final StateDiffReportGenerator stateDiffReportGenerator;
+    private final StateDiffReportListGenerator stateDiffReportGenerator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ReportEntryGenerator.class);
 
     @Autowired
-    ReportEntryGenerator(final DmiLoader dmiLoader, final StateDiffReportGenerator stateDiffReportGenerator) {
+    ReportEntryGenerator(final DmiLoader dmiLoader, final StateDiffReportListGenerator stateDiffReportGenerator) {
         this.dmiLoader = dmiLoader;
         this.stateDiffReportGenerator = stateDiffReportGenerator;
     }

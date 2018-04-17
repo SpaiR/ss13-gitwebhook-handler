@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Component
-class DmiLoader {
+public class DmiLoader {
 
     private final RestService restService;
     private final GitHubService gitHubService;

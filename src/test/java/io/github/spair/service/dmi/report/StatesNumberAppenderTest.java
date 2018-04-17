@@ -1,7 +1,8 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.ReadFileUtil;
 import io.github.spair.service.dmi.entities.ReportEntry;
+import io.github.spair.service.dmi.report.StatesNumberAppender;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

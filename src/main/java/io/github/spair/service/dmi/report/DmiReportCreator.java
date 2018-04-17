@@ -1,10 +1,10 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.service.dmi.entities.DmiDiffReport;
 import org.springframework.stereotype.Component;
 
 @Component
-class ReportPrinter {
+public class DmiReportCreator {
 
     private final ReportAppender filenameAppender = new FilenameAppender();
     private final ReportAppender duplicationAppender = new DuplicationAppender();
@@ -18,7 +18,7 @@ class ReportPrinter {
     private static final String DETAILS_CLOSE = "</details>";
     private static final String LINE_HORIZONTAL = "<hr />";
 
-    String printReport(final DmiDiffReport report) {
+    public String createReport(final DmiDiffReport report) {
         StringBuilder sb = new StringBuilder();
 
         sb.append(DmiDiffReport.TITLE).append(NEW_LINE).append(NEW_LINE);
@@ -43,7 +43,7 @@ class ReportPrinter {
         return sb.toString();
     }
 
-    String printErrorReason() {
+    public String createErrorReason() {
         return DmiDiffReport.TITLE + NEW_LINE + NEW_LINE
                 + "Report is too long, it can't be print. Make PR more atomic, please.";
     }

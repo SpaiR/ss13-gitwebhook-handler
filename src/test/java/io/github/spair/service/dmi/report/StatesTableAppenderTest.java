@@ -1,10 +1,11 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.ReadFileUtil;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.SpriteDir;
 import io.github.spair.service.dmi.entities.ReportEntry;
 import io.github.spair.service.dmi.entities.StateDiffReport;
+import io.github.spair.service.dmi.report.StatesTableAppender;
 import org.junit.Test;
 
 import java.util.Arrays;

@@ -1,13 +1,13 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.service.dmi.entities.ReportEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.spair.service.dmi.ReportPrinter.SUMMARY_TEMPLATE;
+import static io.github.spair.service.dmi.report.DmiReportCreator.SUMMARY_TEMPLATE;
 
-public class FilenameAppender implements ReportAppender {
+class FilenameAppender implements ReportAppender {
 
     private static final String DUPLICATES = "duplicates";
     private static final String STATE_OVERFLOW = "state overflow";

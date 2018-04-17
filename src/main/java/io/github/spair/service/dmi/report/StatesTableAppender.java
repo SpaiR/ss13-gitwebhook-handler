@@ -1,4 +1,4 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.byond.dmi.SpriteDir;
 import io.github.spair.service.dmi.entities.ReportEntry;
@@ -6,9 +6,9 @@ import io.github.spair.service.dmi.entities.StateDiffReport;
 
 import javax.annotation.Nonnull;
 
-import static io.github.spair.service.dmi.ReportPrinter.NEW_LINE;
+import static io.github.spair.service.dmi.report.DmiReportCreator.NEW_LINE;
 
-public class StatesTableAppender implements ReportAppender {
+class StatesTableAppender implements ReportAppender {
 
     private static final String IMG_TEMPLATE = "<img src=\"%s\" title=\"%s\" />";
     private static final String TABLE_DELIMITER = "|";

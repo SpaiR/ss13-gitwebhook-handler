@@ -1,4 +1,4 @@
-package io.github.spair.service.dmi;
+package io.github.spair.service.dmi.report;
 
 import io.github.spair.ReadFileUtil;
 import io.github.spair.service.dmi.entities.DmiDiffReport;
@@ -17,9 +17,9 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ReportPrinterTest {
+public class ReportCreatorTest {
 
-    private final ReportPrinter printer = new ReportPrinter();
+    private final DmiReportCreator creator = new DmiReportCreator();
     private final String NEW_LINE = System.getProperty("line.separator");
 
     @Mock
@@ -44,20 +44,20 @@ public class ReportPrinterTest {
     }
 
     @Test
-    public void testPrintReport() {
+    public void testCreateReport() {
         String expectedReport = ReadFileUtil.readFile("report-printer-result.txt");
         DmiDiffReport dmiDiffReport = new DmiDiffReport();
         dmiDiffReport.getReportEntries().add(mock(ReportEntry.class));
         dmiDiffReport.getReportEntries().add(mock(ReportEntry.class));
 
-        assertEquals(expectedReport, printer.printReport(dmiDiffReport));
+        assertEquals(expectedReport, creator.createReport(dmiDiffReport));
     }
 
     private void setField(String fieldName, ReportAppender value) throws Exception {
-        Class<?> c = printer.getClass();
+        Class<?> c = creator.getClass();
         Field f = c.getDeclaredField(fieldName);
         f.setAccessible(true);
-        f.set(printer, value);
+        f.set(creator, value);
     }
 
     private void mockAppender(String appendText, ReportAppender appender) {
