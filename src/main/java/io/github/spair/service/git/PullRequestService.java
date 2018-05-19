@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Service
 public class PullRequestService {
@@ -62,7 +63,9 @@ public class PullRequestService {
         labelsToAdd.addAll(getLabelsFromChangedFiles(pullRequest.getNumber()));
         labelsToAdd.addAll(getLabelsFromTitle(pullRequest.getTitle()));
 
-        gitHubService.addLabels(pullRequest.getNumber(), new ArrayList<>(labelsToAdd));
+        if (!labelsToAdd.isEmpty()) {
+            gitHubService.addLabels(pullRequest.getNumber(), new ArrayList<>(labelsToAdd));
+        }
     }
 
     private Set<String> getLabelsFromChangelog(final PullRequest pullRequest) {
@@ -124,11 +127,11 @@ public class PullRequestService {
         boolean isWIP = loweredTitle.contains(WIP_TAG);
 
         if (isDNM) {
-            labelsToAdd.add(configService.getConfig().getGitHubConfig().getLabels().getDoNotMerge());
+            addIfNotEmpty(labelsToAdd, configService.getConfig().getGitHubConfig().getLabels().getDoNotMerge());
         }
 
         if (isWIP) {
-            labelsToAdd.add(configService.getConfig().getGitHubConfig().getLabels().getWorkInProgress());
+            addIfNotEmpty(labelsToAdd, configService.getConfig().getGitHubConfig().getLabels().getWorkInProgress());
         }
 
         return labelsToAdd;
@@ -143,6 +146,12 @@ public class PullRequestService {
             return PullRequestType.MERGED;
         } else {
             return prType;
+        }
+    }
+
+    private void addIfNotEmpty(final List<String> labelsToAdd, final String label) {
+        if (Objects.nonNull(label) && !label.isEmpty()) {
+            labelsToAdd.add(label);
         }
     }
 }
