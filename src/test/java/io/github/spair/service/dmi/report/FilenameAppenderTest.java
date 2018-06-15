@@ -1,7 +1,6 @@
 package io.github.spair.service.dmi.report;
 
 import io.github.spair.service.dmi.entities.ReportEntry;
-import io.github.spair.service.dmi.report.FilenameAppender;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,5 +1,6 @@
 package io.github.spair.service.dmi.report;
 
+import io.github.spair.byond.dmi.Diff;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
 import io.github.spair.byond.dmi.DmiSprite;
@@ -36,8 +37,8 @@ class StateDiffReportListGenerator {
 
     @Nonnull
     List<StateDiffReport> generate(@Nonnull final DmiDiff dmiDiff) {
-        final List<DmiDiff.DiffEntry> diffEntries = dmiDiff.getDiffEntries();
-        final ExecutorService executor = createExecutor(diffEntries.size());
+        final List<Diff> diffs = dmiDiff.getDiffs();
+        final ExecutorService executor = createExecutor(diffs.size());
         final List<Callable<StateDiffReport>> callableList = createCallableList(dmiDiff);
 
         List<StateDiffReport> stateDiffReports = new ArrayList<>();
@@ -55,7 +56,7 @@ class StateDiffReportListGenerator {
                     .forEach(stateDiffReports::add);
         } catch (InterruptedException e) {
             LOGGER.error("Exception on creating StateDiffReport. Created reports: {}. Total diff: {}",
-                    stateDiffReports, diffEntries, e);
+                    stateDiffReports, diffs, e);
             throw new RuntimeException(e);
         } finally {
             executor.shutdown();
@@ -75,24 +76,24 @@ class StateDiffReportListGenerator {
     private List<Callable<StateDiffReport>> createCallableList(final DmiDiff dmiDiff) {
         List<Callable<StateDiffReport>> callableList = new ArrayList<>();
 
-        dmiDiff.getDiffEntries().forEach(diffEntry ->
+        dmiDiff.getDiffs().forEach(diff ->
                 callableList.add(() -> {
                     StateDiffReport stateDiffReport = new StateDiffReport();
 
-                    final String stateName = diffEntry.getStateName();
+                    final String stateName = diff.getStateName();
                     final DmiMeta oldMeta = dmiDiff.getOldMeta();
                     final DmiMeta newMeta = dmiDiff.getNewMeta();
-                    final DmiSprite oldSprite = diffEntry.getOldSprite();
-                    final DmiSprite newSprite = diffEntry.getNewSprite();
+                    final DmiSprite oldSprite = diff.getOldSprite();
+                    final DmiSprite newSprite = diff.getNewSprite();
 
                     stateDiffReport.setName(stateName);
                     stateDiffReport.setSpriteWidth(determineValue(oldMeta, newMeta, DmiMeta::getSpritesWidth));
                     stateDiffReport.setSpriteHeight(determineValue(oldMeta, newMeta, DmiMeta::getSpritesHeight));
-                    stateDiffReport.setDir(determineValue(oldSprite, newSprite, DmiSprite::getSpriteDir));
-                    stateDiffReport.setFrameNumber(determineValue(oldSprite, newSprite, DmiSprite::getSpriteFrameNum));
+                    stateDiffReport.setDir(determineValue(oldSprite, newSprite, DmiSprite::getDir));
+                    stateDiffReport.setFrameNumber(determineValue(oldSprite, newSprite, DmiSprite::getFrameNum));
                     stateDiffReport.setOldDmiLink(getSpriteLink(oldSprite));
                     stateDiffReport.setNewDmiLink(getSpriteLink(newSprite));
-                    stateDiffReport.setStatus(diffEntry.getStatus());
+                    stateDiffReport.setStatus(diff.getStatus());
 
                     return stateDiffReport;
                 })

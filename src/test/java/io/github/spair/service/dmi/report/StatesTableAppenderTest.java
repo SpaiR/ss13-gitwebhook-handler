@@ -1,11 +1,10 @@
 package io.github.spair.service.dmi.report;
 
 import io.github.spair.ReadFileUtil;
-import io.github.spair.byond.dmi.DmiDiff;
+import io.github.spair.byond.dmi.DiffStatus;
 import io.github.spair.byond.dmi.SpriteDir;
 import io.github.spair.service.dmi.entities.ReportEntry;
 import io.github.spair.service.dmi.entities.StateDiffReport;
-import io.github.spair.service.dmi.report.StatesTableAppender;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -22,9 +21,9 @@ public class StatesTableAppenderTest {
         ReportEntry reportEntry = new ReportEntry("icons/file.dmi");
 
         reportEntry.setStateDiffReports(Arrays.asList(
-                createStateDiff("state1", SpriteDir.SOUTH, 1, DmiDiff.Status.CREATED),
-                createStateDiff("state2", SpriteDir.SOUTH, 1, DmiDiff.Status.MODIFIED),
-                createStateDiff("state3", SpriteDir.NORTH, 2, DmiDiff.Status.DELETED)
+                createStateDiff("state1", SpriteDir.SOUTH, 1, DiffStatus.CREATED),
+                createStateDiff("state2", SpriteDir.SOUTH, 1, DiffStatus.MODIFIED),
+                createStateDiff("state3", SpriteDir.NORTH, 2, DiffStatus.DELETED)
         ));
 
         appender.append(sb, reportEntry);
@@ -33,7 +32,7 @@ public class StatesTableAppenderTest {
         assertEquals(expectedReport, sb.toString());
     }
 
-    private StateDiffReport createStateDiff(String name, SpriteDir dir, int frame, DmiDiff.Status status) {
+    private StateDiffReport createStateDiff(String name, SpriteDir dir, int frame, DiffStatus status) {
         StateDiffReport report = new StateDiffReport();
 
         report.setName(name);
