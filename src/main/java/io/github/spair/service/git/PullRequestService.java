@@ -2,6 +2,7 @@ package io.github.spair.service.git;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.spair.aspect.ExceptionSuppress;
 import io.github.spair.service.EnumUtil;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.config.ConfigService;
@@ -56,6 +57,7 @@ public class PullRequestService {
                 .build();
     }
 
+    @ExceptionSuppress
     public void processLabels(final PullRequest pullRequest) {
         Set<String> labelsToAdd = new HashSet<>();
 

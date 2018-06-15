@@ -2,6 +2,7 @@ package io.github.spair.service.git;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.spair.aspect.ExceptionSuppress;
 import io.github.spair.service.EnumUtil;
 import io.github.spair.service.git.entities.Issue;
 import io.github.spair.service.git.entities.IssueType;
@@ -32,6 +33,7 @@ public class IssuesService {
         return new Issue(number, title, issueType);
     }
 
+    @ExceptionSuppress
     public void processLabels(final Issue issue) {
         boolean isProposal = issue.getTitle().toLowerCase().contains(PROPOSAL_TAG);
 

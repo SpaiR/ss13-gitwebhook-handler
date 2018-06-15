@@ -1,5 +1,6 @@
 package io.github.spair.service.changelog;
 
+import io.github.spair.aspect.ExceptionSuppress;
 import io.github.spair.service.changelog.entities.Changelog;
 import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.changelog.entities.ChangelogValidationStatus;
@@ -40,6 +41,7 @@ public class ChangelogService {
         this.changelogGenerator = changelogGenerator;
     }
 
+    @ExceptionSuppress
     public void generateAndUpdate(final PullRequest pullRequest) {
         Changelog changelog = changelogGenerator.generate(pullRequest);
 
@@ -55,6 +57,7 @@ public class ChangelogService {
         }
     }
 
+    @ExceptionSuppress
     public void validate(final PullRequest pullRequest) {
         String invalidChangelogLabel = configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog();
         Changelog changelog = changelogGenerator.generate(pullRequest);

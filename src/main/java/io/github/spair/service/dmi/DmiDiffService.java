@@ -1,5 +1,6 @@
 package io.github.spair.service.dmi;
 
+import io.github.spair.aspect.ExceptionSuppress;
 import io.github.spair.service.dmi.entities.DmiDiffReport;
 import io.github.spair.service.dmi.report.DmiReportCreator;
 import io.github.spair.service.dmi.report.ReportEntryGenerator;
@@ -38,6 +39,7 @@ public class DmiDiffService {
         this.reportEntryGenerator = reportEntryGenerator;
     }
 
+    @ExceptionSuppress
     public void generateAndReport(final PullRequest pullRequest) {
         final int prNumber = pullRequest.getNumber();
         final List<PullRequestFile> dmiPrFiles = filterDmiFiles(gitHubService.listPullRequestFiles(prNumber));
