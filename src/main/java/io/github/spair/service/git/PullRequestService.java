@@ -17,7 +17,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Objects;
 
 @Service
 public class PullRequestService {
@@ -66,7 +65,7 @@ public class PullRequestService {
         labelsToAdd.addAll(getLabelsFromTitle(pullRequest.getTitle()));
 
         if (!labelsToAdd.isEmpty()) {
-            gitHubService.addLabels(pullRequest.getNumber(), new ArrayList<>(labelsToAdd));
+            gitHubService.addLabels(pullRequest.getNumber(), labelsToAdd);
         }
     }
 
@@ -152,7 +151,7 @@ public class PullRequestService {
     }
 
     private void addIfNotEmpty(final List<String> labelsToAdd, final String label) {
-        if (Objects.nonNull(label) && !label.isEmpty()) {
+        if (label != null && !label.isEmpty()) {
             labelsToAdd.add(label);
         }
     }

@@ -21,10 +21,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @RestController
 @RequestMapping("/handler")
 public class HandlerWebController {
+
+    private static final int SIGN_PREFIX_LENGTH = 5;
 
     private final SignatureService signatureService;
     private final PullRequestHandler pullRequestHandler;
@@ -76,13 +79,13 @@ public class HandlerWebController {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Exception handleGeneralException(final Exception e) {
+    public String handleGeneralException(final Exception e) {
         LOGGER.error("Uncaught exception happened", e);
-        return e;
+        return Arrays.toString(e.getStackTrace());
     }
 
     // Signature header from GitHub always starts with 'sha1=' part, which should be cut down.
     private String sanitizeSignature(final String sign) {
-        return sign.substring("sha1=".length());
+        return sign.substring(SIGN_PREFIX_LENGTH);
     }
 }

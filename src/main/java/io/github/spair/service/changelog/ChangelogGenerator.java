@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -75,7 +74,7 @@ class ChangelogGenerator {
                     ChangelogRow changelogRow = new ChangelogRow();
 
                     changelogRow.setClassName(matcher.group(1));
-                    changelogRow.setHasLink(Objects.nonNull(matcher.group(2)));
+                    changelogRow.setHasLink(matcher.group(2) != null);
                     changelogRow.setChanges(matcher.group(3));
 
                     changelogRows.add(changelogRow);

@@ -15,7 +15,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -103,9 +102,9 @@ class StateDiffReportListGenerator {
     }
 
     private <T, V> V determineValue(@Nullable final T oldOne, @Nullable final T newOne, final Function<T, V> function) {
-        if (Objects.nonNull(oldOne)) {
+        if (oldOne != null) {
             return function.apply(oldOne);
-        } else if (Objects.nonNull(newOne)) {
+        } else if (newOne != null) {
             return function.apply(newOne);
         } else {
             LOGGER.error("Unhandled case during value determining. Both objects are null");
@@ -114,7 +113,7 @@ class StateDiffReportListGenerator {
     }
 
     private String getSpriteLink(@Nullable final DmiSprite sprite) {
-        if (Objects.nonNull(sprite)) {
+        if (sprite != null) {
             return imageUploader.uploadImage(sprite.getSpriteAsBase64());
         } else {
             return "";

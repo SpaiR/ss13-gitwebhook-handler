@@ -23,6 +23,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class GitHubService {
             resp = restService.getForJson(pathProvider.contents(relPath), getAuthHeaders());
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode().equals(HttpStatus.FORBIDDEN)) {
-                LOGGER.info("Blobs API was used to read file data. Path: {}", relPath);
+                LOGGER.info("Using Blobs API to read file data. Path: {}", relPath);
                 resp = restService.getForJson(pathProvider.blobs(getFileSha(relPath)), getAuthHeaders());
             } else {
                 LOGGER.error("Error on reading file from GitHub. Path: {}", relPath);
@@ -97,10 +98,10 @@ public class GitHubService {
     }
 
     public void addLabel(final int issueNum, final String labelName) {
-        addLabels(issueNum, Collections.singletonList(labelName));
+        addLabels(issueNum, Collections.singleton(labelName));
     }
 
-    public void addLabels(final int issueNum, final List<String> labels) {
+    public void addLabels(final int issueNum, final Set<String> labels) {
         restService.post(pathProvider.issueLabels(issueNum), labels, getAuthHeaders());
     }
 

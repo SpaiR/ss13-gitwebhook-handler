@@ -17,18 +17,18 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class DmiDiffService {
+
+    private static final String DMI_SUFFIX = ".dmi";
 
     private final GitHubService gitHubService;
     private final ReportEntryGenerator reportEntryGenerator;
     private final DmiReportCreator reportCreator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmiDiffService.class);
-    private static final String DMI_SUFFIX = ".dmi";
 
     @Autowired
     public DmiDiffService(final GitHubService gitHubService,
@@ -71,7 +71,7 @@ public class DmiDiffService {
     }
 
     private void sendReport(final String report, final int prNumber, @Nullable final Integer reportId) {
-        if (Objects.nonNull(reportId)) {
+        if (reportId != null) {
             gitHubService.editIssueComment(reportId, report);
         } else {
             gitHubService.createIssueComment(prNumber, report);

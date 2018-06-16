@@ -24,7 +24,7 @@ public class DmiLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(DmiLoader.class);
 
     @Autowired
-    DmiLoader(final RestService restService, final GitHubService gitHubService) {
+    public DmiLoader(final RestService restService, final GitHubService gitHubService) {
         this.restService = restService;
         this.gitHubService = gitHubService;
     }

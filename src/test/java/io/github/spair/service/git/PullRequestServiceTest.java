@@ -19,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ClassPathResource;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
@@ -140,7 +139,7 @@ public class PullRequestServiceTest {
 
         service.processLabels(pullRequest);
 
-        verify(gitHubService).addLabels(2, Arrays.asList("Fix", "Sprites", "Map Edit", "Do Not Merge", "WIP"));
+        verify(gitHubService).addLabels(2, Sets.newSet("Fix", "Sprites", "Map Edit", "Do Not Merge", "WIP"));
     }
 
     private PullRequestFile createPullRequestFile(String filename) {

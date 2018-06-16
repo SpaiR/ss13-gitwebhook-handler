@@ -36,7 +36,7 @@ class HtmlChangelogGenerator {
     private static final String AUTHOR_COLUMN_TEMPLATE = "<div data-author=\"%s\"></div>";
     private static final String AUTHOR_ELEMENT_TEMPLATE = "<h4 class=\"author\">%s:</h4><ul class=\"changelog\"></ul>";
 
-    // $1 is group from regex, taken during replacement process.
+    // $1 is a group from regex, taken during replacement process.
     private static final String READ_MORE = "<a class=\"btn btn-xs btn-success link-btn\" href=\"$1\">Read More</a>";
 
     @Autowired

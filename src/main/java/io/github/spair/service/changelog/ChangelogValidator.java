@@ -28,7 +28,7 @@ class ChangelogValidator {
         ChangelogValidationStatus status = new ChangelogValidationStatus();
         List<String> invalidClasses = parseInvalidClasses(changelog.getChangelogRows());
 
-        if (invalidClasses.size() > 0) {
+        if (!invalidClasses.isEmpty()) {
             status.setMessage(getUnknownClassesReason(invalidClasses));
         } else if (changelog.isEmpty()) {
             status.setMessage("Reason: empty changelog. Please, check markdown correctness.");

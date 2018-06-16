@@ -27,15 +27,16 @@ import java.io.IOException;
 @RequestMapping("/config/rest")
 public class ConfigRestController {
 
+    private final String logName;
+
     private final ConfigService configService;
-    private final Environment env;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ConfigRestController.class);
 
     @Autowired
     public ConfigRestController(final ConfigService configService, final Environment env) {
         this.configService = configService;
-        this.env = env;
+        this.logName = env.getProperty("logging.file");
     }
 
     @GetMapping("/current")
@@ -58,10 +59,7 @@ public class ConfigRestController {
     @GetMapping("/log")
     public FileSystemResource downloadLogFile(final HttpServletResponse response) {
         LOGGER.info("Log file downloaded");
-
-        String logName = env.getProperty("logging.file");
         setResponseAsFile(response, logName);
-
         return new FileSystemResource(new File(logName));
 
     }

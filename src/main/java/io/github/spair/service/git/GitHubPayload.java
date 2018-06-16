@@ -1,5 +1,6 @@
 package io.github.spair.service.git;
 
+@SuppressWarnings("WeakerAccess")
 public final class GitHubPayload {
 
     public static final String ISSUE = "issue";

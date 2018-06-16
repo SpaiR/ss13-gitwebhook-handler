@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.Objects;
-
 @Service
 public class ImageUploaderService {
 
@@ -29,7 +27,7 @@ public class ImageUploaderService {
     private static final String DATA_TYPE_PREFIX = "data:image/png;base64,";
 
     @Autowired
-    ImageUploaderService(final RestService restService, final ConfigService configService) {
+    public ImageUploaderService(final RestService restService, final ConfigService configService) {
         this.restService = restService;
         this.configService = configService;
     }
@@ -37,7 +35,7 @@ public class ImageUploaderService {
     public String uploadImage(final String base64image) {
         final String imageUploadCode = configService.getConfig().getImageUploadCode();
 
-        if (Objects.isNull(imageUploadCode) || imageUploadCode.isEmpty()) {
+        if (imageUploadCode == null || imageUploadCode.isEmpty()) {
             LOGGER.error("Image upload code should be specified to make application work properly");
             throw new IllegalStateException("Empty image upload code");
         }

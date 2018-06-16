@@ -1,8 +1,8 @@
 package io.github.spair.service.git.entities;
 
+import lombok.AccessLevel;
 import lombok.Data;
-
-import java.util.Objects;
+import lombok.Setter;
 
 @Data
 public class PullRequestFile {
@@ -12,10 +12,17 @@ public class PullRequestFile {
     private String rawUrl;
     private Status status;
 
+    @Setter(AccessLevel.NONE)
+    private String realName;
+
     public String getRealName() {
-        if (Objects.nonNull(filename)) {
+        if (filename != null) {
+            if (realName != null) {
+                return realName;
+            }
             String[] splicedFilename = filename.split("/");
-            return splicedFilename[splicedFilename.length - 1];
+            realName = splicedFilename[splicedFilename.length - 1];
+            return realName;
         } else {
             return null;
         }

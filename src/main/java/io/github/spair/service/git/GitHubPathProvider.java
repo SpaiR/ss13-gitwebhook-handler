@@ -38,6 +38,7 @@ class GitHubPathProvider {
         return getContentsApiPath(orgName, repoName) + relPath;
     }
 
+    // https://api.github.com/repos/OrgName/RepoName/git/blobs/sha1hash
     String blobs(final String fileSha) {
         return getBlobsApiPath() + "/" + fileSha;
     }
@@ -61,7 +62,6 @@ class GitHubPathProvider {
     String issueComment(final int commentId) {
         return getIssuesApiPath() + "/" + COMMENTS + "/" + commentId;
     }
-
 
     // https://api.github.com/repos/OrgName/RepoName/pulls/1/files
     String pullFiles(final int prNum) {
