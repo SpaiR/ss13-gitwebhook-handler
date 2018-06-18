@@ -26,8 +26,11 @@ public class HtmlChangelogGeneratorTest {
     private ConfigService configService;
     private String currentDate;
 
+    private HtmlChangelogGenerator generator;
+
     @Before
     public void setUp() {
+        generator = new HtmlChangelogGenerator(configService);
         when(configService.getConfig().getTimeZone()).thenReturn("Europe/Moscow");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
@@ -37,8 +40,6 @@ public class HtmlChangelogGeneratorTest {
 
     @Test
     public void testGenerate() {
-        HtmlChangelogGenerator generator = new HtmlChangelogGenerator(configService);
-
         ChangelogRow changelogRow1 = new ChangelogRow();
         changelogRow1.setChanges("Some changes.");
         changelogRow1.setClassName("entry1");

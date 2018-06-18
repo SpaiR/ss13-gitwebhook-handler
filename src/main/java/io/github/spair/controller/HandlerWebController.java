@@ -2,7 +2,8 @@ package io.github.spair.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.spair.handler.IssuesHandler;
+import io.github.spair.handler.Handler;
+import io.github.spair.handler.IssueHandler;
 import io.github.spair.handler.PullRequestHandler;
 import io.github.spair.service.InvalidSignatureException;
 import io.github.spair.service.SignatureService;
@@ -10,6 +11,7 @@ import io.github.spair.service.git.GitHubConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,23 +32,25 @@ public class HandlerWebController {
     private static final int SIGN_PREFIX_LENGTH = 5;
 
     private final SignatureService signatureService;
-    private final PullRequestHandler pullRequestHandler;
-    private final IssuesHandler issuesHandler;
     private final ObjectMapper objectMapper;
+    private final Handler pullRequestHandler;
+    private final Handler issueHandler;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HandlerWebController.class);
 
     @Autowired
-    public HandlerWebController(final SignatureService signatureService, final ObjectMapper objectMapper,
-                                final PullRequestHandler pullRequestHandler, final IssuesHandler issuesHandler) {
+    public HandlerWebController(final SignatureService signatureService,
+                                final ObjectMapper objectMapper,
+                                @Qualifier(Handler.PULL_REQUEST) final Handler pullRequestHandler,
+                                @Qualifier(Handler.ISSUE) final Handler issueHandler) {
         this.signatureService = signatureService;
-        this.pullRequestHandler = pullRequestHandler;
-        this.issuesHandler = issuesHandler;
         this.objectMapper = objectMapper;
+        this.pullRequestHandler = pullRequestHandler;
+        this.issueHandler = issueHandler;
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String catchPullRequestWebhook(
+    public String processPullRequestWebhook(
             @RequestHeader(GitHubConstants.SIGNATURE_HEADER) final String signature,
             @RequestHeader(GitHubConstants.EVENT_HEADER) final String event,
             @RequestBody final String webhookPayload) throws IOException {
@@ -63,7 +67,7 @@ public class HandlerWebController {
                 pullRequestHandler.handle(webhookJson);
                 return "Pull Request handled";
             case GitHubConstants.ISSUES_EVENT:
-                issuesHandler.handle(webhookJson);
+                issueHandler.handle(webhookJson);
                 return "Issue handled";
             default:
                 LOGGER.info("Unhandled event caught: " + event);
@@ -73,13 +77,13 @@ public class HandlerWebController {
 
     @ExceptionHandler(InvalidSignatureException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public String handleInvalidSignature() {
+    public String catchInvalidSignature() {
         return "Invalid signature was provided";
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public String handleGeneralException(final Exception e) {
+    public String catchGeneralException(final Exception e) {
         LOGGER.error("Uncaught exception happened", e);
         return Arrays.toString(e.getStackTrace());
     }

@@ -12,16 +12,15 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.File;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
-public class IssuesServiceTest {
+public class IssueServiceTest {
 
-    private IssuesService service;
+    private IssueService service;
     private ObjectMapper objectMapper;
 
     @Before
     public void setUp() {
-        service = new IssuesService(mock(GitHubService.class));
+        service = new IssueService();
         objectMapper = new ObjectMapper();
     }
 

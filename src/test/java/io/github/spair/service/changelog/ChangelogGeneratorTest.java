@@ -12,10 +12,10 @@ import static org.junit.Assert.assertTrue;
 
 public class ChangelogGeneratorTest {
 
+    private final ChangelogGenerator changelogGenerator = new ChangelogGenerator();
+
     @Test
     public void testCreateFromPullRequestWithCustomAuthorAndCommentsAndLink() {
-        ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
         String bodyText = "Lorem ipsum dolor sit amet.\n\n" +
                 "<!-- Comment \n ... \r text -->" +
                 ":cl: Custom author\n" +
@@ -41,8 +41,6 @@ public class ChangelogGeneratorTest {
 
     @Test
     public void testCreateFromPullRequestWithGitHubAuthor() {
-        ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
         String bodyText = "Lorem ipsum dolor sit amet.\n\n" +
                 ":cl:\n" +
                 "- entry: Value!\n";
@@ -59,8 +57,6 @@ public class ChangelogGeneratorTest {
 
     @Test
     public void testCreateFromPullRequestWithoutChangelog() {
-        ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
         String bodyText = "Lorem ipsum dolor sit amet";
 
         PullRequest pullRequest = PullRequest.builder().body(bodyText).build();
@@ -71,8 +67,6 @@ public class ChangelogGeneratorTest {
 
     @Test
     public void testCreateFromPullRequestWithInvalidChangelog() {
-        ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
         String bodyText = "Lorem ipsum dolor sit amet\n" +
                 ":cl: entry: Value.";
 
@@ -93,8 +87,6 @@ public class ChangelogGeneratorTest {
 
     @Test
     public void testCreateFromPullRequestWithClAsIcon() {
-        ChangelogGenerator changelogGenerator = new ChangelogGenerator();
-
         String bodyText = "Lorem ipsum dolor sit amet\n" +
                 "\uD83C\uDD91\n" +
                 " - entry: value";

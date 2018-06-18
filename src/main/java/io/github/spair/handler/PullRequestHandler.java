@@ -1,47 +1,46 @@
 package io.github.spair.handler;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.spair.service.changelog.ChangelogService;
-import io.github.spair.service.dmi.DmiDiffService;
+import io.github.spair.handler.command.Command;
+import io.github.spair.handler.command.HandlerCommand;
 import io.github.spair.service.git.PullRequestService;
 import io.github.spair.service.git.entities.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
-public class PullRequestHandler {
+import java.util.Set;
+
+@Component(Handler.PULL_REQUEST)
+public class PullRequestHandler extends AbstractHandler<PullRequest> implements Handler {
 
     private final PullRequestService pullRequestService;
-    private final ChangelogService changelogService;
-    private final DmiDiffService dmiDiffService;
 
     @Autowired
-    public PullRequestHandler(final PullRequestService pullRequestService,
-                              final ChangelogService changelogService,
-                              final DmiDiffService dmiDiffService) {
+    public PullRequestHandler(
+            final PullRequestService pullRequestService, final Set<HandlerCommand<PullRequest>> commands) {
         this.pullRequestService = pullRequestService;
-        this.changelogService = changelogService;
-        this.dmiDiffService = dmiDiffService;
+        this.commands = filterCommands(commands);
     }
 
     public void handle(final ObjectNode webhookJson) {
         PullRequest pullRequest = pullRequestService.convertWebhookJson(webhookJson);
+        Command[] commands = wrapCommands();
 
         switch (pullRequest.getType()) {
             case OPENED:
-                changelogService.validate(pullRequest);
-                pullRequestService.processLabels(pullRequest);
-                dmiDiffService.generateAndReport(pullRequest);
+                commands = wrapCommands(Command.VALIDATE_CHANGELOG, Command.LABEL_PR, Command.REPORT_DMI);
                 break;
             case SYNCHRONIZE:
-                dmiDiffService.generateAndReport(pullRequest);
+                commands = wrapCommands(Command.REPORT_DMI);
                 break;
             case EDITED:
-                changelogService.validate(pullRequest);
+                commands = wrapCommands(Command.VALIDATE_CHANGELOG);
                 break;
             case MERGED:
-                changelogService.generateAndUpdate(pullRequest);
+                commands = wrapCommands(Command.UPDATE_CHANGELOG);
                 break;
         }
+
+        executeCommands(pullRequest, commands);
     }
 }

@@ -23,17 +23,17 @@ public class ChangelogValidatorTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private ConfigService configService;
+    private ChangelogValidator validator;
 
     @Before
     public void setUp() {
+        validator = new ChangelogValidator(configService);
         when(configService.getConfig().getChangelogConfig().getHtml().getAvailableClasses())
                 .thenReturn(Sets.newSet("entry1", "entry2"));
     }
 
     @Test
     public void testValidateWhenAllValid() {
-        ChangelogValidator validator = new ChangelogValidator(configService);
-
         ChangelogRow changelogRow1 = new ChangelogRow();
         changelogRow1.setChanges("Some changes");
         changelogRow1.setClassName("entry1");
@@ -54,8 +54,6 @@ public class ChangelogValidatorTest {
 
     @Test
     public void testValidateWhenMultiInvalidEntryClass() {
-        ChangelogValidator validator = new ChangelogValidator(configService);
-
         ChangelogRow changelogRow1 = new ChangelogRow();
         changelogRow1.setChanges("Some changes");
         changelogRow1.setClassName("invalid-entry1");
@@ -77,8 +75,6 @@ public class ChangelogValidatorTest {
 
     @Test
     public void testValidateWhenInvalidEntryClass() {
-        ChangelogValidator validator = new ChangelogValidator(configService);
-
         ChangelogRow changelogRow = new ChangelogRow();
         changelogRow.setChanges("Some changes");
         changelogRow.setClassName("invalid-entry");
@@ -96,8 +92,6 @@ public class ChangelogValidatorTest {
 
     @Test
     public void testValidateWhenEmptyChangelog() {
-        ChangelogValidator validator = new ChangelogValidator(configService);
-
         Changelog changelog = new Changelog();
         changelog.setChangelogRows(Lists.emptyList());
 

@@ -14,7 +14,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-@Component
 class HtmlChangelogGenerator {
 
     private final ConfigService configService;
@@ -39,7 +38,6 @@ class HtmlChangelogGenerator {
     // $1 is a group from regex, taken during replacement process.
     private static final String READ_MORE = "<a class=\"btn btn-xs btn-success link-btn\" href=\"$1\">Read More</a>";
 
-    @Autowired
     HtmlChangelogGenerator(final ConfigService configService) {
         this.configService = configService;
     }

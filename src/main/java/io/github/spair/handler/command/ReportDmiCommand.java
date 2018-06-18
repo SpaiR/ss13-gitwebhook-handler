@@ -1,6 +1,5 @@
-package io.github.spair.service.dmi;
+package io.github.spair.handler.command;
 
-import io.github.spair.aspect.ExceptionSuppress;
 import io.github.spair.service.dmi.entities.DmiDiffReport;
 import io.github.spair.service.dmi.report.DmiReportCreator;
 import io.github.spair.service.dmi.report.ReportEntryGenerator;
@@ -12,15 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
-public class DmiDiffService {
+@Component
+public class ReportDmiCommand implements HandlerCommand<PullRequest> {
 
     private static final String DMI_SUFFIX = ".dmi";
 
@@ -28,19 +27,20 @@ public class DmiDiffService {
     private final ReportEntryGenerator reportEntryGenerator;
     private final DmiReportCreator reportCreator;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DmiDiffService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ReportDmiCommand.class);
 
     @Autowired
-    public DmiDiffService(final GitHubService gitHubService,
-                          final DmiReportCreator reportCreator,
-                          final ReportEntryGenerator reportEntryGenerator) {
+    public ReportDmiCommand(
+            final GitHubService gitHubService,
+            final ReportEntryGenerator reportEntryGenerator,
+            final DmiReportCreator reportCreator) {
         this.gitHubService = gitHubService;
-        this.reportCreator = reportCreator;
         this.reportEntryGenerator = reportEntryGenerator;
+        this.reportCreator = reportCreator;
     }
 
-    @ExceptionSuppress
-    public void generateAndReport(final PullRequest pullRequest) {
+    @Override
+    public void execute(final PullRequest pullRequest) {
         final int prNumber = pullRequest.getNumber();
         final List<PullRequestFile> dmiPrFiles = filterDmiFiles(gitHubService.listPullRequestFiles(prNumber));
 

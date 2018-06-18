@@ -12,14 +12,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
 class ChangelogValidator {
 
     private final ConfigService configService;
 
     private static final String CODE_QUOTE = "`";
 
-    @Autowired
     ChangelogValidator(final ConfigService configService) {
         this.configService = configService;
     }
