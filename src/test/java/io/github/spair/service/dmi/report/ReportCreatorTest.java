@@ -45,7 +45,7 @@ public class ReportCreatorTest {
 
     @Test
     public void testCreateReport() {
-        String expectedReport = ReadFileUtil.readFile("report-printer-result.txt");
+        String expectedReport = ReadFileUtil.readFile("data/report-printer-result.txt");
         DmiDiffReport dmiDiffReport = new DmiDiffReport();
         dmiDiffReport.getReportEntries().add(mock(ReportEntry.class));
         dmiDiffReport.getReportEntries().add(mock(ReportEntry.class));

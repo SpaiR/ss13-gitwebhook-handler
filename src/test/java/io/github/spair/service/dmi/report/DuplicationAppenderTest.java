@@ -35,7 +35,7 @@ public class DuplicationAppenderTest {
 
         appender.append(sb, reportEntry);
 
-        String expectedReport = ReadFileUtil.readFile("appenders-reports/duplication-report.txt");
+        String expectedReport = ReadFileUtil.readFile("data/appenders-reports/duplication-report.txt");
         assertEquals(expectedReport, sb.toString());
     }
 }

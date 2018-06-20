@@ -9,9 +9,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Aspect
 @Configuration
+@SuppressWarnings("AroundAdviceStyleInspection")
 public class ExceptionSuppressAspect {
 
-    @Around("@annotation(io.github.spair.aspect.ExceptionSuppress)")
+    @Around("within(io.github.spair.handler.command.HandlerCommand+) && execution(void execute(..))")
     public void around(final ProceedingJoinPoint joinPoint) throws Throwable {
         try {
             joinPoint.proceed();

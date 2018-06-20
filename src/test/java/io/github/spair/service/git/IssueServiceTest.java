@@ -26,7 +26,7 @@ public class IssueServiceTest {
 
     @Test
     public void testConvertWebhookJson() throws Exception {
-        File jsonFile = new ClassPathResource("issue-webhook-payload.json").getFile();
+        File jsonFile = new ClassPathResource("data/issue-webhook-payload.json").getFile();
         ObjectNode issuePayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         Issue expectedIssue = new Issue(2, "Spelling error in the README file", IssueType.OPENED);
@@ -36,7 +36,7 @@ public class IssueServiceTest {
 
     @Test
     public void testConvertWebhookJsonWithUndefined() throws Exception {
-        File jsonFile = new ClassPathResource("issue-webhook-payload.json").getFile();
+        File jsonFile = new ClassPathResource("data/issue-webhook-payload.json").getFile();
         ObjectNode issuePayload = objectMapper.readValue(jsonFile, ObjectNode.class);
         issuePayload.set("action", JsonNodeFactory.instance.textNode("unknown_action"));
 

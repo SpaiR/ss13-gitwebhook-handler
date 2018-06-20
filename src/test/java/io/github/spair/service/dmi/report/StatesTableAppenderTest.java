@@ -28,7 +28,7 @@ public class StatesTableAppenderTest {
 
         appender.append(sb, reportEntry);
 
-        String expectedReport = ReadFileUtil.readFile("appenders-reports/states-table-report.txt");
+        String expectedReport = ReadFileUtil.readFile("data/appenders-reports/states-table-report.txt");
         assertEquals(expectedReport, sb.toString());
     }
 

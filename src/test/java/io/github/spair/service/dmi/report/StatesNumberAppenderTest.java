@@ -20,7 +20,7 @@ public class StatesNumberAppenderTest {
 
         appender.append(sb, reportEntry);
 
-        String expectedReport = ReadFileUtil.readFile("appenders-reports/states-number-report.txt");
+        String expectedReport = ReadFileUtil.readFile("data/appenders-reports/states-number-report.txt");
         assertEquals(expectedReport, sb.toString());
     }
 
@@ -34,7 +34,7 @@ public class StatesNumberAppenderTest {
 
         appender.append(sb, reportEntry);
 
-        String expectedReport = ReadFileUtil.readFile("appenders-reports/states-number-overflow-report.txt");
+        String expectedReport = ReadFileUtil.readFile("data/appenders-reports/states-number-overflow-report.txt");
         assertEquals(expectedReport, sb.toString());
     }
 }

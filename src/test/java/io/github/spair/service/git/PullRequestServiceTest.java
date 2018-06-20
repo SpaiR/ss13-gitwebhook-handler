@@ -29,7 +29,7 @@ public class PullRequestServiceTest {
 
     @Test
     public void testConvertWebhookJson() throws Exception {
-        File jsonFile = new ClassPathResource("pull-request-webhook-payload.json").getFile();
+        File jsonFile = new ClassPathResource("data/pull-request-webhook-payload.json").getFile();
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
@@ -42,7 +42,7 @@ public class PullRequestServiceTest {
 
     @Test
     public void testConvertWebhookJsonWithUndefinedAction() throws Exception {
-        File jsonFile = new ClassPathResource("pull-request-webhook-payload.json").getFile();
+        File jsonFile = new ClassPathResource("data/pull-request-webhook-payload.json").getFile();
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
         pullRequestPayload.set("action", JsonNodeFactory.instance.textNode("unknown_action"));
 
@@ -56,7 +56,7 @@ public class PullRequestServiceTest {
 
     @Test
     public void testConvertWebhookJsonWhenClosed() throws Exception {
-        File jsonFile = new ClassPathResource("pull-request-webhook-payload-closed.json").getFile();
+        File jsonFile = new ClassPathResource("data/pull-request-webhook-payload-closed.json").getFile();
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
@@ -69,7 +69,7 @@ public class PullRequestServiceTest {
 
     @Test
     public void testConvertWebhookJsonWhenMerged() throws Exception {
-        File jsonFile = new ClassPathResource("pull-request-webhook-payload-merged.json").getFile();
+        File jsonFile = new ClassPathResource("data/pull-request-webhook-payload-merged.json").getFile();
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
@@ -82,7 +82,7 @@ public class PullRequestServiceTest {
 
     @Test
     public void testConvertWebhookJsonWhenLabeledMerged() throws Exception {
-        File jsonFile = new ClassPathResource("pull-request-webhook-payload-labeled-merged.json").getFile();
+        File jsonFile = new ClassPathResource("data/pull-request-webhook-payload-labeled-merged.json").getFile();
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
