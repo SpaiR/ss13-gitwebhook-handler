@@ -1,5 +1,7 @@
 package io.github.spair.handler.command;
 
+import org.springframework.aop.framework.Advised;
+
 public enum Command {
 
     LABEL_ISSUE(LabelIssueCommand.class),
@@ -8,7 +10,7 @@ public enum Command {
     LABEL_PR(LabelPullRequestCommand.class),
     REPORT_DMI(ReportDmiCommand.class);
 
-    final Class classOfCommand;
+    private final Class classOfCommand;
 
     Command(final Class classOfCommand) {
         this.classOfCommand = classOfCommand;
@@ -16,7 +18,7 @@ public enum Command {
 
     public static Command valueOf(final HandlerCommand handlerCommand) {
         for (Command command : values()) {
-            if (handlerCommand.getClass().equals(command.classOfCommand)) {
+            if (((Advised) handlerCommand).getTargetSource().getTargetClass().equals(command.classOfCommand)) {
                 return command;
             }
         }

@@ -8,7 +8,11 @@ import io.github.spair.service.git.entities.PullRequestFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 @Component
@@ -34,7 +38,7 @@ public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
     }
 
     @Override
-    public void execute(PullRequest pullRequest) {
+    public void execute(final PullRequest pullRequest) {
         Set<String> labelsToAdd = new HashSet<>();
 
         labelsToAdd.addAll(getLabelsFromChangelog(pullRequest));

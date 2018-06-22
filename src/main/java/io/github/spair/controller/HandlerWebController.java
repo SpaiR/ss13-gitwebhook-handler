@@ -3,8 +3,6 @@ package io.github.spair.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.handler.Handler;
-import io.github.spair.handler.IssueHandler;
-import io.github.spair.handler.PullRequestHandler;
 import io.github.spair.service.InvalidSignatureException;
 import io.github.spair.service.SignatureService;
 import io.github.spair.service.git.GitHubConstants;

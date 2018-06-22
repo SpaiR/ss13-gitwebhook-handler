@@ -4,8 +4,6 @@ import io.github.spair.service.changelog.entities.Changelog;
 import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.changelog.entities.ChangelogValidationStatus;
 import io.github.spair.service.config.ConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
