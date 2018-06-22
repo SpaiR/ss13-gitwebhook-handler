@@ -3,8 +3,8 @@ package io.github.spair.handler.command;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.GitHubService;
-import io.github.spair.service.git.entities.PullRequest;
-import io.github.spair.service.git.entities.PullRequestFile;
+import io.github.spair.service.pr.entity.PullRequest;
+import io.github.spair.service.git.entity.PullRequestFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

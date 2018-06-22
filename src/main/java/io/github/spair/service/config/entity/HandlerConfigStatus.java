@@ -1,4 +1,4 @@
-package io.github.spair.service.config.entities;
+package io.github.spair.service.config.entity;
 
 import lombok.AllArgsConstructor;
 

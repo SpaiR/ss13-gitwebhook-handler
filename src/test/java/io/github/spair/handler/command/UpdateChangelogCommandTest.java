@@ -1,10 +1,10 @@
 package io.github.spair.handler.command;
 
 import io.github.spair.service.changelog.ChangelogService;
-import io.github.spair.service.changelog.entities.Changelog;
+import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.GitHubService;
-import io.github.spair.service.git.entities.PullRequest;
+import io.github.spair.service.pr.entity.PullRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

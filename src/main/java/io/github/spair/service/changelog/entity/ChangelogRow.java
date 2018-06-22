@@ -1,4 +1,4 @@
-package io.github.spair.service.changelog.entities;
+package io.github.spair.service.changelog.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

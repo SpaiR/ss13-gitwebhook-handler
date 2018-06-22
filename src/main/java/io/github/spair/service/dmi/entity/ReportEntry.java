@@ -1,4 +1,4 @@
-package io.github.spair.service.dmi.entities;
+package io.github.spair.service.dmi.entity;
 
 import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.byond.dmi.DmiMeta;

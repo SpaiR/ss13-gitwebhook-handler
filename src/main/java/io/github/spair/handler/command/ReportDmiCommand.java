@@ -1,12 +1,12 @@
 package io.github.spair.handler.command;
 
-import io.github.spair.service.dmi.entities.DmiDiffReport;
+import io.github.spair.service.dmi.entity.DmiDiffReport;
 import io.github.spair.service.dmi.report.DmiReportCreator;
 import io.github.spair.service.dmi.report.ReportEntryGenerator;
 import io.github.spair.service.git.GitHubService;
-import io.github.spair.service.git.entities.IssueComment;
-import io.github.spair.service.git.entities.PullRequest;
-import io.github.spair.service.git.entities.PullRequestFile;
+import io.github.spair.service.issue.entity.IssueComment;
+import io.github.spair.service.pr.entity.PullRequest;
+import io.github.spair.service.git.entity.PullRequestFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

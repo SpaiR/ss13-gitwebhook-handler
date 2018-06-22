@@ -4,7 +4,7 @@ import io.github.spair.byond.dmi.Diff;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
 import io.github.spair.byond.dmi.DmiSprite;
-import io.github.spair.service.dmi.entities.StateDiffReport;
+import io.github.spair.service.dmi.entity.StateDiffReport;
 import io.github.spair.service.image.ImageUploaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

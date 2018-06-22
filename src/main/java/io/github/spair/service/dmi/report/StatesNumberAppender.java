@@ -1,7 +1,7 @@
 package io.github.spair.service.dmi.report;
 
 import io.github.spair.byond.dmi.Dmi;
-import io.github.spair.service.dmi.entities.ReportEntry;
+import io.github.spair.service.dmi.entity.ReportEntry;
 
 import static io.github.spair.service.dmi.report.DmiReportCreator.NEW_LINE;
 

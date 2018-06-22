@@ -1,4 +1,4 @@
-package io.github.spair.service.git.entities;
+package io.github.spair.service.git.entity;
 
 import org.junit.Test;
 

@@ -3,8 +3,8 @@ package io.github.spair.service.dmi.report;
 import io.github.spair.ReadFileUtil;
 import io.github.spair.byond.dmi.DiffStatus;
 import io.github.spair.byond.dmi.SpriteDir;
-import io.github.spair.service.dmi.entities.ReportEntry;
-import io.github.spair.service.dmi.entities.StateDiffReport;
+import io.github.spair.service.dmi.entity.ReportEntry;
+import io.github.spair.service.dmi.entity.StateDiffReport;
 import org.junit.Test;
 
 import java.util.Arrays;

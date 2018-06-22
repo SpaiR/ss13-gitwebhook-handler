@@ -1,4 +1,4 @@
-package io.github.spair.service.dmi.entities;
+package io.github.spair.service.dmi.entity;
 
 import lombok.Data;
 

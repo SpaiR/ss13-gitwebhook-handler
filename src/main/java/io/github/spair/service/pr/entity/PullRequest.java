@@ -1,4 +1,4 @@
-package io.github.spair.service.git.entities;
+package io.github.spair.service.pr.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

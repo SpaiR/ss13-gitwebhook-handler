@@ -1,7 +1,7 @@
 package io.github.spair.handler.command;
 
 import io.github.spair.service.git.GitHubService;
-import io.github.spair.service.git.entities.Issue;
+import io.github.spair.service.issue.entity.Issue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
