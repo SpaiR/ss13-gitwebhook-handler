@@ -4,7 +4,7 @@ import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogValidationStatus;
 import io.github.spair.service.config.ConfigService;
-import io.github.spair.service.git.GitHubService;
+import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

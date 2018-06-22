@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.handler.Handler;
 import io.github.spair.service.InvalidSignatureException;
 import io.github.spair.service.SignatureService;
-import io.github.spair.service.git.GitHubConstants;
+import io.github.spair.service.github.GitHubConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

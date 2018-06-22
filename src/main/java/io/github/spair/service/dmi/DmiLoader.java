@@ -3,7 +3,7 @@ package io.github.spair.service.dmi;
 import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.byond.dmi.DmiSlurper;
 import io.github.spair.service.RestService;
-import io.github.spair.service.git.GitHubService;
+import io.github.spair.service.github.GitHubService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

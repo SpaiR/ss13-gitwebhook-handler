@@ -3,7 +3,7 @@ package io.github.spair.service.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.spair.service.config.entity.HandlerConfig;
 import io.github.spair.service.config.entity.HandlerConfigStatus;
-import io.github.spair.service.git.GitHubService;
+import io.github.spair.service.github.GitHubService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

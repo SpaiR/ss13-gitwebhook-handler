@@ -1,6 +1,6 @@
 package io.github.spair.handler.command;
 
-import io.github.spair.service.git.GitHubService;
+import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.issue.entity.Issue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

@@ -3,7 +3,7 @@ package io.github.spair.service.issue;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.service.EnumUtil;
-import io.github.spair.service.git.GitHubPayload;
+import io.github.spair.service.github.GitHubPayload;
 import io.github.spair.service.issue.entity.Issue;
 import io.github.spair.service.issue.entity.IssueType;
 import org.springframework.stereotype.Service;

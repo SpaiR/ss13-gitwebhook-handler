@@ -1,4 +1,4 @@
-package io.github.spair.service.git;
+package io.github.spair.service.github;
 
 import io.github.spair.service.config.ConfigService;
 import org.junit.Before;
@@ -40,7 +40,7 @@ public class GitHubPathProviderTest {
 
     @Test
     public void testBlobs() {
-        String expected = "https://api.github.com/repos/GitHub/Handler/git/blobs/12345789";
+        String expected = "https://api.github.com/repos/GitHub/Handler/github/blobs/12345789";
         assertEquals(expected, provider.blobs("12345789"));
     }
 

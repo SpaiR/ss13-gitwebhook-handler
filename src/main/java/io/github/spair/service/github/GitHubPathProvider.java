@@ -1,4 +1,4 @@
-package io.github.spair.service.git;
+package io.github.spair.service.github;
 
 import io.github.spair.service.config.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ class GitHubPathProvider {
     private static final String ISSUES = "issues";
     private static final String FILES = "files";
     private static final String COMMENTS = "comments";
-    private static final String GIT_BLOBS = "git/blobs";
+    private static final String GIT_BLOBS = "github/blobs";
 
     @Autowired
     GitHubPathProvider(final ConfigService configService) {

@@ -1,4 +1,4 @@
-package io.github.spair.service.git;
+package io.github.spair.service.github;
 
 public final class GitHubConstants {
 

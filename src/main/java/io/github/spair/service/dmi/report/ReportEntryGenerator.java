@@ -5,7 +5,7 @@ import io.github.spair.byond.dmi.DmiComparator;
 import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.service.dmi.DmiLoader;
 import io.github.spair.service.dmi.entity.ReportEntry;
-import io.github.spair.service.git.entity.PullRequestFile;
+import io.github.spair.service.github.entity.PullRequestFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package io.github.spair.service.git;
+package io.github.spair.service.github;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -8,7 +8,7 @@ import io.github.spair.service.EnumUtil;
 import io.github.spair.service.RestService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.issue.entity.IssueComment;
-import io.github.spair.service.git.entity.PullRequestFile;
+import io.github.spair.service.github.entity.PullRequestFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
