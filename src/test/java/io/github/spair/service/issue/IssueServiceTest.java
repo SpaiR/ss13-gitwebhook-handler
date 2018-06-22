@@ -1,10 +1,11 @@
-package io.github.spair.service.git;
+package io.github.spair.service.issue;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.service.git.entities.Issue;
 import io.github.spair.service.git.entities.IssueType;
+import io.github.spair.service.issue.IssueService;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;

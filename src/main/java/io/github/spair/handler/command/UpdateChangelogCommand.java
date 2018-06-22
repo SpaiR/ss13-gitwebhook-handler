@@ -33,17 +33,19 @@ public class UpdateChangelogCommand implements HandlerCommand<PullRequest> {
 
     @Override
     public void execute(final PullRequest pullRequest) {
-        Optional<Changelog> changelog = changelogService.createFromPullRequest(pullRequest);
+        Optional<Changelog> changelogOpt = changelogService.createFromPullRequest(pullRequest);
 
-        if (changelog.isPresent() && !changelog.get().isEmpty()) {
-            String changelogPath = configService.getConfig().getChangelogConfig().getPathToChangelog();
-            String currentChangelogHtml = gitHubService.readDecodedFile(changelogPath);
-            String newChangelogHtml = changelogService.mergeHtmlWithChangelog(currentChangelogHtml, changelog.get());
+        changelogOpt.ifPresent(changelog -> {
+            if (!changelog.isEmpty()) {
+                String changelogPath = configService.getConfig().getChangelogConfig().getPathToChangelog();
+                String currentChangelogHtml = gitHubService.readDecodedFile(changelogPath);
+                String newChangelogHtml = changelogService.mergeHtmlWithChangelog(currentChangelogHtml, changelog);
 
-            String updateMessage = "Automatic changelog generation for PR #" + pullRequest.getNumber();
-            gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);
+                String updateMessage = "Automatic changelog generation for PR #" + pullRequest.getNumber();
+                gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);
 
-            LOGGER.info("Changelog generated for PR #" + pullRequest.getNumber());
-        }
+                LOGGER.info("Changelog generated for PR #" + pullRequest.getNumber());
+            }
+        });
     }
 }

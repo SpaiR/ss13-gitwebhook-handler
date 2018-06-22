@@ -3,7 +3,7 @@ package io.github.spair.handler;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.handler.command.HandlerCommand;
 import io.github.spair.handler.command.Command;
-import io.github.spair.service.git.IssueService;
+import io.github.spair.service.issue.IssueService;
 import io.github.spair.service.git.entities.Issue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

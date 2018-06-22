@@ -1,10 +1,11 @@
-package io.github.spair.service.git;
+package io.github.spair.service.pr;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.service.git.entities.PullRequest;
 import io.github.spair.service.git.entities.PullRequestType;
+import io.github.spair.service.pr.PullRequestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
