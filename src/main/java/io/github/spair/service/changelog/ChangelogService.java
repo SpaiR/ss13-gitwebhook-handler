@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ public class ChangelogService {
         this.changelogGenerator = new ChangelogGenerator();
     }
 
-    public Changelog createFromPullRequest(final PullRequest pullRequest) {
+    public Optional<Changelog> createFromPullRequest(final PullRequest pullRequest) {
         return changelogGenerator.generate(pullRequest);
     }
 
@@ -39,12 +40,12 @@ public class ChangelogService {
     }
 
     public Set<String> getChangelogClassesList(final PullRequest pullRequest) {
-        Changelog changelog = changelogGenerator.generate(pullRequest);
+        Optional<Changelog> changelog = changelogGenerator.generate(pullRequest);
 
-        if (changelog.isEmpty()) {
-            return Collections.emptySet();
-        } else {
-            return changelog.getChangelogRows().stream().map(ChangelogRow::getClassName).collect(Collectors.toSet());
+        if (changelog.isPresent() && !changelog.get().isEmpty()) {
+            return changelog.get().getChangelogRows()
+                    .stream().map(ChangelogRow::getClassName).collect(Collectors.toSet());
         }
+        return Collections.emptySet();
     }
 }

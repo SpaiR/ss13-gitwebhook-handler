@@ -3,7 +3,6 @@ package io.github.spair.service.changelog;
 import io.github.spair.service.changelog.entities.Changelog;
 import io.github.spair.service.changelog.entities.ChangelogRow;
 import io.github.spair.service.git.entities.PullRequest;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.List;
@@ -18,8 +17,8 @@ class ChangelogGenerator {
     private static final Pattern AUTHOR_BEFORE_CHANGES = Pattern.compile(".*");
     private static final Pattern CHANGELOG_ROW_WITH_CLASS = Pattern.compile("-\\s(\\w+)(\\[link])?:\\s(.*)");
 
-    Changelog generate(final PullRequest pullRequest) {
-        Changelog changelog = new Changelog();
+    Optional<Changelog> generate(final PullRequest pullRequest) {
+        Changelog changelog = null;
         String changelogText = findChangelogText(Optional.ofNullable(pullRequest.getBody()).orElse(""));
 
         if (!changelogText.isEmpty()) {
@@ -27,7 +26,7 @@ class ChangelogGenerator {
             prepareChangelog(changelog, pullRequest);
         }
 
-        return changelog;
+        return Optional.ofNullable(changelog);
     }
 
     private String findChangelogText(final String prBody) {

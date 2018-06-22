@@ -9,6 +9,8 @@ import io.github.spair.service.git.entities.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class ValidateChangelogCommand implements HandlerCommand<PullRequest> {
 
@@ -29,14 +31,14 @@ public class ValidateChangelogCommand implements HandlerCommand<PullRequest> {
     @Override
     public void execute(final PullRequest pullRequest) {
         String invalidChangelogLabel = configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog();
-        Changelog changelog = changelogService.createFromPullRequest(pullRequest);
+        Optional<Changelog> changelog = changelogService.createFromPullRequest(pullRequest);
         int prNumber = pullRequest.getNumber();
 
         boolean isValid = true;
         boolean hasInvalidLabel = gitHubService.listIssueLabels(prNumber).contains(invalidChangelogLabel);
 
-        if (changelog.getChangelogRows() != null) {
-            ChangelogValidationStatus validationStatus = changelogService.validateChangelog(changelog);
+        if (changelog.isPresent()) {
+            ChangelogValidationStatus validationStatus = changelogService.validateChangelog(changelog.get());
 
             if (validationStatus.getStatus() == ChangelogValidationStatus.Status.INVALID) {
                 isValid = false;

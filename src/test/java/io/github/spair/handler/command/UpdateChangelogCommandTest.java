@@ -10,11 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import java.util.Optional;
+
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -41,7 +40,7 @@ public class UpdateChangelogCommandTest {
         Changelog changelog = mock(Changelog.class);
         when(changelog.isEmpty()).thenReturn(false);
         PullRequest pullRequest = PullRequest.builder().number(123).build();
-        when(changelogService.createFromPullRequest(pullRequest)).thenReturn(changelog);
+        when(changelogService.createFromPullRequest(pullRequest)).thenReturn(Optional.of(changelog));
 
         command.execute(pullRequest);
 
@@ -56,7 +55,7 @@ public class UpdateChangelogCommandTest {
         Changelog changelog = mock(Changelog.class);
         when(changelog.isEmpty()).thenReturn(true);
         PullRequest pullRequest = mock(PullRequest.class);
-        when(changelogService.createFromPullRequest(pullRequest)).thenReturn(changelog);
+        when(changelogService.createFromPullRequest(pullRequest)).thenReturn(Optional.of(changelog));
 
         command.execute(pullRequest);
 

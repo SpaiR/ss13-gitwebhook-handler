@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class UpdateChangelogCommand implements HandlerCommand<PullRequest> {
 
@@ -31,12 +33,12 @@ public class UpdateChangelogCommand implements HandlerCommand<PullRequest> {
 
     @Override
     public void execute(final PullRequest pullRequest) {
-        Changelog changelog = changelogService.createFromPullRequest(pullRequest);
+        Optional<Changelog> changelog = changelogService.createFromPullRequest(pullRequest);
 
-        if (!changelog.isEmpty()) {
+        if (changelog.isPresent() && !changelog.get().isEmpty()) {
             String changelogPath = configService.getConfig().getChangelogConfig().getPathToChangelog();
             String currentChangelogHtml = gitHubService.readDecodedFile(changelogPath);
-            String newChangelogHtml = changelogService.mergeHtmlWithChangelog(currentChangelogHtml, changelog);
+            String newChangelogHtml = changelogService.mergeHtmlWithChangelog(currentChangelogHtml, changelog.get());
 
             String updateMessage = "Automatic changelog generation for PR #" + pullRequest.getNumber();
             gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);

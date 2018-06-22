@@ -6,10 +6,11 @@ import io.github.spair.service.git.entities.PullRequest;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
+@SuppressWarnings("ConstantConditions")
 public class ChangelogGeneratorTest {
 
     private final ChangelogGenerator changelogGenerator = new ChangelogGenerator();
@@ -24,7 +25,7 @@ public class ChangelogGeneratorTest {
                 " - entry3[link]: Value 3";
 
         PullRequest pullRequest = PullRequest.builder().author("Author Name").body(bodyText).link("pr-link").build();
-        Changelog changelog = changelogGenerator.generate(pullRequest);
+        Changelog changelog = changelogGenerator.generate(pullRequest).get();
         List<ChangelogRow> changelogRows = changelog.getChangelogRows();
 
         assertEquals("Custom author", changelog.getAuthor());
@@ -46,7 +47,7 @@ public class ChangelogGeneratorTest {
                 "- entry: Value!\n";
 
         PullRequest pullRequest = PullRequest.builder().author("Author Name").body(bodyText).build();
-        Changelog changelog = changelogGenerator.generate(pullRequest);
+        Changelog changelog = changelogGenerator.generate(pullRequest).get();
         List<ChangelogRow> changelogRows = changelog.getChangelogRows();
 
         assertEquals("Author Name", changelog.getAuthor());
@@ -60,9 +61,9 @@ public class ChangelogGeneratorTest {
         String bodyText = "Lorem ipsum dolor sit amet";
 
         PullRequest pullRequest = PullRequest.builder().body(bodyText).build();
-        Changelog changelog = changelogGenerator.generate(pullRequest);
+        Optional<Changelog> changelog = changelogGenerator.generate(pullRequest);
 
-        assertTrue(changelog.isEmpty());
+        assertFalse(changelog.isPresent());
     }
 
     @Test
@@ -71,9 +72,10 @@ public class ChangelogGeneratorTest {
                 ":cl: entry: Value.";
 
         PullRequest pullRequest = PullRequest.builder().body(bodyText).build();
-        Changelog changelog = changelogGenerator.generate(pullRequest);
+        Optional<Changelog> changelog = changelogGenerator.generate(pullRequest);
 
-        assertTrue(changelog.isEmpty());
+        assertTrue(changelog.isPresent());
+        assertTrue(changelog.get().isEmpty());
 
         bodyText = "Lorem ipsum dolor sit amet\n" +
                 ":cl:\n" +
@@ -82,7 +84,8 @@ public class ChangelogGeneratorTest {
         pullRequest = PullRequest.builder().body(bodyText).build();
         changelog = changelogGenerator.generate(pullRequest);
 
-        assertTrue(changelog.isEmpty());
+        assertTrue(changelog.isPresent());
+        assertTrue(changelog.get().isEmpty());
     }
 
     @Test
@@ -92,8 +95,8 @@ public class ChangelogGeneratorTest {
                 " - entry: value";
 
         PullRequest pullRequest = PullRequest.builder().body(bodyText).build();
-        Changelog changelog = changelogGenerator.generate(pullRequest);
-        List<ChangelogRow> changelogRows = changelog.getChangelogRows();
+        Optional<Changelog> changelog = changelogGenerator.generate(pullRequest);
+        List<ChangelogRow> changelogRows = changelog.get().getChangelogRows();
 
         assertEquals("entry", changelogRows.get(0).getClassName());
         assertEquals("Value.", changelogRows.get(0).getChanges());

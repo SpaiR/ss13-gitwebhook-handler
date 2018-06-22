@@ -7,22 +7,22 @@ import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.GitHubService;
 import io.github.spair.service.git.entities.PullRequest;
 import org.assertj.core.util.Lists;
-import org.assertj.core.util.Sets;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static org.junit.Assert.*;
+import java.util.Optional;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
+@SuppressWarnings("ConstantConditions")
 public class ValidateChangelogCommandTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -33,7 +33,6 @@ public class ValidateChangelogCommandTest {
     private GitHubService gitHubService;
 
     private ValidateChangelogCommand command;
-    private Changelog changelog;
 
     @Before
     public void setUp() {
@@ -42,11 +41,11 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndInvalidAndNoInvalidLabel() {
-        Changelog changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog(true);
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
-        when(changelogService.validateChangelog(changelog)).thenReturn(createValidationStatus(false));
+        when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(false));
 
         command.execute(mock(PullRequest.class));
 
@@ -57,11 +56,11 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndInvalidAndHasInvalidLabel() {
-        Changelog changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog(true);
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
-        when(changelogService.validateChangelog(changelog)).thenReturn(createValidationStatus(false));
+        when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(false));
 
         command.execute(mock(PullRequest.class));
 
@@ -72,11 +71,11 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndValidAndNoInvalidLabel() {
-        Changelog changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog(true);
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
-        when(changelogService.validateChangelog(changelog)).thenReturn(createValidationStatus(true));
+        when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(true));
 
         command.execute(mock(PullRequest.class));
 
@@ -87,11 +86,11 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndValidAndHasInvalidLabel() {
-        Changelog changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog(true);
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
-        when(changelogService.validateChangelog(changelog)).thenReturn(createValidationStatus(true));
+        when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(true));
 
         command.execute(mock(PullRequest.class));
 
@@ -102,11 +101,11 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenNoChangelogRowsAndHasInvalidLabel() {
-        Changelog changelog = createChangelog(false);
+        Optional<Changelog> changelog = createChangelog(false);
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
-        when(changelogService.validateChangelog(changelog)).thenReturn(createValidationStatus(true));
+        when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(true));
 
         command.execute(mock(PullRequest.class));
 
@@ -115,10 +114,10 @@ public class ValidateChangelogCommandTest {
         verify(gitHubService).removeLabel(anyInt(), anyString());
     }
 
-    private Changelog createChangelog(final boolean hasRows) {
+    private Optional<Changelog> createChangelog(final boolean hasRows) {
         Changelog changelog = mock(Changelog.class);
         when(changelog.getChangelogRows()).thenReturn(hasRows ? Lists.emptyList() : null);
-        return changelog;
+        return Optional.of(changelog);
     }
 
     private ChangelogValidationStatus createValidationStatus(final boolean isValid) {

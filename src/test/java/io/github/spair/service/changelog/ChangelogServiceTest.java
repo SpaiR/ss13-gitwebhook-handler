@@ -14,6 +14,7 @@ import org.mockito.internal.util.collections.Sets;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -74,7 +75,7 @@ public class ChangelogServiceTest {
                 new ChangelogRow("fix", false, null)
         ));
 
-        when(changelogGenerator.generate(any())).thenReturn(changelog);
+        when(changelogGenerator.generate(any())).thenReturn(Optional.of(changelog));
 
         Set<String> expectedList = Sets.newSet("fix", "map");
 
@@ -83,7 +84,7 @@ public class ChangelogServiceTest {
 
     @Test
     public void testGetChangelogClassesListWhenEmpty() {
-        when(changelogGenerator.generate(any())).thenReturn(new Changelog());
+        when(changelogGenerator.generate(any())).thenReturn(Optional.empty());
         assertEquals(0, service.getChangelogClassesList(new PullRequest()).size());
     }
 }
