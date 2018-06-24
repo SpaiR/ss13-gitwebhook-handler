@@ -16,9 +16,8 @@ public abstract class AbstractReportRenderService<T> implements ReportRenderServ
 
     @Override
     public final String renderStatus(final List<T> statusList) {
-        StringBuilder report = new StringBuilder();
+        StringBuilder report = new StringBuilder(renderTitle()).append(NEW_LINE).append(NEW_LINE);
 
-        report.append(renderTitle()).append(NEW_LINE).append(NEW_LINE);
         statusList.forEach(status -> {
             report.append(DETAILS_OPEN);
 

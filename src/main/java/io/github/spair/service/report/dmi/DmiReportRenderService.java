@@ -48,7 +48,7 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
         }
 
         if (!statuses.isEmpty()) {
-            filename = filename + " <b><< " + String.join(" | ", statuses) + "</b>";
+            filename += " <b><< " + String.join(" | ", statuses) + "</b>";
         }
 
         return filename;

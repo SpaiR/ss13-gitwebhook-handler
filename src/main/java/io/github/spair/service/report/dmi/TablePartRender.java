@@ -24,12 +24,12 @@ final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
         bodyPart.append("Key | Dir / Frame | Old | New | Status").append(NEW_LINE);
         bodyPart.append("--- | :---------: | --- | --- | ------").append(NEW_LINE);
 
-        status.getSpritesDiffStatuses().stream().map(this::renderTableRows).forEach(bodyPart::append);
+        status.getSpritesDiffStatuses().stream().map(this::renderTableRow).forEach(bodyPart::append);
 
         return bodyPart.toString();
     }
 
-    private String renderTableRows(final DmiSpriteDiffStatus spriteDiffStatus) {
+    private String renderTableRow(final DmiSpriteDiffStatus spriteDiffStatus) {
         final String simpleName = spriteDiffStatus.getName();
         final String nameWithLink = createRowNameWithLinks(spriteDiffStatus);
 
