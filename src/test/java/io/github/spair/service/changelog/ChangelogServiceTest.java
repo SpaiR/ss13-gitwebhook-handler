@@ -11,8 +11,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 import java.util.Set;
@@ -39,9 +39,9 @@ public class ChangelogServiceTest {
         service = new ChangelogService(configService);
         when(configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog()).thenReturn("Invalid Changelog");
 
-        Whitebox.setInternalState(service, "changelogGenerator", changelogGenerator);
-        Whitebox.setInternalState(service, "htmlChangelogGenerator", htmlChangelogGenerator);
-        Whitebox.setInternalState(service, "changelogValidator", changelogValidator);
+        ReflectionTestUtils.setField(service, "changelogGenerator", changelogGenerator);
+        ReflectionTestUtils.setField(service, "htmlChangelogGenerator", htmlChangelogGenerator);
+        ReflectionTestUtils.setField(service, "changelogValidator", changelogValidator);
     }
 
     @Test

@@ -6,19 +6,15 @@ import io.github.spair.service.changelog.entity.ChangelogValidationStatus;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.pr.entity.PullRequest;
-import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -37,11 +33,12 @@ public class ValidateChangelogCommandTest {
     @Before
     public void setUp() {
         command = new ValidateChangelogCommand(configService, changelogService, gitHubService);
+        when(configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog()).thenReturn("");
     }
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndInvalidAndNoInvalidLabel() {
-        Optional<Changelog> changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
@@ -56,7 +53,7 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndInvalidAndHasInvalidLabel() {
-        Optional<Changelog> changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
@@ -71,7 +68,7 @@ public class ValidateChangelogCommandTest {
 
     @Test
     public void testExecuteWhenHasChangelogRowsAndValidAndNoInvalidLabel() {
-        Optional<Changelog> changelog = createChangelog(true);
+        Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
@@ -85,23 +82,8 @@ public class ValidateChangelogCommandTest {
     }
 
     @Test
-    public void testExecuteWhenHasChangelogRowsAndValidAndHasInvalidLabel() {
-        Optional<Changelog> changelog = createChangelog(true);
-
-        when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
-        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
-        when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(true));
-
-        command.execute(mock(PullRequest.class));
-
-        verify(gitHubService, never()).createIssueComment(anyInt(), anyString());
-        verify(gitHubService, never()).addLabel(anyInt(), anyString());
-        verify(gitHubService).removeLabel(anyInt(), anyString());
-    }
-
-    @Test
     public void testExecuteWhenNoChangelogRowsAndHasInvalidLabel() {
-        Optional<Changelog> changelog = createChangelog(false);
+        Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
         when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
@@ -114,9 +96,8 @@ public class ValidateChangelogCommandTest {
         verify(gitHubService).removeLabel(anyInt(), anyString());
     }
 
-    private Optional<Changelog> createChangelog(final boolean hasRows) {
+    private Optional<Changelog> createChangelog() {
         Changelog changelog = mock(Changelog.class);
-        when(changelog.getChangelogRows()).thenReturn(hasRows ? Lists.emptyList() : null);
         return Optional.of(changelog);
     }
 

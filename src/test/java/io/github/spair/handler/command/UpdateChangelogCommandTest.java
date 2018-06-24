@@ -10,12 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Optional;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,7 +38,11 @@ public class UpdateChangelogCommandTest {
         Changelog changelog = mock(Changelog.class);
         when(changelog.isEmpty()).thenReturn(false);
         PullRequest pullRequest = PullRequest.builder().number(123).build();
+
         when(changelogService.createFromPullRequest(pullRequest)).thenReturn(Optional.of(changelog));
+        when(configService.getConfig().getChangelogConfig().getPathToChangelog()).thenReturn("");
+        when(gitHubService.readDecodedFile(anyString())).thenReturn("");
+        when(changelogService.mergeHtmlWithChangelog(anyString(), eq(changelog))).thenReturn("");
 
         command.execute(pullRequest);
 

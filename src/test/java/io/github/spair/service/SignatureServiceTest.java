@@ -17,7 +17,7 @@ public class SignatureServiceTest {
 
     @Test
     public void testValidate() {
-        ConfigService configService = mock(ConfigService.class, Answers.RETURNS_DEEP_STUBS.get());
+        ConfigService configService = mock(ConfigService.class, Answers.RETURNS_DEEP_STUBS);
         SignatureService signatureService = new SignatureService(configService);
 
         when(configService.getConfig().getGitHubConfig().getSecretKey()).thenReturn("12345");
@@ -27,7 +27,7 @@ public class SignatureServiceTest {
 
     @Test
     public void testValidateWithInvalidSignature() {
-        ConfigService configService = mock(ConfigService.class, Answers.RETURNS_DEEP_STUBS.get());
+        ConfigService configService = mock(ConfigService.class, Answers.RETURNS_DEEP_STUBS);
         SignatureService signatureService = new SignatureService(configService);
 
         when(configService.getConfig().getGitHubConfig().getSecretKey()).thenReturn("000");

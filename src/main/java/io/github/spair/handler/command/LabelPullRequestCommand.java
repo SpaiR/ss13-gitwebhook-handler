@@ -18,8 +18,6 @@ import java.util.function.Consumer;
 @Component
 public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
 
-    private static final String DMI_SUFFIX = ".dmi";
-    private static final String DMM_SUFFIX = ".dmm";
     private static final String DNM_TAG = "[dnm]";
     private static final String WIP_TAG = "[wip]";
 
@@ -77,9 +75,9 @@ public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
         for (PullRequestFile file : prFiles) {
             final String filename = file.getFilename();
 
-            if (filename.endsWith(DMM_SUFFIX)) {
+            if (filename.endsWith(ByondFiles.DMM_SUFFIX)) {
                 hasMapChanges = true;
-            } else if (filename.endsWith(DMI_SUFFIX)) {
+            } else if (filename.endsWith(ByondFiles.DMI_SUFFIX)) {
                 hasIconChanges = true;
             }
 

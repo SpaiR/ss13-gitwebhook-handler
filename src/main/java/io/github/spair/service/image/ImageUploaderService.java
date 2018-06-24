@@ -15,12 +15,14 @@ import org.springframework.util.MultiValueMap;
 @Service
 public class ImageUploaderService {
 
+    static final String HOST_PATH = "https://img.taucetistation.org";
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageUploaderService.class);
 
     private final RestService restService;
     private final ConfigService configService;
 
-    private static final String UPLOAD_ENDPOINT = "https://img.taucetistation.org/backend.php";
+    private static final String UPLOAD_ENDPOINT = HOST_PATH + "/backend.php";
     private static final String BASE64 = "base64";
     private static final String URL = "url";
     private static final String UPLOAD_CODE = "upload_code";
