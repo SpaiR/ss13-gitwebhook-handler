@@ -54,9 +54,9 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
         List<DmiDiffStatus> dmiDiffStatuses = extractDmiDiffStatuses(modifiedDmis);
 
         final String report = reportService.renderStatus(dmiDiffStatuses);
-        final Integer reportId = getReportId(gitHubService.listIssueComments(prNumber));
+        final Integer commentId = getCommentId(gitHubService.listIssueComments(prNumber));
 
-        sendReportOrCreate(report, prNumber, reportId);
+        sendReportOrCreate(report, prNumber, commentId);
     }
 
     private List<ModifiedDmi> extractModifiedDmis(final List<PullRequestFile> dmiPrFiles) {
@@ -71,12 +71,12 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
                 .collect(Collectors.toList());
     }
 
-    private void sendReportOrCreate(final String report, final int prNumber, final int reportId) {
+    private void sendReportOrCreate(final String report, final int prNumber, @Nullable final Integer commentId) {
         try {
-            sendReport(report, prNumber, reportId);
+            sendReport(report, prNumber, commentId);
         } catch (HttpClientErrorException e) {
             if (e.getStatusCode() == HttpStatus.UNPROCESSABLE_ENTITY) {
-                sendReport(reportService.renderError(), prNumber, reportId);
+                sendReport(reportService.renderError(), prNumber, commentId);
             } else {
                 LOGGER.error("Error on sending DMI diff dmi. Resp headers: {}. Resp body: {}",
                         e.getResponseHeaders(), e.getResponseBodyAsString());
@@ -85,9 +85,9 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
         }
     }
 
-    private void sendReport(final String report, final int prNumber, @Nullable final Integer reportId) {
-        if (reportId != null) {
-            gitHubService.editIssueComment(reportId, report);
+    private void sendReport(final String report, final int prNumber, @Nullable final Integer commentId) {
+        if (commentId != null) {
+            gitHubService.editIssueComment(commentId, report);
         } else {
             gitHubService.createIssueComment(prNumber, report);
         }
@@ -100,7 +100,7 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
     }
 
     @Nullable
-    private Integer getReportId(final List<IssueComment> pullRequestComments) {
+    private Integer getCommentId(final List<IssueComment> pullRequestComments) {
         for (IssueComment prComment : pullRequestComments) {
             if (prComment.getBody().startsWith(DmiReportRenderService.TITLE)) {
                 return prComment.getId();

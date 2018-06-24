@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 public class DmiService {
 
     private final DmiLoader dmiLoader;
-    private final DmiSpriteDiffStatusGenerator spriteDiffStatusGenerator;
+    private final SpriteDiffStatusGenerator spriteDiffStatusGenerator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DmiService.class);
 
@@ -28,7 +28,7 @@ public class DmiService {
     public DmiService(final DmiLoader dmiLoader,
                       final ImageUploaderService imageUploaderService) {
         this.dmiLoader = dmiLoader;
-        this.spriteDiffStatusGenerator = new DmiSpriteDiffStatusGenerator(imageUploaderService);
+        this.spriteDiffStatusGenerator = new SpriteDiffStatusGenerator(imageUploaderService);
     }
 
     public ModifiedDmi createModifiedDmi(final PullRequestFile dmiFile) {

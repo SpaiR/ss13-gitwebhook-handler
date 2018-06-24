@@ -18,16 +18,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-final class DmiSpriteDiffStatusGenerator {
+final class SpriteDiffStatusGenerator {
 
     private final ImageUploaderService imageUploader;
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DmiSpriteDiffStatusGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SpriteDiffStatusGenerator.class);
 
-    DmiSpriteDiffStatusGenerator(final ImageUploaderService imageUploader) {
+    SpriteDiffStatusGenerator(final ImageUploaderService imageUploader) {
         this.imageUploader = imageUploader;
     }
 
@@ -41,13 +42,8 @@ final class DmiSpriteDiffStatusGenerator {
         try {
             dmiSpriteDiffStatuses = executor.invokeAll(callableList, 2, TimeUnit.MINUTES)
                     .stream()
-                    .map(dmiSpriteDiffStatusFuture -> {
-                        try {
-                            return dmiSpriteDiffStatusFuture.get();
-                        } catch (InterruptedException | ExecutionException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }).collect(Collectors.toList());
+                    .map(this::unwrapFuture)
+                    .collect(Collectors.toList());
         } catch (InterruptedException e) {
             LOGGER.error("Exception on creating DmiSpriteDiffStatus. Created reports: {}. Total diff: {}",
                     dmiSpriteDiffStatuses, diffs, e);
@@ -110,6 +106,14 @@ final class DmiSpriteDiffStatusGenerator {
             return Executors.newFixedThreadPool(diffEntriesSize / 2);
         } else {
             return Executors.newSingleThreadExecutor();
+        }
+    }
+
+    private DmiSpriteDiffStatus unwrapFuture(final Future<DmiSpriteDiffStatus> future) {
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
         }
     }
 }
