@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.spair.service.EnumUtil;
 import io.github.spair.service.RestService;
 import io.github.spair.service.config.ConfigService;
-import io.github.spair.service.issue.entity.IssueComment;
+import io.github.spair.service.github.entity.IssueComment;
 import io.github.spair.service.github.entity.PullRequestFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

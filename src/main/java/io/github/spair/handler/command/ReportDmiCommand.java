@@ -4,7 +4,7 @@ import io.github.spair.service.dmi.entity.DmiDiffReport;
 import io.github.spair.service.dmi.report.DmiReportCreator;
 import io.github.spair.service.dmi.report.ReportEntryGenerator;
 import io.github.spair.service.github.GitHubService;
-import io.github.spair.service.issue.entity.IssueComment;
+import io.github.spair.service.github.entity.IssueComment;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.github.entity.PullRequestFile;
 import org.slf4j.Logger;
