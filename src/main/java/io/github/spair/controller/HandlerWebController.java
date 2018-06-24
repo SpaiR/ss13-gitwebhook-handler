@@ -75,8 +75,8 @@ public class HandlerWebController {
                 issueHandler.handle(webhookJson);
                 return "Issue handled";
             default:
-                LOGGER.info("Unhandled event caught: " + event);
-                return "Unhandled event caught. Event: " + event;
+                LOGGER.warn("Unhandled event caught: " + event);
+                return "Unknown event caught. Event: " + event;
         }
     }
 
