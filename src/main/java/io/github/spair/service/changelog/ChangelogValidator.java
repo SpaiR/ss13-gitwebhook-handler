@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class ChangelogValidator {
+final class ChangelogValidator {
 
     private final ConfigService configService;
 

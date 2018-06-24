@@ -12,7 +12,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-class HtmlChangelogGenerator {
+final class HtmlChangelogGenerator {
 
     private final ConfigService configService;
 
