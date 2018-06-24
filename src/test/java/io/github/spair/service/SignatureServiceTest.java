@@ -4,6 +4,8 @@ import io.github.spair.service.config.ConfigService;
 import org.junit.Test;
 import org.mockito.Answers;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,16 +22,16 @@ public class SignatureServiceTest {
 
         when(configService.getConfig().getGitHubConfig().getSecretKey()).thenReturn("12345");
 
-        signatureService.validate(SIGN, TEXT);
+        assertTrue(signatureService.validate(SIGN, TEXT));
     }
 
-    @Test(expected = InvalidSignatureException.class)
+    @Test
     public void testValidateWithInvalidSignature() {
         ConfigService configService = mock(ConfigService.class, Answers.RETURNS_DEEP_STUBS.get());
         SignatureService signatureService = new SignatureService(configService);
 
         when(configService.getConfig().getGitHubConfig().getSecretKey()).thenReturn("000");
 
-        signatureService.validate(SIGN, TEXT);
+        assertFalse(signatureService.validate(SIGN, TEXT));
     }
 }

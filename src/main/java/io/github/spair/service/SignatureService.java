@@ -25,7 +25,7 @@ public class SignatureService {
         this.configService = configService;
     }
 
-    public void validate(final String signature, final String data) throws InvalidSignatureException {
+    public boolean validate(final String signature, final String data) {
         try {
             String realSecretKey = configService.getConfig().getGitHubConfig().getSecretKey();
             SecretKeySpec signingKey = new SecretKeySpec(realSecretKey.getBytes(), HMAC_SHA1_ALGORITHM);
@@ -33,9 +33,7 @@ public class SignatureService {
             Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
             mac.init(signingKey);
 
-            if (!signature.equals(bytesToString(mac.doFinal(data.getBytes())))) {
-                throw new InvalidSignatureException();
-            }
+            return signature.equals(bytesToString(mac.doFinal(data.getBytes())));
         } catch (InvalidKeyException | NoSuchAlgorithmException e) {
             LOGGER.error("Signature validation error", e);
             throw new RuntimeException(e);
