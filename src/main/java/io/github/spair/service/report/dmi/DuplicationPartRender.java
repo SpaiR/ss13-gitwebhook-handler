@@ -11,37 +11,37 @@ final class DuplicationPartRender implements BodyPartRender<DmiDiffStatus> {
 
     private static final String DUPLICATION_WARNING = "**Warning!** States duplication detected:";
     private static final String DUPLICATION_WARNING_TEXT =
-            "*Duplication of states may result into unpredictable behavior in game and incorrect diff dmi, "
+            "*Duplication of states may result into unpredictable behavior in game and incorrect diff report, "
           + "so fix is recommended.*";
 
     @Override
     public String render(final DmiDiffStatus status) {
+        String bodyPart = "";
+
         if (!status.isHasDuplicates()) {
-            return "";
+            return bodyPart;
         }
 
-        StringBuilder bodyPart = new StringBuilder();
-
-        bodyPart.append(DUPLICATION_WARNING);
-        bodyPart.append(NEW_LINE);
+        bodyPart += DUPLICATION_WARNING;
+        bodyPart += NEW_LINE;
 
         final Set<String> oldDuplicates = status.getOldDuplicatesNames();
         final Set<String> newDuplicates = status.getNewDuplicatesNames();
 
         if (!oldDuplicates.isEmpty()) {
-            bodyPart.append("- **Old DMI:** ").append(oldDuplicates);
-            bodyPart.append(NEW_LINE);
+            bodyPart += "- **Old DMI:** " + oldDuplicates;
+            bodyPart += NEW_LINE;
         }
 
         if (!newDuplicates.isEmpty()) {
-            bodyPart.append("- **New DMI:** ").append(newDuplicates);
-            bodyPart.append(NEW_LINE);
+            bodyPart += "- **New DMI:** " + newDuplicates;
+            bodyPart += NEW_LINE;
         }
 
-        bodyPart.append(NEW_LINE);
-        bodyPart.append(DUPLICATION_WARNING_TEXT);
-        bodyPart.append(NEW_LINE);
+        bodyPart += NEW_LINE;
+        bodyPart += DUPLICATION_WARNING_TEXT;
+        bodyPart += NEW_LINE;
 
-        return bodyPart.toString();
+        return bodyPart;
     }
 }

@@ -1,0 +1,5 @@
+**Warning!** States duplication detected:
+- **Old DMI:** [a, b, c]
+- **New DMI:** [d, e, f]
+
+*Duplication of states may result into unpredictable behavior in game and incorrect diff report, so fix is recommended.*

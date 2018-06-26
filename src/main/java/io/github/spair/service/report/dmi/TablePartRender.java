@@ -21,8 +21,8 @@ final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
 
         StringBuilder bodyPart = new StringBuilder();
 
-        bodyPart.append("Key | Dir / Frame | Old | New | Status").append(NEW_LINE);
-        bodyPart.append("--- | :---------: | --- | --- | ------").append(NEW_LINE);
+        bodyPart.append("Key|Dir / Frame|Old|New|Status").append(NEW_LINE);
+        bodyPart.append("---|:---------:|---|---|------").append(NEW_LINE);
 
         status.getSpritesDiffStatuses().stream().map(this::renderTableRow).forEach(bodyPart::append);
 

@@ -10,9 +10,9 @@ public abstract class AbstractReportRenderService<T> implements ReportRenderServ
     private static final String DETAILS_CLOSE = "</details>";
 
     private static final String SUMMARY_OPEN = "<summary>";
-    private static final String SUMMARY_CLOSE = "/<summary>";
+    private static final String SUMMARY_CLOSE = "</summary>";
 
-    private static final String LINE_HORIZONTAL = "<hr />";
+    private static final String LINE_HORIZONTAL = "<hr>";
 
     @Override
     public final String renderStatus(final List<T> statusList) {

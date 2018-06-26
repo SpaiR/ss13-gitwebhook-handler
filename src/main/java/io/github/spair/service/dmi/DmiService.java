@@ -42,14 +42,14 @@ public class DmiService {
 
             switch (dmiFile.getStatus()) {
                 case ADDED:
-                    oldDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
+                    newDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
                     break;
                 case MODIFIED:
-                    newDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
-                    oldDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
+                    oldDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
+                    newDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
                     break;
                 case REMOVED:
-                    newDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
+                    oldDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
                     break;
             }
 

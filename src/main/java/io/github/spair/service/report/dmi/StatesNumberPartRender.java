@@ -17,29 +17,28 @@ final class StatesNumberPartRender implements BodyPartRender<DmiDiffStatus> {
 
     @Override
     public String render(final DmiDiffStatus status) {
-        StringBuilder bodyPart = new StringBuilder();
+        String bodyPart = "";
 
-        bodyPart.append("States number:").append(NEW_LINE);
-        bodyPart.append(renderNumber(OLD_DMI, status.getOldStatesNumber())).append(NEW_LINE);
-        bodyPart.append(renderNumber(NEW_DMI, status.getNewStatesNumber())).append(NEW_LINE);
+        bodyPart += "States number:" + NEW_LINE;
+        bodyPart += renderNumber(OLD_DMI, status.getOldStatesNumber()) + NEW_LINE;
+        bodyPart += renderNumber(NEW_DMI, status.getNewStatesNumber()) + NEW_LINE;
 
         if (status.isStateOverflow()) {
-            bodyPart.append(NEW_LINE);
-            bodyPart.append(OVERFLOW_MESSAGE);
-            bodyPart.append(NEW_LINE);
+            bodyPart += NEW_LINE;
+            bodyPart += OVERFLOW_MESSAGE;
+            bodyPart += NEW_LINE;
         }
 
-        return bodyPart.toString();
+        return bodyPart;
     }
 
-    private StringBuilder renderNumber(final String dmiType, final int number) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("- **").append(dmiType).append(" DMI:** ").append(number);
+    private String renderNumber(final String dmiType, final int number) {
+        String result = "- **" + dmiType + " DMI:** " + number;
 
         if (number > Dmi.MAX_STATES) {
-            sb.append(OVERFLOW_WARNING);
+            result += OVERFLOW_WARNING;
         }
 
-        return sb;
+        return result;
     }
 }

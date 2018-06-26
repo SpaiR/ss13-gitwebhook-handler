@@ -1,5 +1,5 @@
 States number:
-- **Old DMI:** 570 (overflow)
-- **New DMI:** 30
+- **Old DMI:** 510
+- **New DMI:** 513 (overflow)
 
 *DMI file has limit to 512 states. States overflow is when this limit was overpassed. It's a **critical** problem which should be fixed.*

@@ -10,20 +10,20 @@ public final class ImageHelper {
         boolean hasBeforeLink = !linkBefore.isEmpty();
         boolean hasAfterLink = !linkAfter.isEmpty();
 
-        StringBuilder wrappedLink = new StringBuilder(IMG_DIFF_PATH);
+        String wrappedLink = IMG_DIFF_PATH;
 
         if (hasBeforeLink) {
-            wrappedLink.append("before=").append(resizeLink(linkBefore, resizeWidth, resizeHeight));
+            wrappedLink += "before=" + resizeLink(linkBefore, resizeWidth, resizeHeight);
         }
 
         if (hasAfterLink) {
             if (hasBeforeLink) {
-                wrappedLink.append('&');
+                wrappedLink += '&';
             }
-            wrappedLink.append("after=").append(resizeLink(linkAfter, resizeWidth, resizeHeight));
+            wrappedLink += "after=" + resizeLink(linkAfter, resizeWidth, resizeHeight);
         }
 
-        return wrappedLink.toString();
+        return wrappedLink;
     }
 
     public static String wrapInImgTag(final String imageLink, final String title) {
@@ -36,7 +36,7 @@ public final class ImageHelper {
 
     private static String resizeLink(final String link, final int resizeWidth, final int resizeHeight) {
         final String resizePrefix = "/" + resizeWidth + "x" + resizeHeight + "/forceresize/";
-        final String relativeLinkPath = link.substring(link.lastIndexOf('/'), link.length() - 1);
+        final String relativeLinkPath = link.substring(link.lastIndexOf('/') + 1, link.length());
         return ImageUploaderService.HOST_PATH + resizePrefix + relativeLinkPath;
     }
 

@@ -1,6 +1,0 @@
-<details><summary>DMI Metadata Diff</summary>
-
-```
-[ {'mocked' : 'meta diff'} ]
-```
-</details>

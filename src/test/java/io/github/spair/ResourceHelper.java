@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
-public final class ReadFileUtil {
+public final class ResourceHelper {
 
     public static String readFile(String filePath) {
         try {
@@ -17,6 +17,6 @@ public final class ReadFileUtil {
         }
     }
 
-    private ReadFileUtil() {
+    private ResourceHelper() {
     }
 }
