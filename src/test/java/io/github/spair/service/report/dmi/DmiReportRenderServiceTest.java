@@ -49,7 +49,7 @@ public class DmiReportRenderServiceTest {
 
     @Test
     public void renderError() {
-        assertEquals("## DMI Diff Report" + NEW_LINE + NEW_LINE + "Report is too long and can't be print.", renderService.renderError());
+        assertEquals("## DMI Diff Report" + NEW_LINE + NEW_LINE + "Report is too long and can't be printed.", renderService.renderError());
     }
 
     @Test
@@ -68,14 +68,32 @@ public class DmiReportRenderServiceTest {
     public void renderHeaderWithDuplicationStatus() {
         when(status.isHasDuplicates()).thenReturn(true);
         when(status.isStateOverflow()).thenReturn(false);
+        when(status.isDuplicatesFixed()).thenReturn(false);
         assertEquals(FILE_NAME + " <b><< duplicates</b>", renderService.renderHeader(status));
     }
 
     @Test
-    public void renderHeaderWithStatesOverflowStatus() {
+    public void renderHeaderWithFixedDuplicationStatus() {
+        when(status.isHasDuplicates()).thenReturn(true);
+        when(status.isStateOverflow()).thenReturn(false);
+        when(status.isDuplicatesFixed()).thenReturn(true);
+        assertEquals(FILE_NAME + " <b><< duplicates (fixed)</b>", renderService.renderHeader(status));
+    }
+
+    @Test
+    public void renderHeaderWithStateOverflowStatus() {
         when(status.isHasDuplicates()).thenReturn(false);
         when(status.isStateOverflow()).thenReturn(true);
+        when(status.isStateOverflowFixed()).thenReturn(false);
         assertEquals(FILE_NAME + " <b><< states overflow</b>", renderService.renderHeader(status));
+    }
+
+    @Test
+    public void renderHeaderWithFixesStateOverflowStatus() {
+        when(status.isHasDuplicates()).thenReturn(false);
+        when(status.isStateOverflow()).thenReturn(true);
+        when(status.isStateOverflowFixed()).thenReturn(true);
+        assertEquals(FILE_NAME + " <b><< states overflow (fixed)</b>", renderService.renderHeader(status));
     }
 
     @Test
@@ -83,6 +101,15 @@ public class DmiReportRenderServiceTest {
         when(status.isHasDuplicates()).thenReturn(true);
         when(status.isStateOverflow()).thenReturn(true);
         assertEquals(FILE_NAME + " <b><< duplicates | states overflow</b>", renderService.renderHeader(status));
+    }
+
+    @Test
+    public void renderHeaderWithAllStatusesFixed() {
+        when(status.isHasDuplicates()).thenReturn(true);
+        when(status.isStateOverflow()).thenReturn(true);
+        when(status.isDuplicatesFixed()).thenReturn(true);
+        when(status.isStateOverflowFixed()).thenReturn(true);
+        assertEquals(FILE_NAME + " <b><< duplicates (fixed) | states overflow (fixed)</b>", renderService.renderHeader(status));
     }
 
     @Test

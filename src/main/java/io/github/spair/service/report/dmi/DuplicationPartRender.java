@@ -9,6 +9,7 @@ import static io.github.spair.service.report.TextConstants.NEW_LINE;
 
 final class DuplicationPartRender implements BodyPartRender<DmiDiffStatus> {
 
+    private static final String DUPLICATION_INFO = "**Fixed** states duplication detected:";
     private static final String DUPLICATION_WARNING = "**Warning!** States duplication detected:";
     private static final String DUPLICATION_WARNING_TEXT =
             "*Duplication of states may result into unpredictable behavior in game and incorrect diff report, "
@@ -22,7 +23,7 @@ final class DuplicationPartRender implements BodyPartRender<DmiDiffStatus> {
             return bodyPart;
         }
 
-        bodyPart += DUPLICATION_WARNING;
+        bodyPart += status.isDuplicatesFixed() ? DUPLICATION_INFO : DUPLICATION_WARNING;
         bodyPart += NEW_LINE;
 
         final Set<String> oldDuplicates = status.getOldDuplicatesNames();
@@ -38,9 +39,11 @@ final class DuplicationPartRender implements BodyPartRender<DmiDiffStatus> {
             bodyPart += NEW_LINE;
         }
 
-        bodyPart += NEW_LINE;
-        bodyPart += DUPLICATION_WARNING_TEXT;
-        bodyPart += NEW_LINE;
+        if (!status.isDuplicatesFixed()) {
+            bodyPart += NEW_LINE;
+            bodyPart += DUPLICATION_WARNING_TEXT;
+            bodyPart += NEW_LINE;
+        }
 
         return bodyPart;
     }

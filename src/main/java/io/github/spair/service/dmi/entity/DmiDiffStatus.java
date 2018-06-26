@@ -29,7 +29,15 @@ public class DmiDiffStatus {
         return oldStatesNumber > Dmi.MAX_STATES || newStatesNumber > Dmi.MAX_STATES;
     }
 
+    public boolean isStateOverflowFixed() {
+        return newStatesNumber <= Dmi.MAX_STATES;
+    }
+
     public boolean isHasDuplicates() {
         return !oldDuplicatesNames.isEmpty() || !newDuplicatesNames.isEmpty();
+    }
+
+    public boolean isDuplicatesFixed() {
+        return newDuplicatesNames.isEmpty();
     }
 }

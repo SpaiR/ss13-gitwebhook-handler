@@ -18,6 +18,7 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
 
     private static final String DUPLICATES_HEADER = "duplicates";
     private static final String STATE_OVERFLOW_HEADER = "states overflow";
+    private static final String FIXED_HEADER_INFO = " (fixed)";
 
     private final BodyPartRender<DmiDiffStatus> duplicationPartRender = new DuplicationPartRender();
     private final BodyPartRender<DmiDiffStatus> tablePartRender = new TablePartRender();
@@ -26,7 +27,7 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
     @Override
     public String renderError() {
         return TITLE + NEW_LINE + NEW_LINE
-                + "Report is too long and can't be print.";
+                + "Report is too long and can't be printed.";
     }
 
     @Override
@@ -35,16 +36,24 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
     }
 
     @Override
-    protected String renderHeader(final DmiDiffStatus status) {
-        String filename = status.getFilename();
+    protected String renderHeader(final DmiDiffStatus dmiDiffStatus) {
+        String filename = dmiDiffStatus.getFilename();
         List<String> statuses = new ArrayList<>();
 
-        if (status.isHasDuplicates()) {
-            statuses.add(DUPLICATES_HEADER);
+        if (dmiDiffStatus.isHasDuplicates()) {
+            String status = DUPLICATES_HEADER;
+            if (dmiDiffStatus.isDuplicatesFixed()) {
+                status += FIXED_HEADER_INFO;
+            }
+            statuses.add(status);
         }
 
-        if (status.isStateOverflow()) {
-            statuses.add(STATE_OVERFLOW_HEADER);
+        if (dmiDiffStatus.isStateOverflow()) {
+            String status = STATE_OVERFLOW_HEADER;
+            if (dmiDiffStatus.isStateOverflowFixed()) {
+                status += FIXED_HEADER_INFO;
+            }
+            statuses.add(status);
         }
 
         if (!statuses.isEmpty()) {
