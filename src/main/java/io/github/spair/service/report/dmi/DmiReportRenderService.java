@@ -3,7 +3,6 @@ package io.github.spair.service.report.dmi;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.report.AbstractReportRenderService;
 import io.github.spair.service.report.BodyPartRender;
-import io.github.spair.service.report.ReportRenderService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import static io.github.spair.service.report.TextConstants.NEW_LINE;
 
-@Service(ReportRenderService.DMI)
+@Service
 public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffStatus> {
 
     public static final String TITLE = "## DMI Diff Report";

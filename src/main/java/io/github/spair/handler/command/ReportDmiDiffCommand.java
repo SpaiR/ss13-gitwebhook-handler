@@ -12,7 +12,6 @@ import io.github.spair.service.report.ReportRenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -35,7 +34,7 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
     public ReportDmiDiffCommand(
             final GitHubService gitHubService,
             final DmiService dmiService,
-            @Qualifier(ReportRenderService.DMI) final ReportRenderService<DmiDiffStatus> reportService) {
+            final ReportRenderService<DmiDiffStatus> reportService) {
         this.gitHubService = gitHubService;
         this.dmiService = dmiService;
         this.reportService = reportService;
