@@ -1,7 +1,9 @@
 package io.github.spair.service.github;
 
+@SuppressWarnings("WeakerAccess")
 public final class GitHubConstants {
 
+    public static final String PATH = "https://github.com";
     public static final String API = "https://api.github.com";
 
     public static final String SIGNATURE_HEADER = "X-Hub-Signature";

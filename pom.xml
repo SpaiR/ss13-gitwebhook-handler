@@ -68,6 +68,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.jgit</groupId>
+            <artifactId>org.eclipse.jgit</artifactId>
+            <version>5.0.1.201806211838-r</version>
+        </dependency>
+
+        <dependency>
             <groupId>io.github.spair</groupId>
             <artifactId>byond-dmi-util</artifactId>
             <version>1.0.5</version>

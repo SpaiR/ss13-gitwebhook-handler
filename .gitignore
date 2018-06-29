@@ -27,3 +27,4 @@ nbdist/
 GWHConfig.json
 GWHLog.log
 src/main/resources/static/*.min*
+.repos

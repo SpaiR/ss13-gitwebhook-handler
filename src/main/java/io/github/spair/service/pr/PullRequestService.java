@@ -15,6 +15,7 @@ public class PullRequestService {
         JsonNode pullRequestNode = webhookJson.get(GitHubPayload.PULL_REQUEST);
 
         String author = pullRequestNode.get(GitHubPayload.USER).get(GitHubPayload.LOGIN).asText();
+        String branchName = pullRequestNode.get(GitHubPayload.HEAD).get(GitHubPayload.REF).asText();
         int number = pullRequestNode.get(GitHubPayload.NUMBER).asInt();
         String title = pullRequestNode.get(GitHubPayload.TITLE).asText();
         PullRequestType type = identifyType(webhookJson);
@@ -23,7 +24,8 @@ public class PullRequestService {
         String body = pullRequestNode.get(GitHubPayload.BODY).asText();
 
         return PullRequest.builder()
-                .author(author).number(number).title(title).type(type).link(link).diffLink(diffLink).body(body)
+                .author(author).branchName(branchName).number(number)
+                .title(title).type(type).link(link).diffLink(diffLink).body(body)
                 .build();
     }
 

@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 public class PullRequest {
 
     private String author;
+    private String branchName;
     private int number;
     private String title;
     private PullRequestType type;
