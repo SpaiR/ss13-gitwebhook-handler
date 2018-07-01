@@ -33,7 +33,7 @@ public class PullRequestServiceTest {
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
-                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.OPENED)
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.OPENED).branchName("changes")
                 .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
@@ -47,7 +47,7 @@ public class PullRequestServiceTest {
         pullRequestPayload.set("action", JsonNodeFactory.instance.textNode("unknown_action"));
 
         PullRequest expectedPullRequest = PullRequest.builder()
-                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.UNDEFINED)
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.UNDEFINED).branchName("changes")
                 .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
@@ -60,7 +60,7 @@ public class PullRequestServiceTest {
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
-                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.CLOSED)
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.CLOSED).branchName("changes")
                 .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
@@ -73,7 +73,7 @@ public class PullRequestServiceTest {
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
-                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.MERGED)
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.MERGED).branchName("changes")
                 .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
@@ -86,7 +86,7 @@ public class PullRequestServiceTest {
         ObjectNode pullRequestPayload = objectMapper.readValue(jsonFile, ObjectNode.class);
 
         PullRequest expectedPullRequest = PullRequest.builder()
-                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.UNDEFINED)
+                .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.UNDEFINED).branchName("changes")
                 .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
