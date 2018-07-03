@@ -4,7 +4,7 @@ import io.github.spair.byond.dmi.Dmi;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.report.BodyPartRender;
 
-import static io.github.spair.service.report.TextConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.NEW_LINE;
 
 final class StatesNumberPartRender implements BodyPartRender<DmiDiffStatus> {
 

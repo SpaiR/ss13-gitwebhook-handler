@@ -2,17 +2,14 @@ package io.github.spair.service.report;
 
 import java.util.List;
 
-import static io.github.spair.service.report.TextConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.DETAILS_CLOSE;
+import static io.github.spair.service.report.ReportConstants.DETAILS_OPEN;
+import static io.github.spair.service.report.ReportConstants.SUMMARY_OPEN;
+import static io.github.spair.service.report.ReportConstants.SUMMARY_CLOSE;
+import static io.github.spair.service.report.ReportConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.LINE_HORIZONTAL;
 
 public abstract class AbstractReportRenderService<T> implements ReportRenderService<T> {
-
-    private static final String DETAILS_OPEN = "<details>";
-    private static final String DETAILS_CLOSE = "</details>";
-
-    private static final String SUMMARY_OPEN = "<summary>";
-    private static final String SUMMARY_CLOSE = "</summary>";
-
-    private static final String LINE_HORIZONTAL = "<hr>";
 
     @Override
     public final String renderStatus(final List<T> statusList) {

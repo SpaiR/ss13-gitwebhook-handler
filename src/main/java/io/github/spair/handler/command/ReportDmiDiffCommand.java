@@ -3,20 +3,15 @@ package io.github.spair.handler.command;
 import io.github.spair.service.dmi.DmiService;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
-import io.github.spair.service.report.dmi.DmiReportRenderService;
 import io.github.spair.service.github.GitHubService;
-import io.github.spair.service.github.entity.IssueComment;
-import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.github.entity.PullRequestFile;
+import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.spair.service.report.ReportSenderService;
+import io.github.spair.service.report.dmi.DmiReportRenderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,18 +21,19 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
 
     private final GitHubService gitHubService;
     private final DmiService dmiService;
-    private final ReportRenderService<DmiDiffStatus> reportService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportDmiDiffCommand.class);
+    private final ReportRenderService<DmiDiffStatus> reportRenderService;
+    private final ReportSenderService reportSenderService;
 
     @Autowired
     public ReportDmiDiffCommand(
             final GitHubService gitHubService,
             final DmiService dmiService,
-            final ReportRenderService<DmiDiffStatus> reportService) {
+            final ReportRenderService<DmiDiffStatus> reportRenderService,
+            final ReportSenderService reportSenderService) {
         this.gitHubService = gitHubService;
         this.dmiService = dmiService;
-        this.reportService = reportService;
+        this.reportRenderService = reportRenderService;
+        this.reportSenderService = reportSenderService;
     }
 
     @Override
@@ -49,62 +45,29 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
             return;
         }
 
-        List<ModifiedDmi> modifiedDmis = extractModifiedDmis(dmiPrFiles);
-        List<DmiDiffStatus> dmiDiffStatuses = extractDmiDiffStatuses(modifiedDmis);
+        List<ModifiedDmi> modifiedDmis = getModifiedDmis(dmiPrFiles);
+        List<DmiDiffStatus> dmiDiffStatuses = getDmiDiffStatuses(modifiedDmis);
 
-        final String report = reportService.renderStatus(dmiDiffStatuses);
-        final Integer commentId = getCommentId(gitHubService.listIssueComments(prNumber));
+        final String report = reportRenderService.renderStatus(dmiDiffStatuses);
+        final String errorMessage = reportRenderService.renderError();
+        final String reportId = DmiReportRenderService.TITLE;
 
-        sendReportOrCreate(report, prNumber, commentId);
+        reportSenderService.sendReport(report, errorMessage, reportId, prNumber);
     }
 
-    private List<ModifiedDmi> extractModifiedDmis(final List<PullRequestFile> dmiPrFiles) {
+    private List<ModifiedDmi> getModifiedDmis(final List<PullRequestFile> dmiPrFiles) {
         return dmiPrFiles.stream().map(dmiService::createModifiedDmi).collect(Collectors.toList());
     }
 
-    private List<DmiDiffStatus> extractDmiDiffStatuses(final List<ModifiedDmi> modifiedDmis) {
+    private List<DmiDiffStatus> getDmiDiffStatuses(final List<ModifiedDmi> modifiedDmis) {
         return modifiedDmis.stream()
-                .map(dmiService::createDmiDiffStatus)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
+                .map(dmiService::createDmiDiffStatus).filter(Optional::isPresent).map(Optional::get)
                 .collect(Collectors.toList());
-    }
-
-    private void sendReportOrCreate(final String report, final int prNumber, @Nullable final Integer commentId) {
-        try {
-            sendReport(report, prNumber, commentId);
-        } catch (HttpClientErrorException e) {
-            if (e.getStatusCode() == HttpStatus.UNPROCESSABLE_ENTITY) {
-                sendReport(reportService.renderError(), prNumber, commentId);
-            } else {
-                LOGGER.error("Error on sending DMI diff dmi. Resp headers: {}. Resp body: {}",
-                        e.getResponseHeaders(), e.getResponseBodyAsString());
-                throw e;
-            }
-        }
-    }
-
-    private void sendReport(final String report, final int prNumber, @Nullable final Integer commentId) {
-        if (commentId != null) {
-            gitHubService.editIssueComment(commentId, report);
-        } else {
-            gitHubService.createIssueComment(prNumber, report);
-        }
     }
 
     private List<PullRequestFile> filterDmiFiles(final List<PullRequestFile> allPrFiles) {
         return allPrFiles.stream()
                 .filter(file -> file.getFilename().endsWith(ByondFiles.DMI_SUFFIX))
                 .collect(Collectors.toList());
-    }
-
-    @Nullable
-    private Integer getCommentId(final List<IssueComment> pullRequestComments) {
-        for (IssueComment prComment : pullRequestComments) {
-            if (prComment.getBody().startsWith(DmiReportRenderService.TITLE)) {
-                return prComment.getId();
-            }
-        }
-        return null;
     }
 }

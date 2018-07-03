@@ -3,14 +3,14 @@ package io.github.spair.service.report.dmi;
 import io.github.spair.byond.dmi.SpriteDir;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.DmiSpriteDiffStatus;
-import io.github.spair.service.image.ImageHelper;
 import io.github.spair.service.report.BodyPartRender;
+import io.github.spair.service.report.ReportHelper;
 
-import static io.github.spair.service.report.TextConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.TABLE_DELIMITER;
 
 final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
 
-    private static final String TABLE_DELIMITER = "|";
     private static final int[] IMG_RESIZE_MULTIPLIERS = new int[]{1, 4, 8};
 
     @Override
@@ -42,8 +42,8 @@ final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
 
         final String dirArrow = DirArrowCreator.create(spriteDiffStatus.getDir());
 
-        final String oldImgTag = ImageHelper.wrapInImgTag(spriteDiffStatus.getOldSpriteImageLink(), titleForOldImage);
-        final String newImgTag = ImageHelper.wrapInImgTag(spriteDiffStatus.getNewSpriteImageLink(), titleForNewImage);
+        final String oldImgTag = ReportHelper.createImgTag(spriteDiffStatus.getOldSpriteImageLink(), titleForOldImage);
+        final String newImgTag = ReportHelper.createImgTag(spriteDiffStatus.getNewSpriteImageLink(), titleForNewImage);
 
         final String status = spriteDiffStatus.getStatus();
 
@@ -71,7 +71,7 @@ final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
         final int resizedHeight = status.getSpriteHeight() * multiplier;
         final String linkBefore = status.getOldSpriteImageLink();
         final String linkAfter = status.getNewSpriteImageLink();
-        return ImageHelper.wrapDiffLinksWithResize(linkBefore, linkAfter, resizedWidth, resizedHeight);
+        return ReportHelper.createBeforeAfterDiffLink(linkBefore, linkAfter, resizedWidth, resizedHeight, true);
     }
 
     private static final class DirArrowCreator {

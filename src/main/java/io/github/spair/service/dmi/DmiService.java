@@ -6,7 +6,6 @@ import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
 import io.github.spair.service.github.entity.PullRequestFile;
-import io.github.spair.service.image.ImageUploaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,9 @@ public class DmiService {
 
     @Autowired
     public DmiService(final DmiLoader dmiLoader,
-                      final ImageUploaderService imageUploaderService) {
+                      final SpriteDiffStatusGenerator spriteDiffStatusGenerator) {
         this.dmiLoader = dmiLoader;
-        this.spriteDiffStatusGenerator = new SpriteDiffStatusGenerator(imageUploaderService);
+        this.spriteDiffStatusGenerator = spriteDiffStatusGenerator;
     }
 
     public ModifiedDmi createModifiedDmi(final PullRequestFile dmiFile) {
@@ -36,24 +35,24 @@ public class DmiService {
         final String filename = dmiFile.getFilename();
         final String fileRawUrl = dmiFile.getRawUrl();
 
+        CompletableFuture<Optional<Dmi>> oldDmiFuture = CompletableFuture.completedFuture(Optional.empty());
+        CompletableFuture<Optional<Dmi>> newDmiFuture = CompletableFuture.completedFuture(Optional.empty());
+
+        switch (dmiFile.getStatus()) {
+            case ADDED:
+                newDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
+                break;
+            case MODIFIED:
+                oldDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
+                newDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
+                break;
+            case REMOVED:
+                oldDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
+                break;
+        }
+
         try {
-            CompletableFuture<Optional<Dmi>> oldDmiFuture = CompletableFuture.completedFuture(Optional.empty());
-            CompletableFuture<Optional<Dmi>> newDmiFuture = CompletableFuture.completedFuture(Optional.empty());
-
-            switch (dmiFile.getStatus()) {
-                case ADDED:
-                    newDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
-                    break;
-                case MODIFIED:
-                    oldDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
-                    newDmiFuture = dmiLoader.loadFromUrl(realName, fileRawUrl);
-                    break;
-                case REMOVED:
-                    oldDmiFuture = dmiLoader.loadFromGitHub(realName, filename);
-                    break;
-            }
-
-            CompletableFuture.allOf(oldDmiFuture, newDmiFuture);
+            CompletableFuture.allOf(oldDmiFuture, newDmiFuture).get();
 
             final Optional<Dmi> oldDmi = oldDmiFuture.get();
             final Optional<Dmi> newDmi = newDmiFuture.get();

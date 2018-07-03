@@ -8,6 +8,8 @@ import io.github.spair.service.dmi.entity.DmiSpriteDiffStatus;
 import io.github.spair.service.image.ImageUploaderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -22,12 +24,14 @@ import java.util.concurrent.Future;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+@Component
 final class SpriteDiffStatusGenerator {
 
     private final ImageUploaderService imageUploader;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SpriteDiffStatusGenerator.class);
 
+    @Autowired
     SpriteDiffStatusGenerator(final ImageUploaderService imageUploader) {
         this.imageUploader = imageUploader;
     }
@@ -93,7 +97,7 @@ final class SpriteDiffStatusGenerator {
 
     private String getSpriteLink(@Nullable final DmiSprite sprite) {
         if (sprite != null) {
-            return imageUploader.uploadImage(sprite.getSpriteAsBase64());
+            return imageUploader.uploadImage(sprite.getSprite());
         } else {
             return "";
         }

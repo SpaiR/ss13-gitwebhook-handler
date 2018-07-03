@@ -48,8 +48,7 @@ public class DmiServiceTest {
 
     @Before
     public void setUp() {
-        dmiService = new DmiService(dmiLoader, mock(ImageUploaderService.class));
-        ReflectionTestUtils.setField(dmiService, "spriteDiffStatusGenerator", spriteDiffStatusGenerator);
+        dmiService = new DmiService(dmiLoader, spriteDiffStatusGenerator);
 
         when(dmiLoader.loadFromGitHub(anyString(), anyString())).thenReturn(CompletableFuture.completedFuture(Optional.of(oldMockedDmi)));
         when(dmiLoader.loadFromUrl(anyString(), anyString())).thenReturn(CompletableFuture.completedFuture(Optional.of(newMockedDmi)));

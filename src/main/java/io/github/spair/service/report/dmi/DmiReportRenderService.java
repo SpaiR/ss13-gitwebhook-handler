@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-import static io.github.spair.service.report.TextConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.NEW_LINE;
 
 @Service
 public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffStatus> {
@@ -24,19 +24,12 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
     private final BodyPartRender<DmiDiffStatus> statesNumberPartRender = new StatesNumberPartRender();
 
     @Override
-    public String renderError() {
-        return TITLE + NEW_LINE + NEW_LINE
-                + "Report is too long and can't be printed.";
-    }
-
-    @Override
     protected String renderTitle() {
         return TITLE;
     }
 
     @Override
     protected String renderHeader(final DmiDiffStatus dmiDiffStatus) {
-        String filename = dmiDiffStatus.getFilename();
         List<String> statuses = new ArrayList<>();
 
         if (dmiDiffStatus.isHasDuplicates()) {
@@ -55,6 +48,8 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
             statuses.add(status);
         }
 
+        String filename = dmiDiffStatus.getFilename();
+
         if (!statuses.isEmpty()) {
             filename += " <b><< " + String.join(" | ", statuses) + "</b>";
         }
@@ -67,5 +62,11 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
         return duplicationPartRender.render(status) + NEW_LINE
                 + tablePartRender.render(status) + NEW_LINE
                 + statesNumberPartRender.render(status);
+    }
+
+    @Override
+    public String renderError() {
+        return TITLE + NEW_LINE + NEW_LINE
+                + "Report is too long and can't be printed.";
     }
 }

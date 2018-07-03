@@ -8,7 +8,8 @@ public enum Command {
     VALIDATE_CHANGELOG(ValidateChangelogCommand.class),
     UPDATE_CHANGELOG(UpdateChangelogCommand.class),
     LABEL_PR(LabelPullRequestCommand.class),
-    REPORT_DMI_DIFF(ReportDmiDiffCommand.class);
+    REPORT_DMI_DIFF(ReportDmiDiffCommand.class),
+    REPORT_DMM_DIFF(ReportDmmDiffCommand.class);
 
     private final Class classOfCommand;
 

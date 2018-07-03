@@ -5,7 +5,7 @@ import io.github.spair.service.report.BodyPartRender;
 
 import java.util.Set;
 
-import static io.github.spair.service.report.TextConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.NEW_LINE;
 
 final class DuplicationPartRender implements BodyPartRender<DmiDiffStatus> {
 

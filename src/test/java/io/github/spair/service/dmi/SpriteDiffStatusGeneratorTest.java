@@ -10,9 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,8 +28,8 @@ public class SpriteDiffStatusGeneratorTest {
     @Before
     public void setUp() {
         generator = new SpriteDiffStatusGenerator(imageUploaderService);
-        when(imageUploaderService.uploadImage("oldSpriteBase64")).thenReturn("oldSpriteLink");
-        when(imageUploaderService.uploadImage("newSpriteBase64")).thenReturn("newSpriteLink");
+        when(imageUploaderService.uploadImage(any(BufferedImage.class))).thenReturn("oldSpriteLink");
+        when(imageUploaderService.uploadImage(any(BufferedImage.class))).thenReturn("newSpriteLink");
     }
 
     @Test
@@ -51,9 +53,9 @@ public class SpriteDiffStatusGeneratorTest {
         DmiSprite oldSpriteMock = mock(DmiSprite.class);
         when(oldSpriteMock.getDir()).thenReturn(SpriteDir.NORTH);
         when(oldSpriteMock.getFrameNum()).thenReturn(1);
-        when(oldSpriteMock.getSpriteAsBase64()).thenReturn("oldSpriteBase64");
+        when(oldSpriteMock.getSprite()).thenReturn(mock(BufferedImage.class));
         DmiSprite newSpriteMock = mock(DmiSprite.class);
-        when(newSpriteMock.getSpriteAsBase64()).thenReturn("newSpriteBase64");
+        when(newSpriteMock.getSprite()).thenReturn(mock(BufferedImage.class));
 
         Diff diffMock = mock(Diff.class);
         when(diffMock.getStateName()).thenReturn("simpleState");

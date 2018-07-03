@@ -17,7 +17,10 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.awt.image.BufferedImage;
+
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
@@ -54,11 +57,11 @@ public class ImageUploaderServiceTest {
         server.expect(requestTo("https://img.taucetistation.org/backend.php"))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header("User-Agent", "Agent-Name"))
-                .andExpect(content().contentType(MediaType.APPLICATION_FORM_URLENCODED))
+                .andExpect(content().contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(content().formData(expectedBody))
                 .andRespond(withSuccess("{\"url\":\"some.url\"}", MediaType.APPLICATION_JSON));
 
-        String resp = uploaderService.uploadImage("base64encodedImage");
+        String resp = uploaderService.uploadImage(mock(BufferedImage.class));
 
         assertEquals("some.url", resp);
     }

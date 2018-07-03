@@ -6,16 +6,24 @@ import io.github.spair.service.config.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+
 @Service
 public class ImageUploaderService {
 
-    static final String HOST_PATH = "https://img.taucetistation.org";
+    public static final String HOST_PATH = "https://img.taucetistation.org";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ImageUploaderService.class);
 
@@ -23,10 +31,9 @@ public class ImageUploaderService {
     private final ConfigService configService;
 
     private static final String UPLOAD_ENDPOINT = HOST_PATH + "/backend.php";
-    private static final String BASE64 = "base64";
+    private static final String POSTIMAGE = "postimage";
     private static final String URL = "url";
     private static final String UPLOAD_CODE = "upload_code";
-    private static final String DATA_TYPE_PREFIX = "data:image/png;base64,";
 
     @Autowired
     public ImageUploaderService(final RestService restService, final ConfigService configService) {
@@ -34,7 +41,7 @@ public class ImageUploaderService {
         this.configService = configService;
     }
 
-    public String uploadImage(final String base64image) {
+    public String uploadImage(final BufferedImage image) {
         final String imageUploadCode = configService.getConfig().getImageUploadCode();
 
         if (imageUploadCode == null || imageUploadCode.isEmpty()) {
@@ -42,13 +49,26 @@ public class ImageUploaderService {
             throw new IllegalStateException("Empty image upload code");
         }
 
-        MultiValueMap<String, String> reqBody = new LinkedMultiValueMap<>();
+        try {
+            File tmpFile = Files.createTempFile("img", null).toFile();
+            tmpFile.deleteOnExit();
+            ImageIO.write(image, "png", tmpFile);
 
-        reqBody.add(UPLOAD_CODE, imageUploadCode);
-        reqBody.add(BASE64, DATA_TYPE_PREFIX.concat(base64image));
+            MultiValueMap<String, Object> reqBody = new LinkedMultiValueMap<>();
 
-        ObjectNode respJson = restService.postForJson(UPLOAD_ENDPOINT, reqBody, getHttpHeaders());
-        return respJson.get(URL).asText();
+            reqBody.add(UPLOAD_CODE, imageUploadCode);
+            reqBody.add(POSTIMAGE, new FileSystemResource(tmpFile));
+
+            ObjectNode respJson = restService.postForJson(UPLOAD_ENDPOINT, reqBody, getHttpHeaders());
+
+            if (!tmpFile.delete()) {
+                throw new IOException("Can't delete temp image file");
+            }
+
+            return respJson.get(URL).asText();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 
     private HttpHeaders getHttpHeaders() {
@@ -56,7 +76,7 @@ public class ImageUploaderService {
         String agentName = configService.getConfig().getRequestAgentName();
 
         httpHeaders.set(HttpHeaders.USER_AGENT, agentName);
-        httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         return httpHeaders;
     }

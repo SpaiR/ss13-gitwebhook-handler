@@ -8,6 +8,7 @@ import io.github.spair.service.github.entity.IssueComment;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
+import io.github.spair.service.report.ReportSenderService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,13 +33,15 @@ public class ReportDmiDiffCommandTest {
     @Mock
     private DmiService dmiService;
     @Mock
-    private ReportRenderService<DmiDiffStatus> reportService;
+    private ReportRenderService<DmiDiffStatus> reportRenderService;
+    @Mock
+    private ReportSenderService reportSenderService;
 
     private ReportDmiDiffCommand command;
 
     @Before
     public void setUp() {
-        command = new ReportDmiDiffCommand(gitHubService, dmiService, reportService);
+        command = new ReportDmiDiffCommand(gitHubService, dmiService, reportRenderService, reportSenderService);
     }
 
     @Test
@@ -49,7 +52,7 @@ public class ReportDmiDiffCommandTest {
         when(dmiService.createModifiedDmi(any(PullRequestFile.class))).thenReturn(mock(ModifiedDmi.class));
         when(dmiService.createDmiDiffStatus(any(ModifiedDmi.class))).thenReturn(Optional.of(mock(DmiDiffStatus.class)));
         when(gitHubService.listIssueComments(1)).thenReturn(Lists.emptyList());
-        when(reportService.renderStatus(anyList())).thenReturn("Fake Report");
+        when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
 
         command.execute(PullRequest.builder().number(1).build());
 
@@ -64,7 +67,7 @@ public class ReportDmiDiffCommandTest {
         when(dmiService.createModifiedDmi(any(PullRequestFile.class))).thenReturn(mock(ModifiedDmi.class));
         when(dmiService.createDmiDiffStatus(any(ModifiedDmi.class))).thenReturn(Optional.of(mock(DmiDiffStatus.class)));
         when(gitHubService.listIssueComments(1)).thenReturn(getIssueCommentList());
-        when(reportService.renderStatus(anyList())).thenReturn("Fake Report");
+        when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
 
         command.execute(PullRequest.builder().number(1).build());
 

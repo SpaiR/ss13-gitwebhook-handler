@@ -27,6 +27,7 @@ public class HandlerConfig {
     public class GitHubConfig {
         private String organizationName = "Org Name";
         private String repositoryName = "Repo Name";
+        private String pathToDme = "/taucetistation.dme";
         private String token = "12345";
         private String secretKey = "12345";
         private Labels labels = new Labels();
