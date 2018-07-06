@@ -123,14 +123,14 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
                     nextUpdateMessage[0] += 10;
 
                     String message = DmmReportRenderService.HEADER
-                            + String.format("Cloning PR repository... Progress: %d%%", pcnt);
+                            + String.format("Cloning PR repository... Progress: **%d%%**", pcnt);
 
                     reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
                 }
             };
             Runnable endCallback = () -> {
                 String message = DmmReportRenderService.HEADER
-                        + "Cloning is done. Additional preparations in progress.";
+                        + "Cloning is done. Report will be generated in a few minutes...";
                 reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
             };
 
