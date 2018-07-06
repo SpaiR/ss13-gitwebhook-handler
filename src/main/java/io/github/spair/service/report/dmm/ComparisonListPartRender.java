@@ -22,37 +22,35 @@ final class ComparisonListPartRender implements BodyPartRender<DmmDiffStatus> {
 
     @Override
     public String render(final DmmDiffStatus status) {
-        StringBuilder bodyPart = new StringBuilder();
-
-        bodyPart.append(DETAILS_OPEN);
-
-        bodyPart.append(SUMMARY_OPEN);
-        bodyPart.append(TITLE);
-        bodyPart.append(SUMMARY_CLOSE);
-
-        bodyPart.append(NEW_LINE).append(NEW_LINE);
-
         int chunkNumber = 0;
+
+        StringBuilder objectsComparison = new StringBuilder();
+        StringBuilder areasComparison = new StringBuilder();
 
         for (DmmChunkDiff dmmChunkDiff : status.getDmmDiffChunks()) {
             chunkNumber++;
 
-            bodyPart.append(OBJECTS_HEADER).append(NEW_LINE);
-            appendListsItems(bodyPart, chunkNumber,
+            appendListsItems(objectsComparison, chunkNumber,
                     dmmChunkDiff.getOldChunkImagesLinks(), dmmChunkDiff.getNewChunkImagesLinks()
             );
-            bodyPart.append(NEW_LINE);
 
-            bodyPart.append(AREAS_HEADER).append(NEW_LINE);
-            appendListsItems(bodyPart, chunkNumber,
+            appendListsItems(areasComparison, chunkNumber,
                     dmmChunkDiff.getOldChunkAreasImagesLinks(), dmmChunkDiff.getNewChunkAreasImagesLinks()
             );
-            bodyPart.append(NEW_LINE);
         }
 
-        bodyPart.append(DETAILS_CLOSE);
-
-        return bodyPart.toString();
+        return DETAILS_OPEN
+                + SUMMARY_OPEN
+                + TITLE
+                + SUMMARY_CLOSE
+                + NEW_LINE + NEW_LINE
+                + OBJECTS_HEADER + NEW_LINE
+                + objectsComparison
+                + NEW_LINE
+                + AREAS_HEADER + NEW_LINE
+                + areasComparison
+                + NEW_LINE
+                + DETAILS_CLOSE;
     }
 
     private void appendListsItems(final StringBuilder bodyPart, final int currentChunkNumber,
