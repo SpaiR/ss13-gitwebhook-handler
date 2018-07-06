@@ -19,6 +19,8 @@ import java.util.stream.Collectors;
 @Component
 public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
 
+    private static final String REPORT_ID = DmiReportRenderService.TITLE;
+
     private final GitHubService gitHubService;
     private final DmiService dmiService;
     private final ReportRenderService<DmiDiffStatus> reportRenderService;
@@ -50,9 +52,8 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
 
         final String report = reportRenderService.renderStatus(dmiDiffStatuses);
         final String errorMessage = reportRenderService.renderError();
-        final String reportId = DmiReportRenderService.TITLE;
 
-        reportSenderService.sendReport(report, errorMessage, reportId, prNumber);
+        reportSenderService.sendReport(report, errorMessage, REPORT_ID, prNumber);
     }
 
     private List<ModifiedDmi> getModifiedDmis(final List<PullRequestFile> dmiPrFiles) {

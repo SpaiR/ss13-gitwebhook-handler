@@ -65,7 +65,7 @@ public class GitHubRepositoryTest {
 
     @Test
     public void testLoadForkRepository() {
-        repository.loadForkRepository(getTestPullRequest());
+        repository.loadForkRepository(getTestPullRequest(), null, null);
 
         File forkFolder = new File(TEST_FORK_FOLDER_PATH);
 
@@ -78,7 +78,7 @@ public class GitHubRepositoryTest {
     public void testLoadForkRepositoryWhenExists() throws Exception {
         mockFileExists(TEST_FORK_FOLDER_PATH);
 
-        repository.loadForkRepository(getTestPullRequest());
+        repository.loadForkRepository(getTestPullRequest(), null, null);
 
         File forkFolder = new File(TEST_FORK_FOLDER_PATH);
 

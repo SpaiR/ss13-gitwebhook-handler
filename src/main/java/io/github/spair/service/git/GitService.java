@@ -29,9 +29,16 @@ public class GitService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitService.class);
 
     public void cloneRepository(final String org, final String repo, final String branch, final File folder) {
+        cloneRepository(org, repo, branch, folder, null);
+    }
+
+    public void cloneRepository(final String org, final String repo, final String branch, final File folder,
+                                final CloneMonitor cloneMonitor) {
         final String repoURI = String.format(GitHubConstants.PATH + "/%s/%s", org, repo);
         try {
-            Git.cloneRepository().setURI(repoURI).setBranch(branch).setDirectory(folder).call().close();
+            Git.cloneRepository()
+                    .setURI(repoURI).setBranch(branch).setDirectory(folder).setProgressMonitor(cloneMonitor)
+                    .call().close();
         } catch (GitAPIException e) {
             LOGGER.error("Error on cloning '{}' repository", repoURI, e);
             throw new RuntimeException(e);

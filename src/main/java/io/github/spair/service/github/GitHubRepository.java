@@ -1,6 +1,7 @@
 package io.github.spair.service.github;
 
 import io.github.spair.service.config.ConfigService;
+import io.github.spair.service.git.CloneMonitor;
 import io.github.spair.service.git.GitConstants;
 import io.github.spair.service.git.GitService;
 import io.github.spair.service.pr.entity.PullRequest;
@@ -15,12 +16,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Repository
 public class GitHubRepository {
 
-    private static final String FORK_FOLDER_TMPL = "fork.author=%s.branch=%s.pr=%d";
+    private static final String FORK_FOLDER_TMPL = "fork.author=%s.pr=%d.branch=%s";
 
     private final ConfigService configService;
     private final GitService gitService;
@@ -63,7 +65,8 @@ public class GitHubRepository {
         return masterFolder;
     }
 
-    public File loadForkRepository(final PullRequest pullRequest) {
+    public File loadForkRepository(
+            final PullRequest pullRequest, final Consumer<Integer> updateCallback, final Runnable endCallback) {
         final File forkFolder = new File(formRepositoryFolderPath(pullRequest));
 
         doWithRepoLock(forkFolder.getName(), () -> {
@@ -71,8 +74,9 @@ public class GitHubRepository {
                 final String author = pullRequest.getAuthor();
                 final String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
                 final String branchName = pullRequest.getBranchName();
+                final CloneMonitor cloneMonitor = new CloneMonitor(updateCallback, endCallback);
 
-                gitService.cloneRepository(author, repoName, branchName, forkFolder);
+                gitService.cloneRepository(author, repoName, branchName, forkFolder, cloneMonitor);
                 gitService.configRepositoryRemote(forkFolder);
             } else {
                 gitService.pullRepository(forkFolder);
@@ -115,7 +119,7 @@ public class GitHubRepository {
         final String author = pullRequest.getAuthor();
         final String branch = pullRequest.getBranchName();
         final int number = pullRequest.getNumber();
-        return GitConstants.REPOS_FOLDER + "/" + String.format(FORK_FOLDER_TMPL, author, branch, number);
+        return GitConstants.REPOS_FOLDER + "/" + String.format(FORK_FOLDER_TMPL, author, number, branch);
     }
 
     private void doWithRepoLock(final String repoName, final Runnable action) {

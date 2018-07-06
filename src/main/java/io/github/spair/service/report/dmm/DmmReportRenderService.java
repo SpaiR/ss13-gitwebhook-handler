@@ -11,6 +11,7 @@ import static io.github.spair.service.report.ReportConstants.NEW_LINE;
 public class DmmReportRenderService extends AbstractReportRenderService<DmmDiffStatus> {
 
     public static final String TITLE = "## DMM Diff Report";
+    public static final String HEADER = TITLE + NEW_LINE + NEW_LINE;
 
     private final BodyPartRender<DmmDiffStatus> objectsTablePartRender = new ObjectsTablePartRender();
     private final BodyPartRender<DmmDiffStatus> areasTablePartRender = new AreasTablePartRender();
@@ -37,7 +38,6 @@ public class DmmReportRenderService extends AbstractReportRenderService<DmmDiffS
 
     @Override
     public String renderError() {
-        return TITLE + NEW_LINE + NEW_LINE
-                + "Report is too long and can't be printed.";
+        return HEADER + "Report is too long and can't be printed.";
     }
 }

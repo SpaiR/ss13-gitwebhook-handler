@@ -24,6 +24,10 @@ public class ReportSenderService {
         this.gitHubService = gitHubService;
     }
 
+    public void sendReport(final String report, final String reportId, final int prNumber) {
+        sendReport(report, "Report printing error.", reportId, prNumber);
+    }
+
     public void sendReport(final String report, final String errorMessage, final String reportId, final int prNumber) {
         final Integer commentId = getCommentId(reportId, gitHubService.listIssueComments(prNumber));
         try {

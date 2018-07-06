@@ -22,12 +22,13 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
-
-import static io.github.spair.service.report.ReportConstants.NEW_LINE;
 
 @Component
 public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
+
+    private static final String REPORT_ID = DmmReportRenderService.TITLE;
 
     private final GitHubService gitHubService;
     private final GitHubRepository gitHubRepository;
@@ -89,9 +90,8 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
         final String report = reportRenderService.renderStatus(dmmDiffStatuses);
         final String errorMessage = reportRenderService.renderError();
-        final String reportId = DmmReportRenderService.TITLE;
 
-        reportSenderService.sendReport(report, errorMessage, reportId, prNumber);
+        reportSenderService.sendReport(report, errorMessage, REPORT_ID, prNumber);
     }
 
     private List<ModifiedDmm> getModifiedDmms(final List<PullRequestFile> prFiles, final Dme oldDme, final Dme newDme) {
@@ -116,7 +116,25 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
     private CompletableFuture<File> getForkRepoAsync(final PullRequest pullRequest) {
         return CompletableFuture.supplyAsync(() -> {
-            return gitHubRepository.loadForkRepository(pullRequest);
+            final int[] nextUpdateMessage = new int[]{0};
+
+            Consumer<Integer> updateCallback = pcnt -> {
+                if (pcnt == nextUpdateMessage[0]) {
+                    nextUpdateMessage[0] += 10;
+
+                    String message = DmmReportRenderService.HEADER
+                            + String.format("Cloning PR repository... Progress: %d%%", pcnt);
+
+                    reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
+                }
+            };
+            Runnable endCallback = () -> {
+                String message = DmmReportRenderService.HEADER
+                        + "Cloning is done. Additional preparations in progress.";
+                reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
+            };
+
+            return gitHubRepository.loadForkRepository(pullRequest, updateCallback, endCallback);
         });
     }
 
@@ -125,9 +143,8 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     }
 
     private void sendRejectMessage(final int prNumber) {
-        String errorMessage = DmmReportRenderService.TITLE + NEW_LINE + NEW_LINE
-                + "Report will not be generated for non mergeable pull request.";
-        reportSenderService.sendReport(errorMessage, "", DmmReportRenderService.TITLE, prNumber);
+        String errorMessage = DmmReportRenderService.HEADER + "Report will not be generated for non mergeable PR.";
+        reportSenderService.sendReport(errorMessage, REPORT_ID, prNumber);
     }
 
     private void completeFutures(final CompletableFuture... futures) {
