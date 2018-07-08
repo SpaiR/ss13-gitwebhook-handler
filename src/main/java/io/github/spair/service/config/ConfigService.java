@@ -52,10 +52,9 @@ public class ConfigService {
         return new File(CONFIG_NAME);
     }
 
-    @SuppressWarnings("checkstyle:HiddenField")
-    public void importConfig(final HandlerConfig configuration) throws IOException {
-        this.configuration = configuration;
-        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(CONFIG_NAME), configuration);
+    public void importConfig(final HandlerConfig config) throws IOException {
+        this.configuration = config;
+        objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(CONFIG_NAME), config);
         LOGGER.info("New configuration saved");
     }
 

@@ -4,7 +4,6 @@ import io.github.spair.service.dmi.DmiService;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
 import io.github.spair.service.github.GitHubService;
-import io.github.spair.service.github.entity.IssueComment;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
@@ -47,7 +46,7 @@ public class ReportDmiDiffCommandTest {
     }
 
     @Test
-    public void testExecuteWithDiffsAndWithoutComment() {
+    public void testExecuteWithDiffs() {
         List<PullRequestFile> prFilesList = getPullRequestFileList();
 
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
@@ -63,12 +62,9 @@ public class ReportDmiDiffCommandTest {
 
     @Test
     public void testExecuteWithoutDiffs() {
-        when(gitHubService.listPullRequestFiles(1)).thenReturn(Lists.emptyList());;
-
+        when(gitHubService.listPullRequestFiles(1)).thenReturn(Lists.emptyList());
         command.execute(PullRequest.builder().number(1).build());
-
-        verify(gitHubService, never()).editIssueComment(anyInt(), anyString());
-        verify(gitHubService, never()).createIssueComment(anyInt(), anyString());
+        verify(reportSenderService, never()).sendReport(anyString(), anyString(), anyString(), anyInt());
     }
 
     private List<PullRequestFile> getPullRequestFileList() {

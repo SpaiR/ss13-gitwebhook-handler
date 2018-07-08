@@ -1,0 +1,16 @@
+<details><summary>Raw Links <i>(use if GitHub didn't show something properly)</i></summary>
+
+#### For objects:
+
+Old|New|Difference
+:-:|:-:|:--------:
+[Chunk 1 - Image 1](1-oldChunk1)<br>[Chunk 1 - Image 2](1-oldChunk2)<br>|[Chunk 1 - Image 1](1- newChunk1)<br>[Chunk 1 - Image 2](1-newChunk2)<br>|[Chunk 1 - Image 1](1-diffImg-1)<br>[Chunk 1 - Image 2](1-diffImg-2)<br>
+[Chunk 2 - Image 1](2-oldChunk1)<br>[Chunk 2 - Image 2](2-oldChunk2)<br>|[Chunk 2 - Image 1](2- newChunk1)<br>[Chunk 2 - Image 2](2-newChunk2)<br>|[Chunk 2 - Image 1](2-diffImg-1)<br>[Chunk 2 - Image 2](2-diffImg-2)<br>
+
+#### For areas:
+
+Old|New|Difference
+:-:|:-:|:--------:
+[Chunk 1 - Image 1](1-oldChunk-area1)<br>[Chunk 1 - Image 2](1-oldChunk-area2)<br>|[Chunk 1 - Image 1](1-newChunk-area1)<br>[Chunk 1 - Image 2](1-newChunk-area2)<br>|[Chunk 1 - Image 1](1-diffImg-area1)<br>[Chunk 1 - Image 2](1-diffImg-area2)<br>
+[Chunk 2 - Image 1](2-oldChunk-area1)<br>[Chunk 2 - Image 2](2-oldChunk-area2)<br>|[Chunk 2 - Image 1](2-newChunk-area1)<br>[Chunk 2 - Image 2](2-newChunk-area2)<br>|[Chunk 2 - Image 1](2-diffImg-area1)<br>[Chunk 2 - Image 2](2-diffImg-area2)<br>
+</details>

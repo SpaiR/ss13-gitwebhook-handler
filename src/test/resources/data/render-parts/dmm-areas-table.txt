@@ -1,0 +1,7 @@
+<details><summary><b>Areas</b></summary>
+
+Old|New|Difference
+---|---|----------
+<img src="1-oldChunk-area1" title="Chunk 1 - Image 1"><br><img src="1-oldChunk-area2" title="Chunk 1 - Image 2"><br>|<img src="1- newChunk-area1" title="Chunk 1 - Image 1"><br><img src="1-newChunk-area2" title="Chunk 1 - Image 2"><br>|<img src="1-diffImg-area1" title="Chunk 1 - Image 1"><br><img src="1-diffImg-area2" title="Chunk 1 - Image 2"><br>
+<img src="2-oldChunk-area1" title="Chunk 2 - Image 1"><br><img src="2-oldChunk-area2" title="Chunk 2 - Image 2"><br>|<img src="2- newChunk-area1" title="Chunk 2 - Image 1"><br><img src="2-newChunk-area2" title="Chunk 2 - Image 2"><br>|<img src="2-diffImg-area1" title="Chunk 2 - Image 1"><br><img src="2-diffImg-area2" title="Chunk 2 - Image 2"><br>
+</details>

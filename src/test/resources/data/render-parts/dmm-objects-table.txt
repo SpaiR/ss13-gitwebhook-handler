@@ -1,0 +1,4 @@
+Old|New|Difference
+---|---|----------
+<img src="1-oldChunk1" title="Chunk 1 - Image 1"><br><img src="1-oldChunk2" title="Chunk 1 - Image 2"><br>|<img src="1- newChunk1" title="Chunk 1 - Image 1"><br><img src="1-newChunk2" title="Chunk 1 - Image 2"><br>|<img src="1-diffImg1" title="Chunk 1 - Image 1"><br><img src="1-diffImg2" title="Chunk 1 - Image 2"><br>
+<img src="2-oldChunk1" title="Chunk 2 - Image 1"><br><img src="2-oldChunk2" title="Chunk 2 - Image 2"><br>|<img src="2- newChunk1" title="Chunk 2 - Image 1"><br><img src="2-newChunk2" title="Chunk 2 - Image 2"><br>|<img src="2-diffImg1" title="Chunk 2 - Image 1"><br><img src="2-diffImg2" title="Chunk 2 - Image 2"><br>

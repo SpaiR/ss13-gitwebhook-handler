@@ -1,8 +1,8 @@
 package io.github.spair.handler.command;
 
 import io.github.spair.byond.dme.Dme;
-import io.github.spair.byond.dme.DmeParser;
 import io.github.spair.service.config.ConfigService;
+import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dmm.DmmService;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
 import io.github.spair.service.dmm.entity.ModifiedDmm;
@@ -34,6 +34,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private final GitHubRepository gitHubRepository;
     private final DmmService dmmService;
     private final ConfigService configService;
+    private final DmeService dmeService;
     private final ReportRenderService<DmmDiffStatus> reportRenderService;
     private final ReportSenderService reportSenderService;
 
@@ -45,12 +46,14 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
             final GitHubRepository gitHubRepository,
             final DmmService dmmService,
             final ConfigService configService,
+            final DmeService dmeService,
             final ReportRenderService<DmmDiffStatus> reportRenderService,
             final ReportSenderService reportSenderService) {
         this.gitHubService = gitHubService;
         this.gitHubRepository = gitHubRepository;
         this.dmmService = dmmService;
         this.configService = configService;
+        this.dmeService = dmeService;
         this.reportRenderService = reportRenderService;
         this.reportSenderService = reportSenderService;
     }
@@ -117,7 +120,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private CompletableFuture<File> getForkRepoAsync(final PullRequest pullRequest) {
         return CompletableFuture.supplyAsync(() -> {
             final int updatePcntWait = 10;
-            final int[] nextUpdateMessage = new int[]{0};
+            final int[] nextUpdateMessage = new int[]{0};   // This hack is for increment inside of lambda.
 
             final Consumer<Integer> updateCallback = pcnt -> {
                 if (pcnt == nextUpdateMessage[0]) {
@@ -140,7 +143,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     }
 
     private CompletableFuture<Dme> getDmeAsync(final String path) {
-        return CompletableFuture.supplyAsync(() -> DmeParser.parse(new File(path)));
+        return CompletableFuture.supplyAsync(() -> dmeService.parseDme(new File(path)));
     }
 
     private void sendRejectMessage(final int prNumber) {

@@ -59,14 +59,14 @@ public class DmiLoaderTest {
     }
 
     @Test
-    public void loadFromUrl() throws Exception {
+    public void testLoadFromUrl() throws Exception {
         when(restService.getForObject(anyString(), eq(byte[].class))).thenReturn(new byte[0]);
         CompletableFuture<Optional<Dmi>> future = loader.loadFromUrl(DMI_NAME, FILE_NAME);
         assertTrue(future.get().isPresent());
     }
 
     @Test
-    public void loadFromUrlWithException() throws Exception {
+    public void testLoadFromUrlWithException() throws Exception {
         HttpClientErrorException e = getClientHttpException();
         when(restService.getForObject(anyString(), eq(byte[].class))).thenThrow(e);
         CompletableFuture<Optional<Dmi>> future = loader.loadFromUrl(DMI_NAME, FILE_NAME);
