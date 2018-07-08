@@ -37,20 +37,30 @@ public class GitServiceTest {
     }
 
     @Test
-    public void testCloneRepository() throws Exception {
-        CloneCommand cloneCommand = mock(CloneCommand.class, RETURNS_DEEP_STUBS);
-        when(Git.cloneRepository()).thenReturn(cloneCommand);
-
-        when(cloneCommand.setURI(anyString())).thenReturn(cloneCommand);
-        when(cloneCommand.setBranch(anyString())).thenReturn(cloneCommand);
-        when(cloneCommand.setDirectory(any(File.class))).thenReturn(cloneCommand);
-        when(cloneCommand.call()).thenReturn(git);
+    public void testCloneRepositoryWithoutMonitor() throws Exception {
+        CloneCommand cloneCommand = mockClone();
 
         gitService.cloneRepository("Org", "Repo", "testBranch", testFolder);
 
         verify(cloneCommand).setURI("https://github.com/Org/Repo");
         verify(cloneCommand).setBranch("testBranch");
         verify(cloneCommand).setDirectory(testFolder);
+        verify(cloneCommand).setProgressMonitor(null);
+        verify(cloneCommand).call();
+        verify(git).close();
+    }
+
+    @Test
+    public void testCloneRepositoryWithMonitor() throws Exception {
+        CloneCommand cloneCommand = mockClone();
+        CloneMonitor cloneMonitor = mock(CloneMonitor.class);
+
+        gitService.cloneRepository("Org", "Repo", "testBranch", testFolder, cloneMonitor);
+
+        verify(cloneCommand).setURI("https://github.com/Org/Repo");
+        verify(cloneCommand).setBranch("testBranch");
+        verify(cloneCommand).setDirectory(testFolder);
+        verify(cloneCommand).setProgressMonitor(cloneMonitor);
         verify(cloneCommand).call();
         verify(git).close();
     }
@@ -89,6 +99,19 @@ public class GitServiceTest {
         RebaseCommand rebaseCommand = mockPull(false);
         assertFalse(gitService.mergeWithLocalMaster(testFolder));
         verify(rebaseCommand).call();
+    }
+
+    private CloneCommand mockClone() throws Exception {
+        CloneCommand cloneCommand = mock(CloneCommand.class, RETURNS_DEEP_STUBS);
+        when(Git.cloneRepository()).thenReturn(cloneCommand);
+
+        when(cloneCommand.setURI(anyString())).thenReturn(cloneCommand);
+        when(cloneCommand.setBranch(anyString())).thenReturn(cloneCommand);
+        when(cloneCommand.setDirectory(any(File.class))).thenReturn(cloneCommand);
+        when(cloneCommand.setProgressMonitor(any())).thenReturn(cloneCommand);
+        when(cloneCommand.call()).thenReturn(git);
+
+        return cloneCommand;
     }
 
     private RebaseCommand mockPull(final boolean isSuccess) throws Exception {

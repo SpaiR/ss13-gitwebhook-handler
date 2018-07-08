@@ -20,6 +20,8 @@ import org.springframework.util.MultiValueMap;
 import java.awt.image.BufferedImage;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
@@ -49,19 +51,13 @@ public class ImageUploaderServiceTest {
 
     @Test
     public void testUploadImage() {
-        MultiValueMap<String, String> expectedBody = new LinkedMultiValueMap<>();
-
-        expectedBody.add("upload_code", "12345secret");
-        expectedBody.add("base64", "data:image/png;base64,base64encodedImage");
-
         server.expect(requestTo("https://img.taucetistation.org/backend.php"))
                 .andExpect(method(HttpMethod.POST))
                 .andExpect(header("User-Agent", "Agent-Name"))
-                .andExpect(content().contentType(MediaType.MULTIPART_FORM_DATA))
-                .andExpect(content().formData(expectedBody))
+                .andExpect(content().contentTypeCompatibleWith(MediaType.MULTIPART_FORM_DATA))
                 .andRespond(withSuccess("{\"url\":\"some.url\"}", MediaType.APPLICATION_JSON));
 
-        String resp = uploaderService.uploadImage(mock(BufferedImage.class));
+        String resp = uploaderService.uploadImage(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB));
 
         assertEquals("some.url", resp);
     }

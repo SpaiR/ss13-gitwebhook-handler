@@ -1,9 +1,11 @@
 package io.github.spair.service.git;
 
+import lombok.EqualsAndHashCode;
 import org.eclipse.jgit.lib.BatchingProgressMonitor;
 
 import java.util.function.Consumer;
 
+@EqualsAndHashCode(callSuper = false)
 public class CloneMonitor extends BatchingProgressMonitor {
 
     private static final String RECEIVING_OBJECTS_TASK = "Receiving objects";

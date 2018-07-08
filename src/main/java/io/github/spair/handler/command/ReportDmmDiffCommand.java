@@ -116,11 +116,12 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
     private CompletableFuture<File> getForkRepoAsync(final PullRequest pullRequest) {
         return CompletableFuture.supplyAsync(() -> {
+            final int updatePcntWait = 10;
             final int[] nextUpdateMessage = new int[]{0};
 
-            Consumer<Integer> updateCallback = pcnt -> {
+            final Consumer<Integer> updateCallback = pcnt -> {
                 if (pcnt == nextUpdateMessage[0]) {
-                    nextUpdateMessage[0] += 10;
+                    nextUpdateMessage[0] += updatePcntWait;
 
                     String message = DmmReportRenderService.HEADER
                             + String.format("Cloning PR repository... Progress: **%d%%**", pcnt);
@@ -128,7 +129,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
                     reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
                 }
             };
-            Runnable endCallback = () -> {
+            final Runnable endCallback = () -> {
                 String message = DmmReportRenderService.HEADER
                         + "Cloning is done. Report will be generated in a few minutes...";
                 reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());

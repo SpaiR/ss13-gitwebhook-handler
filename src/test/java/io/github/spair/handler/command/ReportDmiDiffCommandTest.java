@@ -39,6 +39,8 @@ public class ReportDmiDiffCommandTest {
 
     private ReportDmiDiffCommand command;
 
+    private static final String REPORT_ID = "## DMI Diff Report";
+
     @Before
     public void setUp() {
         command = new ReportDmiDiffCommand(gitHubService, dmiService, reportRenderService, reportSenderService);
@@ -51,27 +53,12 @@ public class ReportDmiDiffCommandTest {
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
         when(dmiService.createModifiedDmi(any(PullRequestFile.class))).thenReturn(mock(ModifiedDmi.class));
         when(dmiService.createDmiDiffStatus(any(ModifiedDmi.class))).thenReturn(Optional.of(mock(DmiDiffStatus.class)));
-        when(gitHubService.listIssueComments(1)).thenReturn(Lists.emptyList());
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
+        when(reportRenderService.renderError()).thenReturn("Fake Error");
 
         command.execute(PullRequest.builder().number(1).build());
 
-        verify(gitHubService).createIssueComment(1, "Fake Report");
-    }
-
-    @Test
-    public void testExecuteWithDiffsAndWithComment() {
-        List<PullRequestFile> prFilesList = getPullRequestFileList();
-
-        when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
-        when(dmiService.createModifiedDmi(any(PullRequestFile.class))).thenReturn(mock(ModifiedDmi.class));
-        when(dmiService.createDmiDiffStatus(any(ModifiedDmi.class))).thenReturn(Optional.of(mock(DmiDiffStatus.class)));
-        when(gitHubService.listIssueComments(1)).thenReturn(getIssueCommentList());
-        when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
-
-        command.execute(PullRequest.builder().number(1).build());
-
-        verify(gitHubService).editIssueComment(3, "Fake Report");
+        verify(reportSenderService).sendReport("Fake Report", "Fake Error", REPORT_ID, 1);
     }
 
     @Test
@@ -90,15 +77,5 @@ public class ReportDmiDiffCommandTest {
         PullRequestFile prFile2 = new PullRequestFile();
         prFile2.setFilename("test/filename2.dmi");
         return Lists.newArrayList(prFile1, prFile2);
-    }
-
-    private List<IssueComment> getIssueCommentList() {
-        IssueComment comment1 = new IssueComment();
-        comment1.setBody("#123");
-        comment1.setId(4);
-        IssueComment comment2 = new IssueComment();
-        comment2.setBody("## DMI Diff Report");
-        comment2.setId(3);
-        return Lists.newArrayList(comment1, comment2);
     }
 }

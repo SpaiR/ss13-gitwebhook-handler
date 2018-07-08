@@ -11,7 +11,7 @@ public class DmmDiffStatus {
     private String filename;
     private List<DmmChunkDiff> dmmDiffChunks;
 
-    public DmmDiffStatus(String filename) {
+    public DmmDiffStatus(final String filename) {
         this.filename = filename;
         this.dmmDiffChunks = new ArrayList<>();
     }

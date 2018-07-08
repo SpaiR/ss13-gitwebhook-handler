@@ -23,13 +23,18 @@ public class SpriteDiffStatusGeneratorTest {
 
     @Mock
     private ImageUploaderService imageUploaderService;
+    @Mock
+    private BufferedImage oldImage = mock(BufferedImage.class, "oldSpriteImageMock");
+    @Mock
+    private BufferedImage newImage = mock(BufferedImage.class, "newSpriteImageMock");
+
     private SpriteDiffStatusGenerator generator;
 
     @Before
     public void setUp() {
         generator = new SpriteDiffStatusGenerator(imageUploaderService);
-        when(imageUploaderService.uploadImage(any(BufferedImage.class))).thenReturn("oldSpriteLink");
-        when(imageUploaderService.uploadImage(any(BufferedImage.class))).thenReturn("newSpriteLink");
+        when(imageUploaderService.uploadImage(oldImage)).thenReturn("oldSpriteLink");
+        when(imageUploaderService.uploadImage(newImage)).thenReturn("newSpriteLink");
     }
 
     @Test
@@ -53,9 +58,9 @@ public class SpriteDiffStatusGeneratorTest {
         DmiSprite oldSpriteMock = mock(DmiSprite.class);
         when(oldSpriteMock.getDir()).thenReturn(SpriteDir.NORTH);
         when(oldSpriteMock.getFrameNum()).thenReturn(1);
-        when(oldSpriteMock.getSprite()).thenReturn(mock(BufferedImage.class));
+        when(oldSpriteMock.getSprite()).thenReturn(oldImage);
         DmiSprite newSpriteMock = mock(DmiSprite.class);
-        when(newSpriteMock.getSprite()).thenReturn(mock(BufferedImage.class));
+        when(newSpriteMock.getSprite()).thenReturn(newImage);
 
         Diff diffMock = mock(Diff.class);
         when(diffMock.getStateName()).thenReturn("simpleState");

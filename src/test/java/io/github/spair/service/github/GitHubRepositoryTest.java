@@ -1,6 +1,7 @@
 package io.github.spair.service.github;
 
 import io.github.spair.service.config.ConfigService;
+import io.github.spair.service.git.CloneMonitor;
 import io.github.spair.service.git.GitService;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 import static org.mockito.Mockito.*;
 
@@ -28,7 +30,7 @@ public class GitHubRepositoryTest {
     private GitHubRepository repository;
 
     private static final String MASTER_FOLDER_PATH = ".repos" + File.separator + ".master";
-    private static final String TEST_FORK_FOLDER_PATH = ".repos/fork.author=testUser.branch=testBranch.pr=23";
+    private static final String TEST_FORK_FOLDER_PATH = ".repos/fork.author=testUser.pr=23.branch=testBranch";
 
     @Before
     public void setUp() {
@@ -64,12 +66,16 @@ public class GitHubRepositoryTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testLoadForkRepository() {
-        repository.loadForkRepository(getTestPullRequest(), null, null);
+        Consumer<Integer> updCallback = mock(Consumer.class);
+        Runnable endCallback = mock(Runnable.class);
+
+        repository.loadForkRepository(getTestPullRequest(), updCallback, endCallback);
 
         File forkFolder = new File(TEST_FORK_FOLDER_PATH);
 
-        verify(gitService).cloneRepository("testUser", "Repo", "testBranch", forkFolder);
+        verify(gitService).cloneRepository("testUser", "Repo", "testBranch", forkFolder, new CloneMonitor(updCallback, endCallback));
         verify(gitService).configRepositoryRemote(forkFolder);
         verify(gitService, never()).pullRepository(forkFolder);
     }

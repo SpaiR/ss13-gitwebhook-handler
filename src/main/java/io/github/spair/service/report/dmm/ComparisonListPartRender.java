@@ -20,6 +20,8 @@ final class ComparisonListPartRender implements BodyPartRender<DmmDiffStatus> {
     private static final String OBJECTS_HEADER = "#### For objects:";
     private static final String AREAS_HEADER = "#### For areas:";
 
+    private static final int RESIZE_VALUE = 800;
+
     @Override
     public String render(final DmmDiffStatus status) {
         int chunkNumber = 0;
@@ -71,7 +73,8 @@ final class ComparisonListPartRender implements BodyPartRender<DmmDiffStatus> {
                 newLink = newImagesLinks.get(i);
             }
 
-            String beforeAfterLink = ReportHelper.createBeforeAfterDiffLink(oldLink, newLink, 800, 800, false);
+            String beforeAfterLink = ReportHelper
+                    .createBeforeAfterDiffLink(oldLink, newLink, RESIZE_VALUE, RESIZE_VALUE, false);
             String link = String.format("[Chunk %d - Image %d](%s)", currentChunkNumber, i + 1, beforeAfterLink);
 
             bodyPart.append(" - ").append(link).append(NEW_LINE);
