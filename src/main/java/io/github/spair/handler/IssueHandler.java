@@ -18,7 +18,7 @@ public class IssueHandler extends AbstractHandler<Issue> implements Handler {
     @Autowired
     public IssueHandler(final IssueService issueService, final Set<HandlerCommand<Issue>> commands) {
         this.issueService = issueService;
-        filterCommands(commands);
+        collectCommands(commands);
     }
 
     @Override

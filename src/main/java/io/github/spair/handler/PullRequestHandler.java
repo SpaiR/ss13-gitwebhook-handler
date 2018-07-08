@@ -19,7 +19,7 @@ public class PullRequestHandler extends AbstractHandler<PullRequest> implements 
     public PullRequestHandler(
             final PullRequestService pullRequestService, final Set<HandlerCommand<PullRequest>> commands) {
         this.pullRequestService = pullRequestService;
-        filterCommands(commands);
+        collectCommands(commands);
     }
 
     public void handle(final ObjectNode webhookJson) {

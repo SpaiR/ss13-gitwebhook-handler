@@ -12,7 +12,7 @@ abstract class AbstractHandler<T> implements Handler {
 
     private Map<Command, HandlerCommand<T>> commands;
 
-    void filterCommands(final Set<HandlerCommand<T>> commandsToFilter) {
+    void collectCommands(final Set<HandlerCommand<T>> commandsToFilter) {
         commands = commandsToFilter.stream().collect(Collectors.toMap(Command::valueOf, Function.identity()));
     }
 
