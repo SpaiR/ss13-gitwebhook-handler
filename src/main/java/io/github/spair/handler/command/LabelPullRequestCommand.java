@@ -106,7 +106,7 @@ public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
         boolean isDNM = loweredTitle.contains(DNM_TAG);
         boolean isWIP = loweredTitle.contains(WIP_TAG);
 
-        Consumer<String> addLabelIfNotEmpty = (label) -> {
+        final Consumer<String> addLabelIfNotEmpty = (label) -> {
             if (label != null && !label.isEmpty()) {
                 labelsToAdd.add(label);
             }
