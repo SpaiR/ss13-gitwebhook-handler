@@ -9,7 +9,8 @@ public enum Command {
     UPDATE_CHANGELOG(UpdateChangelogCommand.class),
     LABEL_PR(LabelPullRequestCommand.class),
     REPORT_DMI_DIFF(ReportDmiDiffCommand.class),
-    REPORT_DMM_DIFF(ReportDmmDiffCommand.class);
+    REPORT_DMM_DIFF(ReportDmmDiffCommand.class),
+    DELETE_PULL_REQUEST_REPO(DeletePullRequestRepoCommand.class);
 
     private final Class classOfCommand;
 

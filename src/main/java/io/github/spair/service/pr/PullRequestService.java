@@ -36,8 +36,7 @@ public class PullRequestService {
 
         if (prType == PullRequestType.CLOSED && isMerged) {
             return PullRequestType.MERGED;
-        } else {
-            return prType;
         }
+        return prType;
     }
 }

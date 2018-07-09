@@ -120,7 +120,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private CompletableFuture<File> getForkRepoAsync(final PullRequest pullRequest) {
         return CompletableFuture.supplyAsync(() -> {
             final int updatePcntWait = 10;
-            final int[] nextUpdateMessage = new int[]{0};   // This hack is for increment inside of lambda.
+            final int[] nextUpdateMessage = new int[]{0};   // Hack for increment inside of lambda.
 
             final Consumer<Integer> updateCallback = pcnt -> {
                 if (pcnt == nextUpdateMessage[0]) {

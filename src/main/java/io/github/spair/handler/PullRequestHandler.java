@@ -28,16 +28,24 @@ public class PullRequestHandler extends AbstractHandler<PullRequest> implements 
 
         switch (pullRequest.getType()) {
             case OPENED:
-                commands = wrapCommands(Command.VALIDATE_CHANGELOG, Command.LABEL_PR, Command.REPORT_DMI_DIFF);
+                commands = wrapCommands(
+                        Command.VALIDATE_CHANGELOG,
+                        Command.LABEL_PR,
+                        Command.REPORT_DMI_DIFF,
+                        Command.REPORT_DMM_DIFF
+                );
                 break;
             case SYNCHRONIZE:
-                commands = wrapCommands(Command.REPORT_DMI_DIFF);
+                commands = wrapCommands(Command.REPORT_DMI_DIFF, Command.REPORT_DMM_DIFF);
                 break;
             case EDITED:
                 commands = wrapCommands(Command.VALIDATE_CHANGELOG);
                 break;
             case MERGED:
-                commands = wrapCommands(Command.UPDATE_CHANGELOG);
+                commands = wrapCommands(Command.UPDATE_CHANGELOG, Command.DELETE_PULL_REQUEST_REPO);
+                break;
+            case CLOSED:
+                commands = wrapCommands(Command.DELETE_PULL_REQUEST_REPO);
                 break;
         }
 
