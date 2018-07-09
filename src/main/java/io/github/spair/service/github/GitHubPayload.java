@@ -25,6 +25,7 @@ public final class GitHubPayload {
     public static final String MERGED = "merged";
     public static final String HEAD = "head";
     public static final String REF = "ref";
+    public static final String LABELS = "labels";
 
     private GitHubPayload() {
     }

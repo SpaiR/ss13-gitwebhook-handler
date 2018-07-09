@@ -38,6 +38,24 @@
     "merged_at": null,
     "merge_commit_sha": null,
     "assignee": null,
+    "labels": [
+      {
+        "id": 364620392,
+        "node_id": "MDU6TGFiZWwzNjQ2MjAzOTI=",
+        "url": "https://api.github.com/repos/baxterthehacker/public-repo/labels/label",
+        "name": "label1",
+        "color": "1d76db",
+        "default": false
+      },
+      {
+        "id": 364620392,
+        "node_id": "a324vSQw8vwzNjQ2MjAzOTI=",
+        "url": "https://api.github.com/repos/baxterthehacker/public-repo/labels/label",
+        "name": "label2",
+        "color": "1d76db",
+        "default": false
+      }
+    ],
     "milestone": null,
     "commits_url": "https://api.github.com/repos/baxterthehacker/public-repo/pulls/1/commits",
     "review_comments_url": "https://api.github.com/repos/baxterthehacker/public-repo/pulls/1/comments",

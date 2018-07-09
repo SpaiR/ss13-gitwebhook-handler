@@ -38,6 +38,9 @@
     "merged_at": null,
     "merge_commit_sha": null,
     "assignee": null,
+    "labels": [
+
+    ],
     "milestone": null,
     "commits_url": "https://api.github.com/repos/baxterthehacker/public-repo/pulls/1/commits",
     "review_comments_url": "https://api.github.com/repos/baxterthehacker/public-repo/pulls/1/comments",

@@ -8,6 +8,9 @@ import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.pr.entity.PullRequestType;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 public class PullRequestService {
 
@@ -22,10 +25,11 @@ public class PullRequestService {
         String link = pullRequestNode.get(GitHubPayload.HTML_URL).asText();
         String diffLink = pullRequestNode.get(GitHubPayload.DIFF_URL).asText();
         String body = pullRequestNode.get(GitHubPayload.BODY).asText();
+        Set<String> labels = extractLabels(pullRequestNode);
 
         return PullRequest.builder()
                 .author(author).branchName(branchName).number(number)
-                .title(title).type(type).link(link).diffLink(diffLink).body(body)
+                .title(title).type(type).link(link).diffLink(diffLink).body(body).labels(labels)
                 .build();
     }
 
@@ -38,5 +42,11 @@ public class PullRequestService {
             return PullRequestType.MERGED;
         }
         return prType;
+    }
+
+    private Set<String> extractLabels(final JsonNode pullRequestNode) {
+        Set<String> labels = new HashSet<>();
+        pullRequestNode.get(GitHubPayload.LABELS).forEach(label -> labels.add(label.get(GitHubPayload.NAME).asText()));
+        return labels;
     }
 }
