@@ -35,7 +35,7 @@ public class ValidateChangelogCommand implements HandlerCommand<PullRequest> {
         int prNumber = pullRequest.getNumber();
 
         boolean isValid = true;
-        boolean hasInvalidLabel = gitHubService.listIssueLabels(prNumber).contains(invalidChangelogLabel);
+        boolean hasInvalidLabel = pullRequest.getLabels().contains(invalidChangelogLabel);
 
         if (changelog.isPresent()) {
             ChangelogValidationStatus validationStatus = changelogService.validateChangelog(changelog.get());

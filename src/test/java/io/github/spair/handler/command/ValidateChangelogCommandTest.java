@@ -27,6 +27,8 @@ public class ValidateChangelogCommandTest {
     private ChangelogService changelogService;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private GitHubService gitHubService;
+    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+    private PullRequest pullRequest;
 
     private ValidateChangelogCommand command;
 
@@ -41,10 +43,10 @@ public class ValidateChangelogCommandTest {
         Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
-        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
+        when(pullRequest.getLabels().contains(anyString())).thenReturn(false);
         when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(false));
 
-        command.execute(mock(PullRequest.class));
+        command.execute(pullRequest);
 
         verify(gitHubService).createIssueComment(anyInt(), anyString());
         verify(gitHubService).addLabel(anyInt(), anyString());
@@ -56,10 +58,10 @@ public class ValidateChangelogCommandTest {
         Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
-        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
+        when(pullRequest.getLabels().contains(anyString())).thenReturn(true);
         when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(false));
 
-        command.execute(mock(PullRequest.class));
+        command.execute(pullRequest);
 
         verify(gitHubService, never()).createIssueComment(anyInt(), anyString());
         verify(gitHubService, never()).addLabel(anyInt(), anyString());
@@ -71,10 +73,10 @@ public class ValidateChangelogCommandTest {
         Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
-        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(false);
+        when(pullRequest.getLabels().contains(anyString())).thenReturn(false);
         when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(true));
 
-        command.execute(mock(PullRequest.class));
+        command.execute(pullRequest);
 
         verify(gitHubService, never()).createIssueComment(anyInt(), anyString());
         verify(gitHubService, never()).addLabel(anyInt(), anyString());
@@ -86,10 +88,10 @@ public class ValidateChangelogCommandTest {
         Optional<Changelog> changelog = createChangelog();
 
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(changelog);
-        when(gitHubService.listIssueLabels(anyInt()).contains(anyString())).thenReturn(true);
+        when(pullRequest.getLabels().contains(anyString())).thenReturn(true);
         when(changelogService.validateChangelog(changelog.get())).thenReturn(createValidationStatus(true));
 
-        command.execute(mock(PullRequest.class));
+        command.execute(pullRequest);
 
         verify(gitHubService, never()).createIssueComment(anyInt(), anyString());
         verify(gitHubService, never()).addLabel(anyInt(), anyString());
