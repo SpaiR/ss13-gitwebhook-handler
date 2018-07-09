@@ -58,4 +58,8 @@ public class RestService {
     public void delete(final String path, final HttpHeaders headers) {
         restOperations.exchange(path, HttpMethod.DELETE, new HttpEntity<>(headers), Object.class);
     }
+
+    public void head(final String path, final HttpHeaders headers) {
+        restOperations.headForHeaders(path, headers);
+    }
 }

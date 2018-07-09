@@ -27,6 +27,19 @@ public class GitHubPathProviderTest {
     }
 
     @Test
+    public void testNonApiGeneralPath() {
+        String expected = "https://github.com/OrgName/RepoName";
+        assertEquals(expected, provider.nonApiGeneralPath("OrgName", "RepoName"));
+    }
+
+    @Test
+    public void testNonApiContents() {
+        String expected = "https://github.com/OrgName/RepoName/blob/master/some/contents";
+        assertEquals(expected, provider.nonApiContents("OrgName", "RepoName", "/some/contents"));
+        assertEquals(expected, provider.nonApiContents("OrgName", "RepoName", "some/contents"));
+    }
+
+    @Test
     public void testGeneralPath() {
         String expected = "https://api.github.com/repos/OrgName/RepoName";
         assertEquals(expected, provider.generalPath("OrgName", "RepoName"));

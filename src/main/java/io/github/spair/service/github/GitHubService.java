@@ -136,19 +136,27 @@ public class GitHubService {
 
     public boolean isOrgAndRepoExist(final String org, final String repo) {
         try {
-            restService.get(pathProvider.generalPath(org, repo), getNonAuthHeaders());
+            restService.head(pathProvider.nonApiGeneralPath(org, repo), getNonAuthHeaders());
             return true;
         } catch (HttpStatusCodeException e) {
-            return false;
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return false;
+            }
+            LOGGER.error("Check Org and Repo existence fail. Org: {} Repo: {}", org, repo);
+            throw e;
         }
     }
 
     public boolean isFilePathExist(final String org, final String repo, final String relPath) {
         try {
-            restService.get(pathProvider.contents(org, repo, relPath), getNonAuthHeaders());
+            restService.head(pathProvider.nonApiContents(org, repo, relPath), getNonAuthHeaders());
             return true;
         } catch (HttpStatusCodeException e) {
-            return false;
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return false;
+            }
+            LOGGER.error("Check file existence fail. Org: {} Repo: {} File path: {}", org, repo, relPath);
+            throw e;
         }
     }
 

@@ -16,11 +16,24 @@ class GitHubPathProvider {
     private static final String ISSUES = "issues";
     private static final String FILES = "files";
     private static final String COMMENTS = "comments";
+
     private static final String GIT_BLOBS = "github/blobs";
+    private static final String BLOB_MASTER = "blob/master";
 
     @Autowired
     GitHubPathProvider(final ConfigService configService) {
         this.configService = configService;
+    }
+
+    // https://github.com/OrgName/RepoName
+    String nonApiGeneralPath(final String orgName, final String repoName) {
+        return GitHubConstants.PATH + "/" + orgName + "/" + repoName;
+    }
+
+    // https://github.com/OrgName/RepoName/blob/master/path/to/content
+    String nonApiContents(final String orgName, final String repoName, final String filePath) {
+        String contentsPath = filePath.startsWith("/") ? filePath : "/" + filePath;
+        return nonApiGeneralPath(orgName, repoName) + "/" + BLOB_MASTER + contentsPath;
     }
 
     // https://api.github.com/repos/OrgName/RepoName

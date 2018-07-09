@@ -132,6 +132,14 @@ public class RestServiceTest {
         restService.delete("/test/path", buildHeaders());
     }
 
+    @Test
+    public void testHead() {
+        server.expect(requestTo("/test/path"))
+                .andExpect(method(HttpMethod.HEAD)).andExpect(headersMatecher())
+                .andRespond(withSuccess());
+        restService.head("/test/path", buildHeaders());
+    }
+
     private HttpHeaders buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("User-Agent", "TestAgent-X");
