@@ -17,6 +17,7 @@ public class ConfigServiceTest {
     private final static String VAL_ORG = "validOrg";
     private final static String VAL_REP = "validRepo";
     private final static String VAL_PTH = "validPath";
+    private static final String VAL_DME = "/valDme.dme";
 
     private final static String INVAL_ORG = "invalidOrg";
     private final static String INVAL_REP = "invalidRepo";
@@ -30,6 +31,7 @@ public class ConfigServiceTest {
 
         when(gitHubService.isOrgAndRepoExist(VAL_ORG, VAL_REP)).thenReturn(true);
         when(gitHubService.isFilePathExist(VAL_ORG, VAL_REP, VAL_PTH)).thenReturn(true);
+        when(gitHubService.isFilePathExist(VAL_ORG, VAL_REP, VAL_DME)).thenReturn(true);
 
         when(gitHubService.isFilePathExist(VAL_ORG, VAL_REP, INVAL_PTH)).thenReturn(false);
 
@@ -45,11 +47,13 @@ public class ConfigServiceTest {
         handlerConfig.getGitHubConfig().setOrganizationName(VAL_ORG);
         handlerConfig.getGitHubConfig().setRepositoryName(VAL_REP);
         handlerConfig.getChangelogConfig().setPathToChangelog(VAL_PTH);
+        handlerConfig.getBotConfig().setPathToDme(VAL_DME);
 
         HandlerConfigStatus status = configService.validateConfig(handlerConfig);
         assertTrue(status.allOk);
         assertTrue(status.changelogOk);
         assertTrue(status.gitHubOk);
+        assertTrue(status.botOk);
     }
 
     @Test
@@ -65,6 +69,7 @@ public class ConfigServiceTest {
         assertFalse(status.allOk);
         assertFalse(status.changelogOk);
         assertTrue(status.gitHubOk);
+        assertFalse(status.botOk);
     }
 
     @Test
@@ -80,5 +85,6 @@ public class ConfigServiceTest {
         assertFalse(status.allOk);
         assertFalse(status.changelogOk);
         assertFalse(status.gitHubOk);
+        assertFalse(status.botOk);
     }
 }

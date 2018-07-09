@@ -1,5 +1,6 @@
 package io.github.spair.service.config.entity;
 
+import io.github.spair.service.ByondFiles;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +21,11 @@ public class HandlerConfig {
     private String imageUploadCode = "1234567890";
     private GitHubConfig gitHubConfig = new GitHubConfig();
     private ChangelogConfig changelogConfig = new ChangelogConfig();
+    private BotConfig botConfig = new BotConfig();
+
+    public boolean validDmePath(final String path) {
+        return path.startsWith("/") && path.endsWith(ByondFiles.DME_SUFFIX);
+    }
 
     @ToString
     @Getter
@@ -27,7 +33,6 @@ public class HandlerConfig {
     public class GitHubConfig {
         private String organizationName = "Org Name";
         private String repositoryName = "Repo Name";
-        private String pathToDme = "/taucetistation.dme";
         private String token = "12345";
         private String secretKey = "12345";
         private Labels labels = new Labels();
@@ -58,5 +63,12 @@ public class HandlerConfig {
         public class Html {
             private Set<String> availableClasses = new HashSet<>();
         }
+    }
+
+    @ToString
+    @Getter
+    @Setter
+    public class BotConfig {
+        private String pathToDme = "/taucetistation.dme";
     }
 }

@@ -1,0 +1,19 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="tab">
+    <div class="tab-content">
+        <div class="tab-content__grid mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <div class="tab-content__cell">
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input rv-value="config.botConfig.pathToDme" id="request-agent-name" class="mdl-textfield__input" pattern="[/]{1}.+\.dme">
+                        <label for="request-agent-name" class="mdl-textfield__label">Path To Dme</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/tabs/bot_help :: tab"></div>
+    </div>
+</div>
+</html>

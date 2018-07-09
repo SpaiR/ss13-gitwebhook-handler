@@ -1,5 +1,6 @@
 package io.github.spair.handler.command;
 
+import io.github.spair.service.ByondFiles;
 import io.github.spair.byond.dme.Dme;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.DmeService;
@@ -79,7 +80,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
             return;
         }
 
-        final String pathToDme = configService.getConfig().getGitHubConfig().getPathToDme();
+        final String pathToDme = configService.getConfig().getBotConfig().getPathToDme();
 
         CompletableFuture<Dme> parseOldDmeFuture = getDmeAsync(master.getPath() + pathToDme);
         CompletableFuture<Dme> parseNewDmeFuture = getDmeAsync(fork.getPath() + pathToDme);

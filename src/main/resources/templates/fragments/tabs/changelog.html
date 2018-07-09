@@ -6,7 +6,7 @@
                 <div class="tab-content__cell">
 
                     <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input rv-value="config.changelogConfig.pathToChangelog" rv-on-keyup="ctrl.disableSaveBtn" id="path-to-changelog" class="mdl-textfield__input">
+                        <input rv-value="config.changelogConfig.pathToChangelog" rv-on-keyup="ctrl.disableSaveBtn" id="path-to-changelog" class="mdl-textfield__input" pattern="[/]{1}.+\.html">
                         <label for="path-to-changelog" class="mdl-textfield__label">Changelog Path</label>
                     </div>
 

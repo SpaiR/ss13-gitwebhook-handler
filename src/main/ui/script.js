@@ -46,6 +46,9 @@ var controller = {
         html: {
             availableClasses: [ ]
         }
+    },
+    botConfig: {
+        pathToDme: ''
     }
 };
 
@@ -94,10 +97,12 @@ $(document).ready(function() {
     $('#validate-config').click(function() {
         var $githubIcon = $('#github-fail'),
             $changelogIcon = $('#changelog-fail'),
+            $botIcon = $('#bot-fail'),
             $progressBar = $('#progress-bar');
 
         $githubIcon.hide();
         $changelogIcon.hide();
+        $botIcon.hide();
         toggleSaveButton(false);
 
         $progressBar.slideDown('fast');
@@ -121,6 +126,10 @@ $(document).ready(function() {
 
             if (!responseObject.changelogOk) {
                 $changelogIcon.show();
+            }
+
+            if (!responseObject.botOk) {
+                $botIcon.show();
             }
         }).always(function() {
             $progressBar.slideUp('fast');

@@ -136,7 +136,7 @@ public class GitHubService {
 
     public boolean isOrgAndRepoExist(final String org, final String repo) {
         try {
-            restService.head(pathProvider.nonApiGeneralPath(org, repo), getNonAuthHeaders());
+            restService.head(pathProvider.nonApiGeneralPath(org, repo));
             return true;
         } catch (HttpStatusCodeException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -149,7 +149,7 @@ public class GitHubService {
 
     public boolean isFilePathExist(final String org, final String repo, final String relPath) {
         try {
-            restService.head(pathProvider.nonApiContents(org, repo, relPath), getNonAuthHeaders());
+            restService.head(pathProvider.nonApiContents(org, repo, relPath));
             return true;
         } catch (HttpStatusCodeException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -200,15 +200,6 @@ public class GitHubService {
         ).recursiveProcess(pathProvider.issueComments(issueNum));
 
         return issueComments;
-    }
-
-    private HttpHeaders getNonAuthHeaders() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-
-        String agentName = configService.getConfig().getRequestAgentName();
-        httpHeaders.set(HttpHeaders.USER_AGENT, agentName);
-
-        return httpHeaders;
     }
 
     private HttpHeaders getAuthHeaders() {

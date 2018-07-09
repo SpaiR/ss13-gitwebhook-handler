@@ -135,9 +135,9 @@ public class RestServiceTest {
     @Test
     public void testHead() {
         server.expect(requestTo("/test/path"))
-                .andExpect(method(HttpMethod.HEAD)).andExpect(headersMatecher())
+                .andExpect(method(HttpMethod.HEAD))
                 .andRespond(withSuccess());
-        restService.head("/test/path", buildHeaders());
+        restService.head("/test/path");
     }
 
     private HttpHeaders buildHeaders() {

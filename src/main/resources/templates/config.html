@@ -21,6 +21,9 @@
             <a href="#fixed-tab-changelog" class="mdl-layout__tab">
                 <span><i id="changelog-fail" class="material-icons tab__icon tab__icon--fail">warning</i>CHANGELOG</span>
             </a>
+            <a href="#fixed-tab-bot" class="mdl-layout__tab">
+                <span><i id="bot-fail" class="material-icons tab__icon tab__icon--fail">warning</i>BOT</span>
+            </a>
         </div>
     </header>
 
@@ -35,6 +38,10 @@
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-changelog">
             <div th:replace="fragments/tabs/changelog :: tab"></div>
+        </section>
+
+        <section class="mdl-layout__tab-panel" id="fixed-tab-bot">
+            <div th:replace="fragments/tabs/bot :: tab"></div>
         </section>
     </main>
 
