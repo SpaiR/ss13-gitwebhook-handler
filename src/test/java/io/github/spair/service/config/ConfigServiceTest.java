@@ -47,13 +47,13 @@ public class ConfigServiceTest {
         handlerConfig.getGitHubConfig().setOrganizationName(VAL_ORG);
         handlerConfig.getGitHubConfig().setRepositoryName(VAL_REP);
         handlerConfig.getChangelogConfig().setPathToChangelog(VAL_PTH);
-        handlerConfig.getBotConfig().setPathToDme(VAL_DME);
+        handlerConfig.getDmmBotConfig().setPathToDme(VAL_DME);
 
         HandlerConfigStatus status = configService.validateConfig(handlerConfig);
         assertTrue(status.allOk);
         assertTrue(status.changelogOk);
         assertTrue(status.gitHubOk);
-        assertTrue(status.botOk);
+        assertTrue(status.dmmBotOk);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class ConfigServiceTest {
         assertFalse(status.allOk);
         assertFalse(status.changelogOk);
         assertTrue(status.gitHubOk);
-        assertFalse(status.botOk);
+        assertFalse(status.dmmBotOk);
     }
 
     @Test
@@ -85,6 +85,6 @@ public class ConfigServiceTest {
         assertFalse(status.allOk);
         assertFalse(status.changelogOk);
         assertFalse(status.gitHubOk);
-        assertFalse(status.botOk);
+        assertFalse(status.dmmBotOk);
     }
 }

@@ -9,5 +9,5 @@ public class HandlerConfigStatus {
     public final boolean allOk;
     public final boolean gitHubOk;
     public final boolean changelogOk;
-    public final boolean botOk;
+    public final boolean dmmBotOk;
 }

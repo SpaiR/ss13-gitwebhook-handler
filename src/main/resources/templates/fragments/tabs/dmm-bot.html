@@ -1,0 +1,36 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="tab">
+    <div class="tab-content">
+        <div class="tab-content__grid mdl-grid">
+            <div class="mdl-cell mdl-cell--12-col">
+                <div class="tab-content__cell">
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input rv-value="config.dmmBotConfig.pathToDme" id="request-agent-name" class="mdl-textfield__input" pattern="[/]{1}.+\.dme">
+                        <label for="request-agent-name" class="mdl-textfield__label">Path To Dme</label>
+                    </div>
+
+                    <hr class="tab-content__line"/>
+
+                    <div class="config-btn">
+                        <button id="init-master-repo"
+                                class="config-btn__btn mdl-button mdl-button--blue mdl-button--white-text mdl-js-button mdl-js-ripple-effect mdl-button--raised">
+                            <i class="done material-icons material-icons--green material-icons--hidden">done</i>
+                            <i class="process material-icons material-icons--spin material-icons--orange">rotate_right</i>
+                            <i class="fail material-icons material-icons--red material-icons--hidden">clear</i>
+                            INIT MASTER REPO
+                        </button>
+                        <button id="clean-repos"
+                                class="config-btn__btn mdl-button mdl-button--red mdl-button--white-text mdl-js-button mdl-js-ripple-effect mdl-button--raised">
+                            <i class="process material-icons material-icons--spin material-icons--orange material-icons--hidden">rotate_right</i>
+                            CLEAN ALL REPOS
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/tabs/dmm-bot_help :: tab"></div>
+    </div>
+</div>
+</html>

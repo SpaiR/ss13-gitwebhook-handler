@@ -47,7 +47,7 @@ var controller = {
             availableClasses: [ ]
         }
     },
-    botConfig: {
+    dmmBotConfig: {
         pathToDme: ''
     }
 };
@@ -62,6 +62,9 @@ $.ajax('/config/rest/current').done(function(data) {
 });
 
 $(document).ready(function() {
+    initDmmBot();
+
+
     $('#open-about-button, #close-about-button').click(function() {
         $('#overlay').fadeToggle('fast');
         $('#about-block').fadeToggle('fast');
@@ -97,12 +100,12 @@ $(document).ready(function() {
     $('#validate-config').click(function() {
         var $githubIcon = $('#github-fail'),
             $changelogIcon = $('#changelog-fail'),
-            $botIcon = $('#bot-fail'),
+            $dmmBotIcon = $('#dmm-bot-fail'),
             $progressBar = $('#progress-bar');
 
         $githubIcon.hide();
         $changelogIcon.hide();
-        $botIcon.hide();
+        $dmmBotIcon.hide();
         toggleSaveButton(false);
 
         $progressBar.slideDown('fast');
@@ -128,8 +131,8 @@ $(document).ready(function() {
                 $changelogIcon.show();
             }
 
-            if (!responseObject.botOk) {
-                $botIcon.show();
+            if (!responseObject.dmmBotOk) {
+                $dmmBotIcon.show();
             }
         }).always(function() {
             $progressBar.slideUp('fast');
@@ -172,6 +175,71 @@ function addClassAction() {
 
 function showToast(message) {
     $('#snackbar').get(0).MaterialSnackbar.showSnackbar({ message: message });
+}
+
+function initDmmBot() {
+    var $initMasterBtn = $('#init-master-repo'),
+        $initMasterDone = $('#init-master-repo .done'),
+        $initMasterProcess = $('#init-master-repo .process'),
+        $initMasterFail = $('#init-master-repo .fail'),
+
+        $cleanReposBtn = $('#clean-repos'),
+        $cleanReposProcess = $('#clean-repos .process'),
+
+        REPOS_MASTER_URL = '/config/rest/repos/master',
+        REPOS_URL = '/config/rest/repos';
+
+    function toggleCleanBtn(isEnable) {
+        $cleanReposBtn.prop('disabled', !isEnable);
+    }        
+
+    (function getMasterInitStatus() {
+        $.ajax({
+            url: REPOS_MASTER_URL,
+            method: 'GET'
+        }).done(function(status) {
+            if (status == 'DONE') {
+                $initMasterDone.show();
+            } else if (status === 'NOT_STARTED') {
+                $initMasterFail.show();
+            }
+            if (status !== 'IN_PROGRESS') {
+                $initMasterProcess.hide();
+                toggleCleanBtn(true);
+            } else {
+                toggleCleanBtn(false);
+                setTimeout(getMasterInitStatus, 5000);
+            }
+        });
+    })();
+
+    $initMasterBtn.click(function() {
+        $initMasterFail.hide();
+        $initMasterProcess.show();
+        toggleCleanBtn(false);
+
+        $.ajax({
+            url: REPOS_MASTER_URL,
+            method: 'PUT'
+        }).done(function() {
+            toggleCleanBtn(true);
+        })
+    });
+
+    $cleanReposBtn.click(function() {
+        $cleanReposProcess.show();
+
+        $.ajax({
+            url: REPOS_URL,
+            method: 'DELETE'
+        }).done(function() {
+            showToast('All repos deleted.');
+            $initMasterDone.hide();
+            $initMasterFail.show();
+        }).always(function() {
+            $cleanReposProcess.hide();
+        });
+    });
 }
 
 function initForms() {

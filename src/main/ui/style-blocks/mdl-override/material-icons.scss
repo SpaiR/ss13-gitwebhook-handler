@@ -1,0 +1,33 @@
+.material-icons {
+    &--red {
+        color: #ff2b2b;
+    }
+
+    &--green {
+        color: #00d400;
+    }
+
+    &--orange {
+        color: #fdc357;
+    }
+
+    &--spin {
+        -webkit-animation: mi-spin 2s infinite linear;
+        animation: mi-spin 2s infinite linear;
+    }
+
+    &--hidden {
+        display: none;
+    }
+}
+
+@keyframes mi-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}

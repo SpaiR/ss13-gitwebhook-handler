@@ -21,7 +21,7 @@ public class HandlerConfig {
     private String imageUploadCode = "1234567890";
     private GitHubConfig gitHubConfig = new GitHubConfig();
     private ChangelogConfig changelogConfig = new ChangelogConfig();
-    private BotConfig botConfig = new BotConfig();
+    private DmmBotConfig dmmBotConfig = new DmmBotConfig();
 
     public boolean validDmePath(final String path) {
         return path.startsWith("/") && path.endsWith(ByondFiles.DME_SUFFIX);
@@ -68,7 +68,7 @@ public class HandlerConfig {
     @ToString
     @Getter
     @Setter
-    public class BotConfig {
+    public class DmmBotConfig {
         private String pathToDme = "/taucetistation.dme";
     }
 }

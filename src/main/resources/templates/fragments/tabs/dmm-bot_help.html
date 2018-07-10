@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="tab" class="help">
+    <button data-for="dmm-bot-tab" class="help__button mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">help</i>
+    </button>
+
+    <div id="dmm-bot-tab" class="help__tab">
+        <div class="help__text">
+            <h5>Path To Dme:</h5>
+            <p>Path to <span class="code">.dme</span> file in your project.</p>
+
+            <h5>Init master repo button:</h5>
+            <p>
+                Initializes process of cloning master repository to server.
+                Recommended to do as soon as possible, since the process may take a lot of time.
+            </p>
+
+            <h5>Clean all repos button:</h5>
+            <p>Removes all cloned repositories from local storage.</p>
+        </div>
+    </div>
+</div>
+</html>

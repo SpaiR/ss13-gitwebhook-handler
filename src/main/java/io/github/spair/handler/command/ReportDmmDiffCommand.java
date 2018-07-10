@@ -80,7 +80,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
             return;
         }
 
-        final String pathToDme = configService.getConfig().getBotConfig().getPathToDme();
+        final String pathToDme = configService.getConfig().getDmmBotConfig().getPathToDme();
 
         CompletableFuture<Dme> parseOldDmeFuture = getDmeAsync(master.getPath() + pathToDme);
         CompletableFuture<Dme> parseNewDmeFuture = getDmeAsync(fork.getPath() + pathToDme);

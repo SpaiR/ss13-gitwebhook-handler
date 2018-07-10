@@ -4,6 +4,7 @@ import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.git.CloneMonitor;
 import io.github.spair.service.git.GitConstants;
 import io.github.spair.service.git.GitService;
+import io.github.spair.service.github.entity.MasterInitStatus;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -14,6 +15,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -27,6 +29,7 @@ public class GitHubRepository {
     private final ConfigService configService;
     private final GitService gitService;
 
+    private AtomicBoolean isCloningMaster = new AtomicBoolean(false);
     private final Map<String, Lock> repoLocks = new HashMap<>();
 
     @Autowired
@@ -56,7 +59,9 @@ public class GitHubRepository {
                 final String orgName = configService.getConfig().getGitHubConfig().getOrganizationName();
                 final String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
 
+                isCloningMaster.set(true);
                 gitService.cloneRepository(orgName, repoName, GitConstants.MASTER, masterFolder);
+                isCloningMaster.set(false);
             } else {
                 gitService.pullRepository(masterFolder);
             }
@@ -107,6 +112,18 @@ public class GitHubRepository {
                 FileSystemUtils.deleteRecursively(repoRoot);
             }
         }
+    }
+
+    public MasterInitStatus getMasterRepoInitStatus() {
+        MasterInitStatus status = MasterInitStatus.NOT_STARTED;
+        if (new File(GitConstants.MASTER_REPO_PATH).exists()) {
+            if (isCloningMaster.get()) {
+                status = MasterInitStatus.IN_PROGRESS;
+            } else {
+                status = MasterInitStatus.DONE;
+            }
+        }
+        return status;
     }
 
     private void deleteRepositoryIfExists(final File repoRoot) {

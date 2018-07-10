@@ -42,4 +42,12 @@
             background-color: rgb(65, 100, 181);
         }
     }
+
+    &--red {
+        background-color: rgb(255, 20, 20);
+
+        &:hover {
+            background-color: rgb(255, 72, 72);
+        }
+    }
 }

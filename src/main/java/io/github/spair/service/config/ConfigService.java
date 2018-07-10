@@ -62,16 +62,16 @@ public class ConfigService {
         String orgName = config.getGitHubConfig().getOrganizationName();
         String repoName = config.getGitHubConfig().getRepositoryName();
         String changelogPath = config.getChangelogConfig().getPathToChangelog();
-        String pathToDme = config.getBotConfig().getPathToDme();
+        String pathToDme = config.getDmmBotConfig().getPathToDme();
 
         boolean isGitHubOk = gitHubService.isOrgAndRepoExist(orgName, repoName);
         boolean isChangelogOk = gitHubService.isFilePathExist(orgName, repoName, changelogPath);
-        boolean isBotOk = config.validDmePath(pathToDme)
+        boolean isDmmBotOk = config.validDmePath(pathToDme)
                 && gitHubService.isFilePathExist(orgName, repoName, pathToDme);
 
-        boolean isAllOk = isGitHubOk && isChangelogOk && isBotOk;
+        boolean isAllOk = isGitHubOk && isChangelogOk && isDmmBotOk;
 
-        return new HandlerConfigStatus(isAllOk, isGitHubOk, isChangelogOk, isBotOk);
+        return new HandlerConfigStatus(isAllOk, isGitHubOk, isChangelogOk, isDmmBotOk);
     }
 
     public HandlerConfig getConfig() {
