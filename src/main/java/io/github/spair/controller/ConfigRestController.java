@@ -79,7 +79,7 @@ public class ConfigRestController {
     }
 
     @GetMapping("/repos/master")
-    public String checkMasterRepoInitialized() {
+    public String getMasterRepoInitStatus() {
         return gitHubRepository.getMasterRepoInitStatus().name();
     }
 
