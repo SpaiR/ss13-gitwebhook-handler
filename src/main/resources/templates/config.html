@@ -21,6 +21,7 @@
             <a href="#fixed-tab-changelog" class="mdl-layout__tab">
                 <span><i id="changelog-fail" class="material-icons tab__icon tab__icon--fail">warning</i>CHANGELOG</span>
             </a>
+            <a href="#fixed-tab-labels" class="mdl-layout__tab">LABELS</a>
             <a href="#fixed-tab-dmm-bot" class="mdl-layout__tab">
                 <span><i id="dmm-bot-fail" class="material-icons tab__icon tab__icon--fail">warning</i>DMM BOT</span>
             </a>
@@ -38,6 +39,10 @@
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-changelog">
             <div th:replace="fragments/tabs/changelog :: tab"></div>
+        </section>
+
+        <section class="mdl-layout__tab-panel" id="fixed-tab-labels">
+            <div th:replace="fragments/tabs/labels :: tab"></div>
         </section>
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-dmm-bot">

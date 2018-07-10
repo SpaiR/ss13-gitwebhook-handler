@@ -31,63 +31,6 @@
                         <label for="secret-key" class="mdl-textfield__label">Secret Key</label>
                     </div>
 
-                    <br/>
-                    <h6 class="tab-content__header">Labels:</h6>
-
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input rv-value="config.gitHubConfig.labels.invalidChangelog" id="invalid-changelog" class="mdl-textfield__input">
-                        <label for="invalid-changelog" class="mdl-textfield__label">Invalid Changelog</label>
-                    </div>
-
-                    <br/>
-
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input rv-value="config.gitHubConfig.labels.mapChanges" id="map-changes" class="mdl-textfield__input">
-                        <label for="map-changes" class="mdl-textfield__label">Map Changes</label>
-                    </div>
-
-                    <br/>
-
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input rv-value="config.gitHubConfig.labels.iconChanges" id="icon-changes" class="mdl-textfield__input">
-                        <label for="icon-changes" class="mdl-textfield__label">Icon Changes</label>
-                    </div>
-
-                    <br/>
-
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input rv-value="config.gitHubConfig.labels.workInProgress" id="work-in-progress" class="mdl-textfield__input">
-                        <label for="work-in-progress" class="mdl-textfield__label">Work In Progress</label>
-                    </div>
-
-                    <br/>
-
-                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                        <input rv-value="config.gitHubConfig.labels.doNotMerge" id="do-not-merge" class="mdl-textfield__input">
-                        <label for="do-not-merge" class="mdl-textfield__label">Do Not Merge</label>
-                    </div>
-
-                    <br/>
-
-                    <div class="classes-labels">
-                        <table class="classes-labels__table mdl-data-table mdl-js-data-table">
-                            <thead>
-                            <tr>
-                                <th class="mdl-data-table__cell--non-numeric"><b>Class</b></th>
-                                <th><b>Label</b></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                                <tr rv-each-item="config.changelogConfig.html.availableClasses">
-                                    <td>{item}</td>
-                                    <td>
-                                        <input rv-label-for-class-value="item" class="mdl-textfield__input">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
                 </div>
             </div>
         </div>
