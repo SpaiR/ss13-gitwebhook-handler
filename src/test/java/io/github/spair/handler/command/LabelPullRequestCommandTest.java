@@ -45,7 +45,7 @@ public class LabelPullRequestCommandTest {
                 .diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
                 .body("This is a pretty simple change that we need to pull into master.").build();
 
-        when(configService.getConfig().getGitHubConfig().getLabels().getLabelsForClasses())
+        when(configService.getConfig().getLabels().getLabelsForClasses())
                 .thenReturn(new HashMap<String, String>(){
                     {
                         put("map", "Map Edit");
@@ -61,10 +61,10 @@ public class LabelPullRequestCommandTest {
                                 createPullRequestFile("code.dm")
                         )
                 );
-        when(configService.getConfig().getGitHubConfig().getLabels().getMapChanges()).thenReturn("Map Edit");
-        when(configService.getConfig().getGitHubConfig().getLabels().getIconChanges()).thenReturn("Sprites");
-        when(configService.getConfig().getGitHubConfig().getLabels().getDoNotMerge()).thenReturn("Do Not Merge");
-        when(configService.getConfig().getGitHubConfig().getLabels().getWorkInProgress()).thenReturn("WIP");
+        when(configService.getConfig().getLabels().getMapChanges()).thenReturn("Map Edit");
+        when(configService.getConfig().getLabels().getIconChanges()).thenReturn("Sprites");
+        when(configService.getConfig().getLabels().getDoNotMerge()).thenReturn("Do Not Merge");
+        when(configService.getConfig().getLabels().getWorkInProgress()).thenReturn("WIP");
 
         command.execute(pullRequest);
 

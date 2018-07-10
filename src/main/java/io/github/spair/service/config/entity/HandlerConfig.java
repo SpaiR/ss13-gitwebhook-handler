@@ -21,6 +21,7 @@ public class HandlerConfig {
     private String imageUploadCode = "1234567890";
     private GitHubConfig gitHubConfig = new GitHubConfig();
     private ChangelogConfig changelogConfig = new ChangelogConfig();
+    private Labels labels = new Labels();
     private DmmBotConfig dmmBotConfig = new DmmBotConfig();
 
     public boolean validDmePath(final String path) {
@@ -35,19 +36,18 @@ public class HandlerConfig {
         private String repositoryName = "Repo Name";
         private String token = "12345";
         private String secretKey = "12345";
-        private Labels labels = new Labels();
+    }
 
-        @ToString
-        @Getter
-        @Setter
-        public class Labels {
-            private String invalidChangelog = "Invalid Changelog";
-            private String mapChanges = "Map Edit";
-            private String iconChanges = "Sprites";
-            private String workInProgress = "Work In Progress";
-            private String doNotMerge = "DO NOT MERGE";
-            private Map<String, String> labelsForClasses = new HashMap<>();
-        }
+    @ToString
+    @Getter
+    @Setter
+    public class Labels {
+        private String invalidChangelog = "Invalid Changelog";
+        private String mapChanges = "Map Edit";
+        private String iconChanges = "Sprites";
+        private String workInProgress = "Work In Progress";
+        private String doNotMerge = "DO NOT MERGE";
+        private Map<String, String> labelsForClasses = new HashMap<>();
     }
 
     @ToString

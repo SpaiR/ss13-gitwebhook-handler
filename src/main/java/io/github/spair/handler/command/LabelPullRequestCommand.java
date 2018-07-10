@@ -53,7 +53,7 @@ public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
         Set<String> labelsToAdd = new HashSet<>();
 
         Map<String, String> labelsForClasses = configService
-                .getConfig().getGitHubConfig().getLabels().getLabelsForClasses();
+                .getConfig().getLabels().getLabelsForClasses();
         Set<String> changelogClasses = changelogService.getChangelogClassesList(pullRequest);
 
         changelogClasses.forEach(className -> {
@@ -90,11 +90,11 @@ public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
         List<String> labelsToAdd = new ArrayList<>();
 
         if (hasMapChanges) {
-            labelsToAdd.add(configService.getConfig().getGitHubConfig().getLabels().getMapChanges());
+            labelsToAdd.add(configService.getConfig().getLabels().getMapChanges());
         }
 
         if (hasIconChanges) {
-            labelsToAdd.add(configService.getConfig().getGitHubConfig().getLabels().getIconChanges());
+            labelsToAdd.add(configService.getConfig().getLabels().getIconChanges());
         }
 
         return labelsToAdd;
@@ -114,11 +114,11 @@ public class LabelPullRequestCommand implements HandlerCommand<PullRequest> {
         };
 
         if (isDNM) {
-            addLabelIfNotEmpty.accept(configService.getConfig().getGitHubConfig().getLabels().getDoNotMerge());
+            addLabelIfNotEmpty.accept(configService.getConfig().getLabels().getDoNotMerge());
         }
 
         if (isWIP) {
-            addLabelIfNotEmpty.accept(configService.getConfig().getGitHubConfig().getLabels().getWorkInProgress());
+            addLabelIfNotEmpty.accept(configService.getConfig().getLabels().getWorkInProgress());
         }
 
         return labelsToAdd;

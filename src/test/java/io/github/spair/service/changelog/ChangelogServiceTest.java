@@ -37,7 +37,7 @@ public class ChangelogServiceTest {
     @Before
     public void setUp() {
         service = new ChangelogService(configService);
-        when(configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog()).thenReturn("Invalid Changelog");
+        when(configService.getConfig().getLabels().getInvalidChangelog()).thenReturn("Invalid Changelog");
 
         ReflectionTestUtils.setField(service, "changelogGenerator", changelogGenerator);
         ReflectionTestUtils.setField(service, "htmlChangelogGenerator", htmlChangelogGenerator);

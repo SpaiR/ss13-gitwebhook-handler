@@ -35,7 +35,7 @@ public class ValidateChangelogCommandTest {
     @Before
     public void setUp() {
         command = new ValidateChangelogCommand(configService, changelogService, gitHubService);
-        when(configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog()).thenReturn("");
+        when(configService.getConfig().getLabels().getInvalidChangelog()).thenReturn("");
     }
 
     @Test

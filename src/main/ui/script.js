@@ -21,7 +21,7 @@ var controller = {
 
         // It would be better to place this in 'label-for-class-value' declaration,
         // but RivetsJs doesn't give ability to do it in a natural way, so now it's here.
-        delete config.gitHubConfig.labels.labelsForClasses[className];
+        delete config.labels.labelsForClasses[className];
     }
 }, config = {
     requestAgentName: '',
@@ -31,15 +31,15 @@ var controller = {
         organizationName: '',
         repositoryName: '',
         token: '',
-        secretKey: '',
-        labels: {
-            invalidChangelog: '',
-            mapChanges: '',
-            iconChanges: '',
-            workInProgress: '',
-            doNotMerge: '',
-            labelsForClasses: { }
-        }
+        secretKey: ''
+    },
+    labels: {
+        invalidChangelog: '',
+        mapChanges: '',
+        iconChanges: '',
+        workInProgress: '',
+        doNotMerge: '',
+        labelsForClasses: { }
     },
     changelogConfig: {
         pathToChangelog: '',
@@ -254,7 +254,7 @@ function initRivets() {
     rivets.binders['label-for-class-value'] = {
         routine: function(el, value) {
             this.className = value;
-            var labelsForClassesMap = config.gitHubConfig.labels.labelsForClasses;
+            var labelsForClassesMap = config.labels.labelsForClasses;
 
             if (labelsForClassesMap.hasOwnProperty(value)) {
                 el.value = labelsForClassesMap[value];
@@ -266,7 +266,7 @@ function initRivets() {
         bind: function(el) {
             var that = this;
             $(el).keyup(function() {
-                config.gitHubConfig.labels.labelsForClasses[that.className] = el.value;
+                config.labels.labelsForClasses[that.className] = el.value;
             });
         }
     };

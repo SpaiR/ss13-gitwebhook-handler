@@ -30,7 +30,7 @@ public class ValidateChangelogCommand implements HandlerCommand<PullRequest> {
 
     @Override
     public void execute(final PullRequest pullRequest) {
-        String invalidChangelogLabel = configService.getConfig().getGitHubConfig().getLabels().getInvalidChangelog();
+        String invalidChangelogLabel = configService.getConfig().getLabels().getInvalidChangelog();
         Optional<Changelog> changelog = changelogService.createFromPullRequest(pullRequest);
         int prNumber = pullRequest.getNumber();
 
