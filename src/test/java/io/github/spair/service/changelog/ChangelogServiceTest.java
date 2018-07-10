@@ -2,17 +2,14 @@ package io.github.spair.service.changelog;
 
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
-import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.internal.util.collections.Sets;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.Optional;
 import java.util.Set;
@@ -23,12 +20,10 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class ChangelogServiceTest {
 
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private ConfigService configService;
-    @Mock
-    private ChangelogGenerator changelogGenerator;
     @Mock
     private HtmlChangelogGenerator htmlChangelogGenerator;
+    @Mock
+    private ChangelogGenerator changelogGenerator;
     @Mock
     private ChangelogValidator changelogValidator;
 
@@ -36,12 +31,7 @@ public class ChangelogServiceTest {
 
     @Before
     public void setUp() {
-        service = new ChangelogService(configService);
-        when(configService.getConfig().getLabels().getInvalidChangelog()).thenReturn("Invalid Changelog");
-
-        ReflectionTestUtils.setField(service, "changelogGenerator", changelogGenerator);
-        ReflectionTestUtils.setField(service, "htmlChangelogGenerator", htmlChangelogGenerator);
-        ReflectionTestUtils.setField(service, "changelogValidator", changelogValidator);
+        service = new ChangelogService(htmlChangelogGenerator, changelogValidator, changelogGenerator);
     }
 
     @Test

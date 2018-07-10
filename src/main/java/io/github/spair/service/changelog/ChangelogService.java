@@ -3,7 +3,6 @@ package io.github.spair.service.changelog;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
 import io.github.spair.service.changelog.entity.ChangelogValidationStatus;
-import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +20,13 @@ public class ChangelogService {
     private final ChangelogGenerator changelogGenerator;
 
     @Autowired
-    public ChangelogService(final ConfigService configService) {
-        this.htmlChangelogGenerator = new HtmlChangelogGenerator(configService);
-        this.changelogValidator = new ChangelogValidator(configService);
-        this.changelogGenerator = new ChangelogGenerator();
+    public ChangelogService(
+            final HtmlChangelogGenerator htmlChangelogGenerator,
+            final ChangelogValidator changelogValidator,
+            final ChangelogGenerator changelogGenerator) {
+        this.htmlChangelogGenerator = htmlChangelogGenerator;
+        this.changelogValidator = changelogValidator;
+        this.changelogGenerator = changelogGenerator;
     }
 
     public Optional<Changelog> createFromPullRequest(final PullRequest pullRequest) {

@@ -3,6 +3,7 @@ package io.github.spair.service.changelog;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
 import io.github.spair.service.pr.entity.PullRequest;
+import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 final class ChangelogGenerator {
 
     private static final Pattern CL_TEXT = Pattern.compile(":cl:((?:.|\\n|\\r)*+)|\uD83C\uDD91((?:.|\\n|\\r)*+)");

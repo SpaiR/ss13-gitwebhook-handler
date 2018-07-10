@@ -4,18 +4,22 @@ import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
 import io.github.spair.service.changelog.entity.ChangelogValidationStatus;
 import io.github.spair.service.config.ConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 final class ChangelogValidator {
 
     private final ConfigService configService;
 
     private static final String CODE_QUOTE = "`";
 
+    @Autowired
     ChangelogValidator(final ConfigService configService) {
         this.configService = configService;
     }
