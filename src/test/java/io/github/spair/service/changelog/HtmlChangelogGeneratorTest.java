@@ -1,8 +1,8 @@
 package io.github.spair.service.changelog;
 
+import io.github.spair.TimeService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
-import io.github.spair.service.config.ConfigService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,9 +11,6 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -23,19 +20,13 @@ import static org.mockito.Mockito.when;
 public class HtmlChangelogGeneratorTest {
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private ConfigService configService;
-    private String currentDate;
-
+    private TimeService timeService;
     private HtmlChangelogGenerator generator;
 
     @Before
     public void setUp() {
-        generator = new HtmlChangelogGenerator(configService);
-        when(configService.getConfig().getTimeZone()).thenReturn("Europe/Moscow");
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.YYYY");
-        ZoneId zoneId = ZoneId.of("Europe/Moscow");
-        currentDate = LocalDate.now(zoneId).format(formatter);
+        generator = new HtmlChangelogGenerator(timeService);
+        when(timeService.getCurrentDate()).thenReturn("mocked date");
     }
 
     @Test
@@ -68,9 +59,9 @@ public class HtmlChangelogGeneratorTest {
                 " <head></head>\n" +
                 " <body>\n" +
                 "  <div id=\"changelogs\">\n" +
-                "   <div class=\"row\" data-date=\"" + currentDate + "\">\n" +
+                "   <div class=\"row\" data-date=\"mocked date\">\n" +
                 "    <div class=\"col-lg-12\">\n" +
-                "     <h3 class=\"date\">" + currentDate + "</h3>\n" +
+                "     <h3 class=\"date\">mocked date</h3>\n" +
                 "     <div data-author=\"Author Name\">\n" +
                 "      <h4 class=\"author\">Author Name:</h4>\n" +
                 "      <ul class=\"changelog\">\n" +

@@ -1,25 +1,20 @@
 package io.github.spair.service.changelog;
 
+import io.github.spair.TimeService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
-import io.github.spair.service.config.ConfigService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
 final class HtmlChangelogGenerator {
 
-    private final ConfigService configService;
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.YYYY");
+    private final TimeService timeService;
 
     private static final String LARGE_COLUMN = "col-lg-12";
 
@@ -40,16 +35,14 @@ final class HtmlChangelogGenerator {
     private static final String READ_MORE = "<a class=\"btn btn-xs btn-success link-btn\" href=\"$1\">Read More</a>";
 
     @Autowired
-    HtmlChangelogGenerator(final ConfigService configService) {
-        this.configService = configService;
+    HtmlChangelogGenerator(final TimeService timeService) {
+        this.timeService = timeService;
     }
 
     String generate(final String currentChangelogHtml, final Changelog newChangelog) {
         Document parsedChangelog = Jsoup.parse(currentChangelogHtml);
         Element currentChangelogs = parsedChangelog.getElementById(CHANGELOGS_ID);
-
-        ZoneId zoneId = ZoneId.of(configService.getConfig().getTimeZone());
-        String currentDate = LocalDate.now(zoneId).format(FORMATTER);
+        String currentDate = timeService.getCurrentDate();
 
         Element currentDateElement = getCurrentDateElement(currentChangelogs, currentDate);
 
