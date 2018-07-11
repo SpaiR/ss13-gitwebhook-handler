@@ -37,6 +37,10 @@ public class RemoveTestChangelogCommand implements HandlerCommand<PullRequest> {
         String currentChangelogHtml = gitHubService.readDecodedFile(changelogPath);
         String newChangelogHtml = changelogService.removeTestChangelogFromHtml(currentChangelogHtml, prNumber);
 
+        if (currentChangelogHtml.equals(newChangelogHtml)) {
+            return;
+        }
+
         String updateMessage = "Remove test merge changelog for PR #" + pullRequest.getNumber();
         gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);
 
