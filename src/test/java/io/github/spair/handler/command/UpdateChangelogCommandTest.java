@@ -49,7 +49,7 @@ public class UpdateChangelogCommandTest {
         verify(configService.getConfig().getChangelogConfig()).getPathToChangelog();
         verify(gitHubService).readDecodedFile(anyString());
         verify(changelogService).mergeHtmlWithChangelog(anyString(), eq(changelog));
-        verify(gitHubService).updateFile(anyString(), eq("Automatic changelog generation for PR #123"), anyString());
+        verify(gitHubService).updateFile(anyString(), anyString(), anyString());
     }
 
     @Test
@@ -64,6 +64,6 @@ public class UpdateChangelogCommandTest {
         verify(configService.getConfig().getChangelogConfig(), never()).getPathToChangelog();
         verify(gitHubService, never()).readDecodedFile(anyString());
         verify(changelogService, never()).mergeHtmlWithChangelog(anyString(), eq(changelog));
-        verify(gitHubService, never()).updateFile(anyString(), eq("Automatic changelog generation for PR #123"), anyString());
+        verify(gitHubService, never()).updateFile(anyString(), anyString(), anyString());
     }
 }

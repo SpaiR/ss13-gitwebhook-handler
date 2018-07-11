@@ -2,16 +2,13 @@ package io.github.spair;
 
 import io.github.spair.service.config.ConfigService;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
 
 public class TimeServiceTest {
 

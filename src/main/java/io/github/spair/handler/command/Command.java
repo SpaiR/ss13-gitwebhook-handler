@@ -11,7 +11,8 @@ public enum Command {
     REPORT_DMI_DIFF(ReportDmiDiffCommand.class),
     REPORT_DMM_DIFF(ReportDmmDiffCommand.class),
     DELETE_PULL_REQUEST_REPO(DeletePullRequestRepoCommand.class),
-    ADD_TEST_CHANGELOG(AddTestChangelogCommand.class);
+    ADD_TEST_CHANGELOG(AddTestChangelogCommand.class),
+    REMOVE_TEST_CHANGELOG(RemoveTestChangelogCommand.class);
 
     private final Class classOfCommand;
 

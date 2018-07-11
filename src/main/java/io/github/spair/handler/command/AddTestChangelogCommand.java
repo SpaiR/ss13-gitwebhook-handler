@@ -48,6 +48,8 @@ public class AddTestChangelogCommand implements HandlerCommand<PullRequest> {
     private boolean checkPullRequest(final PullRequest pullRequest) {
         String testMergeLabel = configService.getConfig().getLabels().getTestMerge();
         Set<String> masterUsers = configService.getConfig().getGitHubConfig().getMasterUsers();
-        return masterUsers.contains(pullRequest.getSender()) && pullRequest.getTouchedLabel().equals(testMergeLabel);
+        String sender = pullRequest.getSender();
+        String touchedLabel = pullRequest.getTouchedLabel();
+        return masterUsers.contains(sender) && touchedLabel.equals(testMergeLabel);
     }
 }

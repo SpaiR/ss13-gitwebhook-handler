@@ -32,29 +32,32 @@ public class AddTestChangelogCommandTest {
 
     private AddTestChangelogCommand command;
 
+    private static final String TESTMERGE = "testmerge";
+    private static final String MASTER = "master";
+
     @Before
     public void setUp() {
         command = new AddTestChangelogCommand(configService, changelogService, gitHubService);
-        when(configService.getConfig().getGitHubConfig().getMasterUsers()).thenReturn(Sets.newSet("master"));
-        when(configService.getConfig().getLabels().getTestMerge()).thenReturn("testmerge");
+        when(configService.getConfig().getGitHubConfig().getMasterUsers()).thenReturn(Sets.newSet(MASTER));
+        when(configService.getConfig().getLabels().getTestMerge()).thenReturn(TESTMERGE);
     }
 
     @Test
     public void testExecuteWhenNotMasterUser() {
-        command.execute(PullRequest.builder().sender("noname").build());
+        command.execute(PullRequest.builder().sender("noname").touchedLabel(TESTMERGE).build());
         verifyNeverUpdate();
     }
 
     @Test
     public void testExecuteWhenNotTestMergeLabel() {
-        command.execute(PullRequest.builder().sender("master").touchedLabel("").build());
+        command.execute(PullRequest.builder().sender(MASTER).touchedLabel("").build());
         verifyNeverUpdate();
     }
 
     @Test
     public void testExecuteWhenNoChangelog() {
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(Optional.empty());
-        command.execute(PullRequest.builder().sender("master").touchedLabel("testmerge").build());
+        command.execute(PullRequest.builder().sender(MASTER).touchedLabel(TESTMERGE).build());
         verifyNeverUpdate();
     }
 
@@ -64,7 +67,7 @@ public class AddTestChangelogCommandTest {
         when(changelog.isEmpty()).thenReturn(true);
         when(changelogService.createFromPullRequest(any(PullRequest.class))).thenReturn(Optional.of(changelog));
 
-        command.execute(PullRequest.builder().sender("master").touchedLabel("testmerge").build());
+        command.execute(PullRequest.builder().sender(MASTER).touchedLabel(TESTMERGE).build());
 
         verifyNeverUpdate();
     }
@@ -92,6 +95,6 @@ public class AddTestChangelogCommandTest {
         verify(configService.getConfig().getChangelogConfig(), never()).getPathToChangelog();
         verify(gitHubService, never()).readDecodedFile(anyString());
         verify(changelogService, never()).mergeHtmlWithChangelog(anyString(), any(Changelog.class));
-        verify(gitHubService, never()).updateFile(anyString(), eq("Automatic changelog generation for PR #123"), anyString());
+        verify(gitHubService, never()).updateFile(anyString(), anyString(), anyString());
     }
 }
