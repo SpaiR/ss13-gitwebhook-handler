@@ -24,9 +24,12 @@ public class ChangelogGeneratorTest {
                 " - entry2: value 2.\n" +
                 " - entry3[link]: Value 3";
 
-        PullRequest pullRequest = PullRequest.builder().author("Author Name").body(bodyText).link("pr-link").build();
+        PullRequest pullRequest = PullRequest.builder().author("Author Name").body(bodyText).link("pr-link").number(123).build();
         Changelog changelog = changelogGenerator.generate(pullRequest).get();
         List<ChangelogRow> changelogRows = changelog.getChangelogRows();
+
+        assertEquals("pr-link", changelog.getPullRequestLink());
+        assertEquals(123, changelog.getPullRequestNumber());
 
         assertEquals("Custom author", changelog.getAuthor());
 
@@ -46,9 +49,12 @@ public class ChangelogGeneratorTest {
                 ":cl:\n" +
                 "- entry: Value!\n";
 
-        PullRequest pullRequest = PullRequest.builder().author("Author Name").body(bodyText).build();
+        PullRequest pullRequest = PullRequest.builder().author("Author Name").link("pr-link").number(123).body(bodyText).build();
         Changelog changelog = changelogGenerator.generate(pullRequest).get();
         List<ChangelogRow> changelogRows = changelog.getChangelogRows();
+
+        assertEquals("pr-link", changelog.getPullRequestLink());
+        assertEquals(123, changelog.getPullRequestNumber());
 
         assertEquals("Author Name", changelog.getAuthor());
 

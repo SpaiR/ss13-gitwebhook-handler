@@ -8,6 +8,8 @@ import java.util.List;
 public class Changelog {
 
     private String author;
+    private String pullRequestLink;
+    private int pullRequestNumber;
     private List<ChangelogRow> changelogRows;
 
     public boolean isEmpty() {

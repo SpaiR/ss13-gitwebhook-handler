@@ -1,5 +1,6 @@
 package io.github.spair.service.changelog;
 
+import io.github.spair.ResourceHelper;
 import io.github.spair.TimeService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
@@ -11,6 +12,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +32,42 @@ public class HtmlChangelogGeneratorTest {
     }
 
     @Test
-    public void testMergeHtmlWithChangelog() {
+    public void testMergeHtmlWithChangelogFromEmpty() {
+        String resultHtml = generator.mergeHtmlWithChangelog("<div id=\"changelogs\"></div>", createChangelog());
+        String assertHtml = readChangelog("changelog-general-from-empty.txt");
+
+        assertEquals(assertHtml, resultHtml);
+    }
+
+    @Test
+    public void testMergeHtmlWithChangelogFromFull() {
+        String changelogTmpl = readChangelog("changelog-general-template.txt");
+
+        String resultHtml = generator.mergeHtmlWithChangelog(changelogTmpl, createChangelog());
+        String assertHtml = readChangelog("changelog-general-from-full.txt");
+
+        assertEquals(assertHtml, resultHtml);
+    }
+
+    @Test
+    public void testAddTestChangelogToHtmlFromEmpty() {
+        String resultHtml = generator.addTestChangelogToHtml("<div id=\"tm-changelogs\"></div>", createChangelog());
+        String assertHtml = readChangelog("changelog-test-from-empty.txt");
+
+        assertEquals(assertHtml, resultHtml);
+    }
+
+    @Test
+    public void testAddTestChangelogToHtmlFromFull() {
+        String changelogTmpl = readChangelog("changelog-test-template.txt");
+
+        String resultHtml = generator.addTestChangelogToHtml(changelogTmpl, createChangelog());
+        String assertHtml = readChangelog("changelog-test-from-full.txt");
+
+        assertEquals(assertHtml, resultHtml);
+    }
+
+    private Changelog createChangelog() {
         ChangelogRow changelogRow1 = new ChangelogRow();
         changelogRow1.setChanges("Some changes.");
         changelogRow1.setClassName("entry1");
@@ -50,33 +87,15 @@ public class HtmlChangelogGeneratorTest {
         List<ChangelogRow> changelogRows = Lists.newArrayList(changelogRow1, changelogRow2, changelogRow3, changelogRow4);
 
         Changelog changelog = new Changelog();
+        changelog.setPullRequestNumber(748);
+        changelog.setPullRequestLink("mocked-link");
         changelog.setAuthor("Author Name");
         changelog.setChangelogRows(changelogRows);
 
-        String resultHtml = generator.mergeHtmlWithChangelog("<div id=\"changelogs\"></div>", changelog);
-        String assertHtml =
-                "<html>\n" +
-                " <head></head>\n" +
-                " <body>\n" +
-                "  <div id=\"changelogs\">\n" +
-                "   <div class=\"row\" data-date=\"mocked date\">\n" +
-                "    <div class=\"col-lg-12\">\n" +
-                "     <h3 class=\"date\">mocked date</h3>\n" +
-                "     <div data-author=\"Author Name\">\n" +
-                "      <h4 class=\"author\">Author Name:</h4>\n" +
-                "      <ul class=\"changelog\">\n" +
-                "       <li class=\"entry1\">Some changes.</li>\n" +
-                "       <li class=\"entry2\">Another changes.</li>\n" +
-                "       <li class=\"entry3\">Linked changes. <a class=\"btn btn-xs btn-success link-btn\" href=\"link-to-pr\">Read More</a></li>\n" +
-                "       <li class=\"entry4\">Changes with... <a class=\"btn btn-xs btn-success link-btn\" href=\"some-link\">Read More</a> ... link.</li>\n" +
-                "      </ul>\n" +
-                "     </div>\n" +
-                "    </div>\n" +
-                "   </div>\n" +
-                "  </div>\n" +
-                " </body>\n" +
-                "</html>";
+        return changelog;
+    }
 
-        assertEquals(assertHtml, resultHtml);
+    private String readChangelog(final String name) {
+        return ResourceHelper.readFile("data" + File.separator + name);
     }
 }

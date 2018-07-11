@@ -25,6 +25,8 @@ final class ChangelogGenerator {
 
         if (!changelogText.isEmpty()) {
             changelog = parseChangelog(changelogText);
+            changelog.setPullRequestLink(pullRequest.getLink());
+            changelog.setPullRequestNumber(pullRequest.getNumber());
             prepareChangelog(changelog, pullRequest);
         }
 
