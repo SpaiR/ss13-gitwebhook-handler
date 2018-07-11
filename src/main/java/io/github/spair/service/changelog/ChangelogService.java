@@ -38,7 +38,7 @@ public class ChangelogService {
     }
 
     public String mergeHtmlWithChangelog(final String html, final Changelog changelog) {
-        return htmlChangelogGenerator.generate(html, changelog);
+        return htmlChangelogGenerator.mergeHtmlWithChangelog(html, changelog);
     }
 
     public Set<String> getChangelogClassesList(final PullRequest pullRequest) {

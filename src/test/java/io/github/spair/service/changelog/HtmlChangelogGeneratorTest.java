@@ -30,7 +30,7 @@ public class HtmlChangelogGeneratorTest {
     }
 
     @Test
-    public void testGenerate() {
+    public void testMergeHtmlWithChangelog() {
         ChangelogRow changelogRow1 = new ChangelogRow();
         changelogRow1.setChanges("Some changes.");
         changelogRow1.setClassName("entry1");
@@ -53,7 +53,7 @@ public class HtmlChangelogGeneratorTest {
         changelog.setAuthor("Author Name");
         changelog.setChangelogRows(changelogRows);
 
-        String resultHtml = generator.generate("<div id=\"changelogs\"></div>", changelog);
+        String resultHtml = generator.mergeHtmlWithChangelog("<div id=\"changelogs\"></div>", changelog);
         String assertHtml =
                 "<html>\n" +
                 " <head></head>\n" +

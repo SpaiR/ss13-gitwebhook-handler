@@ -53,7 +53,7 @@ public class ChangelogServiceTest {
         String html = "";
         Changelog changelog = mock(Changelog.class);
         service.mergeHtmlWithChangelog(html, changelog);
-        verify(htmlChangelogGenerator).generate(html, changelog);
+        verify(htmlChangelogGenerator).mergeHtmlWithChangelog(html, changelog);
     }
 
     @Test

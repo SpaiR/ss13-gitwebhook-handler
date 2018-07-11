@@ -39,7 +39,7 @@ final class HtmlChangelogGenerator {
         this.timeService = timeService;
     }
 
-    String generate(final String currentChangelogHtml, final Changelog newChangelog) {
+    String mergeHtmlWithChangelog(final String currentChangelogHtml, final Changelog newChangelog) {
         Document parsedChangelog = Jsoup.parse(currentChangelogHtml);
         Element currentChangelogs = parsedChangelog.getElementById(CHANGELOGS_ID);
         String currentDate = timeService.getCurrentDate();
