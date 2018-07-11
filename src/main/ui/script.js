@@ -242,6 +242,7 @@ function initDmmBot() {
     })();
 
     $initMasterBtn.click(function() {
+        $initMasterDone.hide();
         $initMasterFail.hide();
         $initMasterProcess.show();
         toggleCleanBtn(false);
