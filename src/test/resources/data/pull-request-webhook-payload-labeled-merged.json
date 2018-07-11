@@ -313,6 +313,14 @@
     "deletions": 1,
     "changed_files": 1
   },
+  "label": {
+    "id": 720922033,
+    "node_id": "MDU6TGFiZWw3MjA5MjIwMzM=",
+    "url": "https://api.github.com/repos/baxterthehacker/public-repo/labels/label%20name",
+    "name": "label name",
+    "color": "fbca04",
+    "default": false
+  },
   "repository": {
     "id": 35129377,
     "name": "public-repo",

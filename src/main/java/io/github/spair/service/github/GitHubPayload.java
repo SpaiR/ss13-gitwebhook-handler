@@ -26,6 +26,8 @@ public final class GitHubPayload {
     public static final String HEAD = "head";
     public static final String REF = "ref";
     public static final String LABELS = "labels";
+    public static final String LABEL = "label";
+    public static final String SENDER = "sender";
 
     private GitHubPayload() {
     }

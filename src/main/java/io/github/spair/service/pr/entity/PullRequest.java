@@ -22,4 +22,6 @@ public class PullRequest {
     private String diffLink;
     private String body;
     private Set<String> labels;
+    private String sender;
+    private String touchedLabel;
 }

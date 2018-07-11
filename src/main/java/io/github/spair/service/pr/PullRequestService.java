@@ -26,10 +26,13 @@ public class PullRequestService {
         String diffLink = pullRequestNode.get(GitHubPayload.DIFF_URL).asText();
         String body = pullRequestNode.get(GitHubPayload.BODY).asText();
         Set<String> labels = extractLabels(pullRequestNode);
+        String sender = webhookJson.get(GitHubPayload.SENDER).get(GitHubPayload.LOGIN).asText();
+        String touchedLabel = extractTouchedLabel(webhookJson);
 
         return PullRequest.builder()
                 .author(author).branchName(branchName).number(number)
                 .title(title).type(type).link(link).diffLink(diffLink).body(body).labels(labels)
+                .sender(sender).touchedLabel(touchedLabel)
                 .build();
     }
 
@@ -48,5 +51,12 @@ public class PullRequestService {
         Set<String> labels = new HashSet<>();
         pullRequestNode.get(GitHubPayload.LABELS).forEach(label -> labels.add(label.get(GitHubPayload.NAME).asText()));
         return labels;
+    }
+
+    private String extractTouchedLabel(final ObjectNode webjookJson) {
+        if (webjookJson.has(GitHubPayload.LABEL)) {
+            return webjookJson.get(GitHubPayload.LABEL).get(GitHubPayload.NAME).asText();
+        }
+        return "";
     }
 }
