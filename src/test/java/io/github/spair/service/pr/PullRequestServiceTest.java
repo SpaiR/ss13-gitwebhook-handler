@@ -93,7 +93,7 @@ public class PullRequestServiceTest {
         PullRequest expectedPullRequest = PullRequest.builder()
                 .author("baxterthehacker").number(1).title("Update the README with new information").type(PullRequestType.UNDEFINED).branchName("changes")
                 .link("https://github.com/baxterthehacker/public-repo/pull/1").diffLink("https://github.com/baxterthehacker/public-repo/pull/1.diff")
-                .sender("baxterthehacker").touchedLabel("label name")
+                .sender("baxterthehacker").touchedLabel("label name").type(PullRequestType.LABELED)
                 .body("This is a pretty simple change that we need to pull into master.").labels(Sets.newLinkedHashSet("label")).build();
 
         assertEquals(expectedPullRequest, service.convertWebhookJson(pullRequestPayload));

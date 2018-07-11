@@ -24,7 +24,7 @@ final class HtmlChangelogGenerator {
     private static final String DATA_PR = "data-pr";
 
     private static final String CHANGELOGS_ID = "changelogs";
-    private static final String TEST_MERGE_CHANGELOG_ID = "tm-changelogs";
+    private static final String TM_CHANGELOGS_ID = "tm-changelogs";
 
     private static final String CHANGELOG_CLASS = "changelog";
     private static final String CHANGELOG_ELEMENT_TEMPLATE = "<li class=\"%s\">%s</li>";
@@ -32,7 +32,7 @@ final class HtmlChangelogGenerator {
     private static final String TM_ROW =
             "<div class=\"row\">"
           +   "<div class=\"col-lg-12\">"
-          +     "<h3 class=\"row__header\">Test Merge:</h3>"
+          +     "<h3 class=\"row-header\">Test Merge:</h3>"
           +   "</div>"
           + "</div>";
     private static final String TM_COLUMN_TEMPLATE =
@@ -44,7 +44,7 @@ final class HtmlChangelogGenerator {
     private static final String DATE_ROW_TEMPLATE = "<div class=\"row\" data-date=\"%s\"></div>";
     private static final String DATE_ELEMENT_TEMPLATE =
             "<div class=\"col-lg-12\">"
-          +   "<h3 class=\"row__header\">%s</h3>"
+          +   "<h3 class=\"row-header\">%s</h3>"
           + "</div>";
 
     private static final String AUTHOR_COLUMN_TEMPLATE = "<div data-author=\"%s\"></div>";
@@ -81,7 +81,7 @@ final class HtmlChangelogGenerator {
 
     String addTestChangelogToHtml(final String html, final Changelog testChangelog) {
         Document parsedChangelog = Jsoup.parse(html);
-        Element testChangelogs = parsedChangelog.getElementById(TEST_MERGE_CHANGELOG_ID);
+        Element testChangelogs = parsedChangelog.getElementById(TM_CHANGELOGS_ID);
 
         if (testChangelogs.childNodes().isEmpty()) {
             testChangelogs.append(TM_ROW);
@@ -103,7 +103,7 @@ final class HtmlChangelogGenerator {
 
     String removeTestChangelogFromHtml(final String html, final int prNumber) {
         Document parsedChangelog = Jsoup.parse(html);
-        Element testChangelogs = parsedChangelog.getElementById(TEST_MERGE_CHANGELOG_ID);
+        Element testChangelogs = parsedChangelog.getElementById(TM_CHANGELOGS_ID);
 
         if (testChangelogs.childNodes().isEmpty()) {
             return html;

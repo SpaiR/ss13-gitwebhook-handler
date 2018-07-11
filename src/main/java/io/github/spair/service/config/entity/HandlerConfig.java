@@ -36,6 +36,7 @@ public class HandlerConfig {
         private String repositoryName = "Repo Name";
         private String token = "12345";
         private String secretKey = "12345";
+        private Set<String> masterUsers = new HashSet<>();
     }
 
     @ToString
@@ -47,6 +48,7 @@ public class HandlerConfig {
         private String iconChanges = "Sprites";
         private String workInProgress = "Work In Progress";
         private String doNotMerge = "DO NOT MERGE";
+        private String testMerge = "Test Merge";
         private Map<String, String> labelsForClasses = new HashMap<>();
     }
 

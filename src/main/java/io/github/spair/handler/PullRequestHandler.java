@@ -38,6 +38,9 @@ public class PullRequestHandler extends AbstractHandler<PullRequest> implements 
             case SYNCHRONIZE:
                 commands = wrapCommands(Command.REPORT_DMI_DIFF, Command.REPORT_DMM_DIFF);
                 break;
+            case LABELED:
+                commands = wrapCommands(Command.ADD_TEST_CHANGELOG);
+                break;
             case EDITED:
                 commands = wrapCommands(Command.VALIDATE_CHANGELOG);
                 break;

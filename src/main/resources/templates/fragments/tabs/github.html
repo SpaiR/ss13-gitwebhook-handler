@@ -31,6 +31,26 @@
                         <label for="secret-key" class="mdl-textfield__label">Secret Key</label>
                     </div>
 
+                    <br/>
+
+                    <h6 class="tab-content__header">Master Users:</h6>
+
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input id="add-master-user-field" class="mdl-textfield__input">
+                        <label for="add-master-user-field" class="mdl-textfield__label">Add user</label>
+                        <button id="add-master-user-button" class="mdl-button mdl-button--right mdl-js-button mdl-button--icon mdl-button--colored">
+                            <i class="material-icons">add</i>
+                        </button>
+                    </div>
+
+                    <ul class="classes-list mdl-list">
+                        <li rv-each-item="config.gitHubConfig.masterUsers" class="mdl-list__item classes-list__item">
+                            <button id="remove-master-user-button" rv-on-click="ctrl.removeMasterUser" class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent">
+                                <i class="material-icons">clear</i>
+                            </button>
+                            &nbsp;{item}
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>

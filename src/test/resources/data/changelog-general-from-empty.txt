@@ -4,7 +4,7 @@
   <div id="changelogs">
    <div class="row" data-date="mocked date">
     <div class="col-lg-12">
-     <h3 class="row__header">mocked date</h3>
+     <h3 class="row-header">mocked date</h3>
      <div data-author="Author Name">
       <h4 class="author">Author Name:</h4>
       <ul class="changelog">

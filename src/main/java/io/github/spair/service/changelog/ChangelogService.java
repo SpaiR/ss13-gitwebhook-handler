@@ -41,6 +41,14 @@ public class ChangelogService {
         return htmlChangelogGenerator.mergeHtmlWithChangelog(html, changelog);
     }
 
+    public String addTestChangelogToHtml(final String html, final Changelog changelog) {
+        return htmlChangelogGenerator.addTestChangelogToHtml(html, changelog);
+    }
+
+    public String removeTestChangelogFromHtml(final String html, final int prNumber) {
+        return htmlChangelogGenerator.removeTestChangelogFromHtml(html, prNumber);
+    }
+
     public Set<String> getChangelogClassesList(final PullRequest pullRequest) {
         Optional<Changelog> changelog = changelogGenerator.generate(pullRequest);
 

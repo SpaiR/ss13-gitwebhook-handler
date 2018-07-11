@@ -22,6 +22,13 @@ var controller = {
         // It would be better to place this in 'label-for-class-value' declaration,
         // but RivetsJs doesn't give ability to do it in a natural way, so now it's here.
         delete config.labels.labelsForClasses[className];
+    },
+
+    removeMasterUser: function(event, rivetsBinding) {
+        var userName = rivetsBinding.item,
+            usersArray = config.gitHubConfig.masterUsers;
+
+        usersArray.splice(usersArray.indexOf(userName), 1);
     }
 }, config = {
     requestAgentName: '',
@@ -31,7 +38,8 @@ var controller = {
         organizationName: '',
         repositoryName: '',
         token: '',
-        secretKey: ''
+        secretKey: '',
+        masterUsers: [ ]
     },
     labels: {
         invalidChangelog: '',
@@ -39,6 +47,7 @@ var controller = {
         iconChanges: '',
         workInProgress: '',
         doNotMerge: '',
+        testMerge: '',
         labelsForClasses: { }
     },
     changelogConfig: {
@@ -150,6 +159,18 @@ $(document).ready(function() {
             addClassAction();
         }
     });
+
+
+    $('#add-master-user-button').click(function() {
+        addMasterUserAction();
+    });
+
+    $('#add-master-user-field').keypress(function(e) {
+        // React on 'enter' button.
+        if (e.which === 13) {
+            addMasterUserAction();
+        }
+    });
 });
 
 function toggleSaveButton(isEnable) {
@@ -157,18 +178,25 @@ function toggleSaveButton(isEnable) {
 }
 
 function addClassAction() {
-    var $addClassField = $('#add-class-field'),
-        fieldValue = $addClassField.val(),
-        classesArray = config.changelogConfig.html.availableClasses;
+    addFieldValueToArray('#add-class-field', config.changelogConfig.html.availableClasses);
+}
+
+function addMasterUserAction() {
+    addFieldValueToArray('#add-master-user-field', config.gitHubConfig.masterUsers);
+}
+
+function addFieldValueToArray(fieldSelector, arrayToAdd) {
+    var $addField = $(fieldSelector),
+        fieldValue = $addField.val();
 
     if (fieldValue.length > 0) {
-        if (classesArray.indexOf(fieldValue) !== -1) {
-            showToast('Class "' + fieldValue + '" already present in the list!');
+        if (arrayToAdd.indexOf(fieldValue) !== -1) {
+            showToast('Item "' + fieldValue + '" already present in the list!');
         } else {
-            classesArray.push(fieldValue);
+            arrayToAdd.push(fieldValue);
 
-            $addClassField.val('');
-            $addClassField.parent().get(0).MaterialTextfield.checkDirty();
+            $addField.val('');
+            $addField.parent().get(0).MaterialTextfield.checkDirty();
         }
     }
 }
