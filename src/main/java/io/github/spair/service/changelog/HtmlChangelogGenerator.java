@@ -36,10 +36,10 @@ final class HtmlChangelogGenerator {
           +   "</div>"
           + "</div>";
     private static final String TM_COLUMN_TEMPLATE =
-              "<div data-pr=\"%d\">"
-            +   "<h4 class=\"author\">%s, <a href=\"%s\">PR #%d</a></h4>"
-            +   "<ul class=\"changelog\"></ul>"
-            + "</div>";
+            "<div data-pr=\"%d\">"
+          +   "<h4 class=\"author\">%s, <a href=\"%s\">PR #%d</a></h4>"
+          +   "<ul class=\"changelog\"></ul>"
+          + "</div>";
 
     private static final String DATE_ROW_TEMPLATE = "<div class=\"row\" data-date=\"%s\"></div>";
     private static final String DATE_ELEMENT_TEMPLATE =
@@ -81,13 +81,13 @@ final class HtmlChangelogGenerator {
 
     String addTestChangelogToHtml(final String html, final Changelog testChangelog) {
         Document parsedChangelog = Jsoup.parse(html);
-        Element currentChangelogs = parsedChangelog.getElementById(TEST_MERGE_CHANGELOG_ID);
+        Element testChangelogs = parsedChangelog.getElementById(TEST_MERGE_CHANGELOG_ID);
 
-        if (currentChangelogs.childNodes().isEmpty()) {
-            currentChangelogs.append(TM_ROW);
+        if (testChangelogs.childNodes().isEmpty()) {
+            testChangelogs.append(TM_ROW);
         }
 
-        Element columnAddTo = currentChangelogs.getElementsByClass(COL_LARGE).first();
+        Element columnAddTo = testChangelogs.getElementsByClass(COL_LARGE).first();
 
         int prNumber = testChangelog.getPullRequestNumber();
         String author = testChangelog.getAuthor();
@@ -97,6 +97,26 @@ final class HtmlChangelogGenerator {
 
         Element elementToAddChangelogRows = getPrElement(columnAddTo, prNumber);
         addChangelogRows(testChangelog.getChangelogRows(), elementToAddChangelogRows);
+
+        return cleanHtml(parsedChangelog.toString());
+    }
+
+    String removeTestChangelogFromHtml(final String html, final int prNumber) {
+        Document parsedChangelog = Jsoup.parse(html);
+        Element testChangelogs = parsedChangelog.getElementById(TEST_MERGE_CHANGELOG_ID);
+
+        if (testChangelogs.childNodes().isEmpty()) {
+            return html;
+        }
+
+        Element elementToRemove = getPrElement(testChangelogs, prNumber);
+        if (elementToRemove != null) {
+            elementToRemove.remove();
+        }
+
+        if (testChangelogs.getElementsByAttribute(DATA_PR).isEmpty()) {
+            testChangelogs.empty();
+        }
 
         return cleanHtml(parsedChangelog.toString());
     }

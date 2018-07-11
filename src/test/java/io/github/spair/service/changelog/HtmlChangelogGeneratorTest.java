@@ -67,6 +67,26 @@ public class HtmlChangelogGeneratorTest {
         assertEquals(assertHtml, resultHtml);
     }
 
+    @Test
+    public void testRemoveTestChangelogFromHtmlFromEmpty() {
+        String changelogTmpl = readChangelog("changelog-test-template.txt");
+
+        String resultHtml = generator.removeTestChangelogFromHtml(changelogTmpl, 543);
+        String assertHtml = readChangelog("changelog-test-empty.txt");
+
+        assertEquals(assertHtml, resultHtml);
+    }
+
+    @Test
+    public void testRemoveTestChangelogFromHtmlFromFull() {
+        String changelogTmpl = readChangelog("changelog-test-from-full.txt");
+
+        String resultHtml = generator.removeTestChangelogFromHtml(changelogTmpl, 748);
+        String assertHtml = readChangelog("changelog-test-template.txt");
+
+        assertEquals(assertHtml, resultHtml);
+    }
+
     private Changelog createChangelog() {
         ChangelogRow changelogRow1 = new ChangelogRow();
         changelogRow1.setChanges("Some changes.");
