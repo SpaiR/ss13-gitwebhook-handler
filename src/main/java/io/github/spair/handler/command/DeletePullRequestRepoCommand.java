@@ -3,7 +3,9 @@ package io.github.spair.handler.command;
 import io.github.spair.service.github.GitHubRepository;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DeletePullRequestRepoCommand implements HandlerCommand<PullRequest> {
 
     private final GitHubRepository gitHubRepository;

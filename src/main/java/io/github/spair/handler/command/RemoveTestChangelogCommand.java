@@ -6,9 +6,11 @@ import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.pr.entity.PullRequestType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Set;
 
+@Component
 public class RemoveTestChangelogCommand implements HandlerCommand<PullRequest> {
 
     private final ConfigService configService;
