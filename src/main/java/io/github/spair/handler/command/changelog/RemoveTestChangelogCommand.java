@@ -9,8 +9,6 @@ import io.github.spair.service.pr.entity.PullRequestType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
-
 @Component
 public class RemoveTestChangelogCommand implements HandlerCommand<PullRequest> {
 
@@ -53,11 +51,7 @@ public class RemoveTestChangelogCommand implements HandlerCommand<PullRequest> {
 
     private boolean checkPullRequest(final PullRequest pullRequest) {
         if (pullRequest.getType() == PullRequestType.UNLABELED) {
-            String testMergeLabel = configService.getConfig().getLabels().getTestMerge();
-            Set<String> masterUsers = configService.getConfig().getGitHubConfig().getMasterUsers();
-            String sender = pullRequest.getSender();
-            String touchedLabel = pullRequest.getTouchedLabel();
-            return masterUsers.contains(sender) && touchedLabel.equals(testMergeLabel);
+            return PullRequestHelper.checkPRForTestChangelog(pullRequest, configService.getConfig());
         }
         return pullRequest.getType() == PullRequestType.CLOSED || pullRequest.getType() == PullRequestType.MERGED;
     }

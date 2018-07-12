@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.Set;
 
 @Component
 public class AddTestChangelogCommand implements HandlerCommand<PullRequest> {
@@ -30,7 +29,7 @@ public class AddTestChangelogCommand implements HandlerCommand<PullRequest> {
 
     @Override
     public void execute(final PullRequest pullRequest) {
-        if (!checkPullRequest(pullRequest)) {
+        if (!PullRequestHelper.checkPRForTestChangelog(pullRequest, configService.getConfig())) {
             return;
         }
 
@@ -46,13 +45,5 @@ public class AddTestChangelogCommand implements HandlerCommand<PullRequest> {
                 gitHubService.updateFile(changelogPath, updateMessage, newChangelogHtml);
             }
         });
-    }
-
-    private boolean checkPullRequest(final PullRequest pullRequest) {
-        String testMergeLabel = configService.getConfig().getLabels().getTestMerge();
-        Set<String> masterUsers = configService.getConfig().getGitHubConfig().getMasterUsers();
-        String sender = pullRequest.getSender();
-        String touchedLabel = pullRequest.getTouchedLabel();
-        return masterUsers.contains(sender) && touchedLabel.equals(testMergeLabel);
     }
 }
