@@ -1,5 +1,14 @@
 package io.github.spair.handler.command;
 
+import io.github.spair.handler.command.changelog.AddTestChangelogCommand;
+import io.github.spair.handler.command.changelog.RemoveTestChangelogCommand;
+import io.github.spair.handler.command.changelog.UpdateChangelogCommand;
+import io.github.spair.handler.command.changelog.ValidateChangelogCommand;
+import io.github.spair.handler.command.diff.DeletePullRequestRepoCommand;
+import io.github.spair.handler.command.diff.ReportDmiDiffCommand;
+import io.github.spair.handler.command.diff.ReportDmmDiffCommand;
+import io.github.spair.handler.command.label.LabelIssueCommand;
+import io.github.spair.handler.command.label.LabelPullRequestCommand;
 import org.springframework.aop.framework.Advised;
 
 public enum Command {

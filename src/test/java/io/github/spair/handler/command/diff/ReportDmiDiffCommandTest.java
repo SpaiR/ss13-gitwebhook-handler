@@ -1,5 +1,6 @@
-package io.github.spair.handler.command;
+package io.github.spair.handler.command.diff;
 
+import io.github.spair.handler.command.diff.ReportDmiDiffCommand;
 import io.github.spair.service.dmi.DmiService;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;

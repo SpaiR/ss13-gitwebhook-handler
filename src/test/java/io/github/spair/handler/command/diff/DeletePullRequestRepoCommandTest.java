@@ -1,5 +1,6 @@
-package io.github.spair.handler.command;
+package io.github.spair.handler.command.diff;
 
+import io.github.spair.handler.command.diff.DeletePullRequestRepoCommand;
 import io.github.spair.service.github.GitHubRepository;
 import io.github.spair.service.pr.entity.PullRequest;
 import org.junit.Test;

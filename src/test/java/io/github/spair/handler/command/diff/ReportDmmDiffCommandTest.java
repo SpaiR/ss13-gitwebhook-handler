@@ -1,6 +1,7 @@
-package io.github.spair.handler.command;
+package io.github.spair.handler.command.diff;
 
 import io.github.spair.byond.dme.Dme;
+import io.github.spair.handler.command.diff.ReportDmmDiffCommand;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dmm.DmmService;
