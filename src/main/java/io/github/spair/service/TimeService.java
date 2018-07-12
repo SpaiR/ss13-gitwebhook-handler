@@ -1,4 +1,4 @@
-package io.github.spair;
+package io.github.spair.service;
 
 import io.github.spair.service.config.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;

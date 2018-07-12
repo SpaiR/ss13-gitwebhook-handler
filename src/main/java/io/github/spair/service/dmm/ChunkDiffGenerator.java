@@ -112,7 +112,7 @@ final class ChunkDiffGenerator {
         return imageLinks;
     }
 
-    // Full map render generate really BIG image, so splitting is necessary.
+    // Full map render generates really BIG image, so splitting is necessary.
     private boolean isToSoftSplit(final BufferedImage image) {
         return image.getWidth() >= SOFT_SPLIT_LIMIT && image.getWidth() < HARD_SPLIT_LIMIT
                 || image.getHeight() >= SOFT_SPLIT_LIMIT && image.getHeight() < HARD_SPLIT_LIMIT;

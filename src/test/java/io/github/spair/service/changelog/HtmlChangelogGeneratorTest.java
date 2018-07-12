@@ -1,7 +1,7 @@
 package io.github.spair.service.changelog;
 
 import io.github.spair.ResourceHelper;
-import io.github.spair.TimeService;
+import io.github.spair.service.TimeService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
 import org.assertj.core.util.Lists;
