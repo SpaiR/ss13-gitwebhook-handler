@@ -223,7 +223,7 @@ public class GitHubService {
             byte[] base64decodedBytes = Base64.getMimeDecoder().decode(encodedContent);
             return new String(base64decodedBytes, StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
-            LOGGER.error("Error on decoding GitHub content", e);
+            LOGGER.error("Error on decoding GitHub content");
             throw new RuntimeException(e);
         }
     }

@@ -89,6 +89,10 @@ public class HandlerWebController {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public String catchGeneralException(final Exception e) {
         LOGGER.error("Uncaught exception happened", e);
-        return Arrays.toString(e.getStackTrace());
+        StringBuilder stackTrace = new StringBuilder();
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            stackTrace.append(stackTraceElement).append(System.lineSeparator());
+        }
+        return stackTrace.toString();
     }
 }

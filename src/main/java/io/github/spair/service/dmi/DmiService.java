@@ -59,7 +59,7 @@ public class DmiService {
 
             return new ModifiedDmi(filename, oldDmi.orElse(null), newDmi.orElse(null));
         } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Error during downloading DMI's. DMI name: {}", realName, e);
+            LOGGER.error("Error during downloading DMI's. DMI name: {}", realName);
             throw new RuntimeException(e);
         }
     }

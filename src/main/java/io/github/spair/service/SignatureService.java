@@ -35,7 +35,7 @@ public class SignatureService {
 
             return signature.equals(bytesToString(mac.doFinal(data.getBytes())));
         } catch (InvalidKeyException | NoSuchAlgorithmException e) {
-            LOGGER.error("Signature validation error", e);
+            LOGGER.error("Signature validation error");
             throw new RuntimeException(e);
         }
     }

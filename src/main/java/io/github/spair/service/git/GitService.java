@@ -40,7 +40,7 @@ public class GitService {
                     .setURI(repoURI).setBranch(branch).setDirectory(folder).setProgressMonitor(cloneMonitor)
                     .call().close();
         } catch (GitAPIException e) {
-            LOGGER.error("Error on cloning '{}' repository", repoURI, e);
+            LOGGER.error("Error on cloning '{}' repository", repoURI);
             throw new RuntimeException(e);
         }
     }
@@ -49,7 +49,7 @@ public class GitService {
         try (Git repo = Git.open(repoRoot)) {
             repo.pull().call();
         } catch (IOException | GitAPIException e) {
-            LOGGER.error("Error on pulling {} repository", repoRoot.getName(), e);
+            LOGGER.error("Error on pulling {} repository", repoRoot.getName());
             throw new RuntimeException(e);
         }
     }
@@ -61,7 +61,7 @@ public class GitService {
             config.setString(CONFIG_REMOTE_SECTION, MASTER_REMOTE, CONFIG_FETCH_SECTION, MASTER_REMOTE_FETCH);
             config.save();
         } catch (IOException e) {
-            LOGGER.error("Error on remote configuration of {} repository", repoRoot.getName(), e);
+            LOGGER.error("Error on remote configuration of {} repository", repoRoot.getName());
             throw new UncheckedIOException(e);
         }
     }
@@ -77,7 +77,7 @@ public class GitService {
             }
             return true;
         } catch (IOException | GitAPIException e) {
-            LOGGER.error("Error on merging {} with master repository", forkRepo.getName(), e);
+            LOGGER.error("Error on merging {} with master repository", forkRepo.getName());
             throw new RuntimeException(e);
         }
     }

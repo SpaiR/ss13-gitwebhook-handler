@@ -156,7 +156,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
         try {
             CompletableFuture.allOf(futures).get();
         } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Exception on loading repositories", e);
+            LOGGER.error("Exception on loading repositories");
             throw new RuntimeException(e);
         }
     }

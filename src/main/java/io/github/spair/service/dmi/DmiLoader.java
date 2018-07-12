@@ -38,7 +38,7 @@ public class DmiLoader {
             if (e.getStatusCode().is4xxClientError()) {
                 return CompletableFuture.completedFuture(Optional.empty());
             } else {
-                LOGGER.error("HTTP error on loading DMI from GitHub. Dmi name: {}. Filename: {}", dmiName, filename, e);
+                LOGGER.error("HTTP error on loading DMI from GitHub. Dmi name: {}. Filename: {}", dmiName, filename);
                 throw e;
             }
         }
@@ -54,7 +54,7 @@ public class DmiLoader {
             if (e.getStatusCode().is4xxClientError()) {
                 return CompletableFuture.completedFuture(Optional.empty());
             } else {
-                LOGGER.error("HTTP error on loading DMI from URL. Dmi name: {}. URL: {}", dmiName, url, e);
+                LOGGER.error("HTTP error on loading DMI from URL. Dmi name: {}. URL: {}", dmiName, url);
                 throw e;
             }
         }

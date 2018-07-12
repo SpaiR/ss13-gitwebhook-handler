@@ -48,7 +48,7 @@ final class SpriteDiffStatusGenerator {
                     .stream().map(this::unwrapFuture).collect(Collectors.toList());
         } catch (InterruptedException e) {
             LOGGER.error("Exception on creating DmiSpriteDiffStatus. Created reports: {}. Total diff: {}",
-                    dmiSpriteDiffStatuses, diffs, e);
+                    dmiSpriteDiffStatuses, diffs);
             throw new RuntimeException(e);
         } finally {
             executor.shutdown();

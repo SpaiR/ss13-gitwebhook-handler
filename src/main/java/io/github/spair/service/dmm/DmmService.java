@@ -57,7 +57,7 @@ public class DmmService {
             CompletableFuture.allOf(oldDmmFuture, newDmmFuture).get();
             return new ModifiedDmm(dmmFile.getFilename(), oldDmmFuture.get(), newDmmFuture.get());
         } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Error during DMM's parsing. DMM name: {}", dmmFile.getRealName(), e);
+            LOGGER.error("Error during DMM's parsing. DMM name: {}", dmmFile.getRealName());
             throw new RuntimeException(e);
         }
     }
