@@ -8,14 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReportSenderServiceTest {
@@ -32,9 +29,17 @@ public class ReportSenderServiceTest {
     private static final String COMMENT_WITH_ID = "comment " + ID;
     private static final String COMMENT_WO_ID = "comment";
 
+    private String longReport;
+
     @Before
     public void setUp() {
         reportSenderService = new ReportSenderService(gitHubService);
+
+        StringBuilder longReportBuilder = new StringBuilder();
+        for (int i = 0; i < 65536; i++) {
+            longReportBuilder.append(i);
+        }
+        longReport = longReportBuilder.toString();
     }
 
     @Test
@@ -61,9 +66,8 @@ public class ReportSenderServiceTest {
     public void testSendReportWithError() {
         List<IssueComment> issueComments = getIssueComment(COMMENT_WITH_ID);
         when(gitHubService.listIssueComments(1)).thenReturn(issueComments);
-        doThrow(new HttpClientErrorException(HttpStatus.UNPROCESSABLE_ENTITY)).when(gitHubService).editIssueComment(anyInt(), eq(REPORT));
 
-        reportSenderService.sendReport(REPORT, ERROR, ID, 1);
+        reportSenderService.sendReport(longReport, ERROR, ID, 1);
 
         verify(gitHubService).editIssueComment(COMMENT_ID, ERROR);
     }
@@ -72,9 +76,8 @@ public class ReportSenderServiceTest {
     public void testSendReportWithEmptyErrorArg() {
         List<IssueComment> issueComments = getIssueComment(COMMENT_WITH_ID);
         when(gitHubService.listIssueComments(1)).thenReturn(issueComments);
-        doThrow(new HttpClientErrorException(HttpStatus.UNPROCESSABLE_ENTITY)).when(gitHubService).editIssueComment(anyInt(), eq(REPORT));
 
-        reportSenderService.sendReport(REPORT, ID, 1);
+        reportSenderService.sendReport(longReport, ID, 1);
 
         verify(gitHubService).editIssueComment(COMMENT_ID, "Report printing error.");
     }
