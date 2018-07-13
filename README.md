@@ -11,6 +11,7 @@ so with minor changes it could be used for any compatible codebase.
 Handler features:
  - Changelog generation and validation from PR description markup
  - `DMM` and `DMI` diff reports
+ - Test Merge changelog generation
  - Auto-labeling of PRs and Issues
  - Web UI interface (Configuration without recompiling or redeploying)
 
@@ -75,7 +76,7 @@ After pull request will be merged next will appear in changelog file:
   <div id="changelogs">
     <div class="row" data-date="${current date}">
       <div class="col-lg-12">
-        <h3 class="date">${current date}</h3>
+        <h3 class="row-header">${current date}</h3>
         <div data-author="${author name}">
           <h4 class="author">${author name}:</h4>
           <ul class="changelog">
@@ -144,6 +145,12 @@ Read more in Web UI.
 
 If handler found changes in `.dmi`/`.dmm` files, diff report will be generated automatically.
 Report generation happens on PR creation and new commits pushing events.
+
+### ... Test Merge Changelog generation
+
+Some pull requests may be merged locally for test merge. Since pull request doesn't merged in github, changelog, if exist, won't be generated.
+To notify players about changes there is ability to create Test Merge changelog, by adding "Test Merge" label.
+This changelog will be automatically removed after PR merging or label removing.
 
 <hr />
 
