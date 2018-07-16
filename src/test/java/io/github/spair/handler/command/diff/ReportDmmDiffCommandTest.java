@@ -1,7 +1,6 @@
 package io.github.spair.handler.command.diff;
 
 import io.github.spair.byond.dme.Dme;
-import io.github.spair.handler.command.diff.ReportDmmDiffCommand;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dmm.DmmService;
@@ -20,6 +19,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.File;
 import java.util.List;
@@ -103,6 +103,26 @@ public class ReportDmmDiffCommandTest {
         when(gitHubService.listPullRequestFiles(1)).thenReturn(Lists.emptyList());
         command.execute(PullRequest.builder().number(1).build());
         verify(reportSenderService, never()).sendReport(anyString(), anyString(), anyString(), anyInt());
+    }
+
+    @Test
+    public void testUpdateCallback() {
+        Consumer<Integer> updateCallback = ReflectionTestUtils.invokeMethod(command, "getUpdateCallback", 23);
+
+        for (int i = 0; i <= 100; i++) {
+            updateCallback.accept(i);
+        }
+
+        verify(reportSenderService, times(11)).sendReport(anyString(), eq(REPORT_ID), eq(23));
+    }
+
+    @Test
+    public void testEndCallback() {
+        Runnable endCallback = ReflectionTestUtils.invokeMethod(command, "getEndCallback", 23);
+        endCallback.run();
+        verify(reportSenderService).sendReport(
+                "## DMM Diff Report" + System.lineSeparator() + System.lineSeparator()
+                        + "Cloning is done. Report will be generated in a few minutes...", REPORT_ID, 23);
     }
 
     private List<PullRequestFile> getPullRequestFileList() {

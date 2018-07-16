@@ -1,8 +1,8 @@
 package io.github.spair.handler.command.diff;
 
+import io.github.spair.byond.dme.Dme;
 import io.github.spair.handler.command.HandlerCommand;
 import io.github.spair.service.ByondFiles;
-import io.github.spair.byond.dme.Dme;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dmm.DmmService;
@@ -121,27 +121,32 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
     private CompletableFuture<File> getForkRepoAsync(final PullRequest pullRequest) {
         return CompletableFuture.supplyAsync(() -> {
-            final int updatePcntWait = 10;
-            final int[] nextUpdateMessage = new int[]{0};   // Hack for increment inside of lambda.
-
-            final Consumer<Integer> updateCallback = pcnt -> {
-                if (pcnt == nextUpdateMessage[0]) {
-                    nextUpdateMessage[0] += updatePcntWait;
-
-                    String message = DmmReportRenderService.HEADER
-                            + String.format("Cloning PR repository... Progress: **%d%%**", pcnt);
-
-                    reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
-                }
-            };
-            final Runnable endCallback = () -> {
-                String message = DmmReportRenderService.HEADER
-                        + "Cloning is done. Report will be generated in a few minutes...";
-                reportSenderService.sendReport(message, REPORT_ID, pullRequest.getNumber());
-            };
-
+            final Consumer<Integer> updateCallback = getUpdateCallback(pullRequest.getNumber());
+            final Runnable endCallback = getEndCallback(pullRequest.getNumber());
             return gitHubRepository.loadForkRepository(pullRequest, updateCallback, endCallback);
         });
+    }
+
+    private Consumer<Integer> getUpdateCallback(final int pullRequestNumber) {
+        final int updatePcntWait = 10;
+        final int[] nextUpdateMessage = new int[]{0}; // Hack to increment value inside of lambda.
+        return pcnt -> {
+            if (pcnt == nextUpdateMessage[0]) {
+                nextUpdateMessage[0] += updatePcntWait;
+
+                String message = DmmReportRenderService.HEADER
+                        + "Cloning PR repository... Progress: **" + pcnt + "%**";
+                reportSenderService.sendReport(message, REPORT_ID, pullRequestNumber);
+            }
+        };
+    }
+
+    private Runnable getEndCallback(final int pullRequestNumber) {
+        return () -> {
+            String message = DmmReportRenderService.HEADER
+                    + "Cloning is done. Report will be generated in a few minutes...";
+            reportSenderService.sendReport(message, REPORT_ID, pullRequestNumber);
+        };
     }
 
     private CompletableFuture<Dme> getDmeAsync(final String path) {
