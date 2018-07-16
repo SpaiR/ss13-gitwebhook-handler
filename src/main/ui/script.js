@@ -252,7 +252,12 @@ function initDmmBot() {
             method: 'PUT'
         }).done(function() {
             toggleCleanBtn(true);
-        })
+        }).fail(function() {
+            $initMasterFail.show();
+            $initMasterProcess.hide();
+            toggleCleanBtn(true);
+            showToast('Error on master repo initialization.')
+        });
     });
 
     $cleanReposBtn.click(function() {
