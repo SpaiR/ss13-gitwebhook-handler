@@ -73,10 +73,11 @@
             <version>5.0.1.201806211838-r</version>
         </dependency>
 
+        <!-- BYOND Tool Set -->
         <dependency>
             <groupId>io.github.spair</groupId>
             <artifactId>byond-dmi-util</artifactId>
-            <version>1.0.5.1</version>
+            <version>1.0.5.2</version>
         </dependency>
         <dependency>
             <groupId>io.github.spair</groupId>
@@ -86,8 +87,9 @@
         <dependency>
             <groupId>io.github.spair</groupId>
             <artifactId>byond-dmm-util</artifactId>
-            <version>0.1.4.1</version>
+            <version>0.1.4.3</version>
         </dependency>
+        <!-- End of BYOND Tool Set -->
 
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
@@ -100,6 +102,7 @@
             <artifactId>httpclient</artifactId>
         </dependency>
 
+        <!-- Webjars -->
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>material-design-lite</artifactId>
@@ -115,6 +118,7 @@
             <artifactId>rivets</artifactId>
             <version>0.9.6</version>
         </dependency>
+        <!-- End of Webjars -->
 
         <dependency>
             <groupId>org.mockito</groupId>
