@@ -1,6 +1,5 @@
 package io.github.spair.handler.command.label;
 
-import io.github.spair.handler.command.label.LabelIssueCommand;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.issue.entity.Issue;
 import org.junit.Before;

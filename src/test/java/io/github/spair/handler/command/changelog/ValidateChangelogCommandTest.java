@@ -1,6 +1,5 @@
 package io.github.spair.handler.command.changelog;
 
-import io.github.spair.handler.command.changelog.ValidateChangelogCommand;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogValidationStatus;
