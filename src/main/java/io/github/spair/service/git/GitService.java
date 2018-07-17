@@ -47,7 +47,7 @@ public class GitService {
 
     public void pullRepository(final File repoRoot) {
         try (Git repo = Git.open(repoRoot)) {
-            repo.pull().call();
+            repo.pull().setRebase(true).call();
         } catch (IOException | GitAPIException e) {
             LOGGER.error("Error on pulling {} repository", repoRoot.getName());
             throw new RuntimeException(e);
@@ -68,7 +68,7 @@ public class GitService {
 
     public boolean mergeWithLocalMaster(final File forkRepo) {
         try (Git git = Git.open(forkRepo)) {
-            PullCommand pullCommand = git.pull().setRebase(true).setRemote(MASTER_REMOTE).setRemoteBranchName(MASTER);
+            PullCommand pullCommand = git.pull().setRemote(MASTER_REMOTE).setRemoteBranchName(MASTER);
             PullResult pullResult = pullCommand.call();
 
             if (!pullResult.isSuccessful()) {
