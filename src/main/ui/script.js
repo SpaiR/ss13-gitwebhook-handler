@@ -217,11 +217,17 @@ function initDmmBot() {
         REPOS_MASTER_URL = '/config/rest/repos/master',
         REPOS_URL = '/config/rest/repos';
 
+    function toggleInitBtn(isEnable) {
+        $initMasterBtn.prop('disabled', !isEnable);
+    }
+
     function toggleCleanBtn(isEnable) {
         $cleanReposBtn.prop('disabled', !isEnable);
-    }        
+    }
 
     (function getMasterInitStatus() {
+        toggleInitBtn(false);
+
         $.ajax({
             url: REPOS_MASTER_URL,
             method: 'GET'
@@ -233,8 +239,10 @@ function initDmmBot() {
             }
             if (status !== 'IN_PROGRESS') {
                 $initMasterProcess.hide();
+                toggleInitBtn(true);
                 toggleCleanBtn(true);
             } else {
+                toggleInitBtn(false);
                 toggleCleanBtn(false);
                 setTimeout(getMasterInitStatus, 5000);
             }
@@ -246,15 +254,18 @@ function initDmmBot() {
         $initMasterFail.hide();
         $initMasterProcess.show();
         toggleCleanBtn(false);
+        toggleInitBtn(false);
 
         $.ajax({
             url: REPOS_MASTER_URL,
             method: 'PUT'
         }).done(function() {
+            toggleInitBtn(true);
             toggleCleanBtn(true);
         }).fail(function() {
             $initMasterFail.show();
             $initMasterProcess.hide();
+            toggleInitBtn(true);
             toggleCleanBtn(true);
             showToast('Error on master repo initialization.')
         });
