@@ -52,6 +52,10 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
         List<ModifiedDmi> modifiedDmis = getModifiedDmis(dmiPrFiles);
         List<DmiDiffStatus> dmiDiffStatuses = getDmiDiffStatuses(modifiedDmis);
 
+        if (dmiDiffStatuses.isEmpty()) {
+            return;
+        }
+
         final String report = reportRenderService.renderStatus(dmiDiffStatuses);
         final String errorMessage = reportRenderService.renderError();
 

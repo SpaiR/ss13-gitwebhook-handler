@@ -93,6 +93,10 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
         List<ModifiedDmm> modifiedDmms = getModifiedDmms(dmmPrFiles, oldDme, newDme);
         List<DmmDiffStatus> dmmDiffStatuses = getDmmDiffStatuses(modifiedDmms);
 
+        if (dmmDiffStatuses.isEmpty()) {
+            return;
+        }
+
         final String report = reportRenderService.renderStatus(dmmDiffStatuses);
         final String errorMessage = reportRenderService.renderError();
 
