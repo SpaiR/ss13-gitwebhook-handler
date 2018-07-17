@@ -4,7 +4,7 @@
 
     <groupId>io.github.spair</groupId>
     <artifactId>ss13-gitwebhook-handler</artifactId>
-    <version>1.4.2.1</version>
+    <version>1.4.2.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ss13-gitwebhook-handler</name>
