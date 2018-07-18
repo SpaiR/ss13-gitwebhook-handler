@@ -226,8 +226,8 @@
                             </execution>
                         </executions>
                         <configuration>
-                            <inputPath>${basedir}/src/main/ui</inputPath>
-                            <outputPath>${basedir}/src/main/ui</outputPath>
+                            <inputPath>src/main/ui-src</inputPath>
+                            <outputPath>src/main/ui-src</outputPath>
                             <generateSourceMap>false</generateSourceMap>
                         </configuration>
                     </plugin>
@@ -248,22 +248,22 @@
                             <jswarn>true</jswarn>
                             <suffix>.min</suffix>
                             <force>true</force>
-                            <sourceDirectory>${basedir}/src/main/ui</sourceDirectory>
-                            <outputDirectory>${basedir}/src/main/ui</outputDirectory>
+                            <sourceDirectory>src/main/ui-src</sourceDirectory>
+                            <outputDirectory>src/main/ui-src</outputDirectory>
                             <excludes>
                                 <exclude>**/*.min.*</exclude>
                             </excludes>
                             <aggregations>
                                 <aggregation>
-                                    <inputDir>${basedir}/src/main/ui</inputDir>
-                                    <output>${basedir}/src/main/resources/static/style.min.css</output>
+                                    <inputDir>src/main/ui-src</inputDir>
+                                    <output>src/main/resources/static/style.min.css</output>
                                     <includes>
                                         <include>**/*.min.css</include>
                                     </includes>
                                 </aggregation>
                                 <aggregation>
-                                    <inputDir>${basedir}/src/main/ui</inputDir>
-                                    <output>${basedir}/src/main/resources/static/script.min.js</output>
+                                    <inputDir>src/main/ui-src</inputDir>
+                                    <output>src/main/resources/static/script.min.js</output>
                                     <includes>
                                         <include>**/*.min.js</include>
                                     </includes>
@@ -284,7 +284,7 @@
                                     <excludeDefaultDirectories>true</excludeDefaultDirectories>
                                     <filesets>
                                         <fileset>
-                                            <directory>src/main/ui</directory>
+                                            <directory>src/main/ui-src</directory>
                                             <includes>
                                                 <include>**/*.css</include>
                                                 <include>**/*.min.js</include>
