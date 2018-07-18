@@ -69,6 +69,7 @@ public class GitServiceTest {
     public void testPullRepository() throws Exception {
         PullCommand pullCommand = mock(PullCommand.class);
         when(git.pull()).thenReturn(pullCommand);
+        when(pullCommand.setRebase(true)).thenReturn(pullCommand);
 
         gitService.pullRepository(testFolder);
 
