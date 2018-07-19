@@ -2,7 +2,6 @@ package io.github.spair.handler.command.diff;
 
 import io.github.spair.byond.dme.Dme;
 import io.github.spair.handler.command.HandlerCommand;
-import io.github.spair.service.ByondFiles;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dmm.DmmService;
@@ -59,7 +58,8 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     @Override
     public void execute(final PullRequest pullRequest) {
         final int prNumber = pullRequest.getNumber();
-        final List<PullRequestFile> dmmPrFiles = filterDmmFiles(gitHubService.listPullRequestFiles(prNumber));
+        final List<PullRequestFile> allPullRequestFiles = gitHubService.listPullRequestFiles(prNumber);
+        final List<PullRequestFile> dmmPrFiles = PullRequestHelper.filterDmmFiles(allPullRequestFiles);
 
         if (dmmPrFiles.isEmpty()) {
             return;
@@ -107,12 +107,6 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
     private List<DmmDiffStatus> getDmmDiffStatuses(final List<ModifiedDmm> modifiedDmms) {
         return modifiedDmms.stream().map(dmmService::createDmmDiffStatus).collect(Collectors.toList());
-    }
-
-    private List<PullRequestFile> filterDmmFiles(final List<PullRequestFile> allPrFiles) {
-        return allPrFiles.stream()
-                .filter(file -> file.getFilename().endsWith(ByondFiles.DMM_SUFFIX))
-                .collect(Collectors.toList());
     }
 
     private CompletableFuture<File> getMasterRepoAsync() {
