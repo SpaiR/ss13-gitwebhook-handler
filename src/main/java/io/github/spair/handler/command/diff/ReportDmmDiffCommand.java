@@ -15,15 +15,13 @@ import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
 import io.github.spair.service.report.ReportSenderService;
 import io.github.spair.service.report.dmm.DmmReportRenderService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.spair.util.FutureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -39,8 +37,6 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private final DmeService dmeService;
     private final ReportRenderService<DmmDiffStatus> reportRenderService;
     private final ReportSenderService reportSenderService;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportDmmDiffCommand.class);
 
     @Autowired
     public ReportDmmDiffCommand(
@@ -71,10 +67,10 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
         CompletableFuture<File> loadMasterFuture = getMasterRepoAsync();
         CompletableFuture<File> loadForkFuture = getForkRepoAsync(pullRequest);
-        completeFutures(loadMasterFuture, loadForkFuture);
+        FutureUtil.completeFutures(loadMasterFuture, loadForkFuture);
 
-        final File master = extractFuture(loadMasterFuture);
-        final File fork = extractFuture(loadForkFuture);
+        final File master = FutureUtil.extractFuture(loadMasterFuture);
+        final File fork = FutureUtil.extractFuture(loadForkFuture);
 
         if (!gitHubRepository.mergeForkWithMaster(fork)) {
             sendRejectMessage(prNumber);
@@ -85,10 +81,10 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
         CompletableFuture<Dme> parseOldDmeFuture = getDmeAsync(master.getPath() + pathToDme);
         CompletableFuture<Dme> parseNewDmeFuture = getDmeAsync(fork.getPath() + pathToDme);
-        completeFutures(parseOldDmeFuture, parseNewDmeFuture);
+        FutureUtil.completeFutures(parseOldDmeFuture, parseNewDmeFuture);
 
-        final Dme oldDme = extractFuture(parseOldDmeFuture);
-        final Dme newDme = extractFuture(parseNewDmeFuture);
+        final Dme oldDme = FutureUtil.extractFuture(parseOldDmeFuture);
+        final Dme newDme = FutureUtil.extractFuture(parseNewDmeFuture);
 
         List<ModifiedDmm> modifiedDmms = getModifiedDmms(dmmPrFiles, oldDme, newDme);
         List<DmmDiffStatus> dmmDiffStatuses = getDmmDiffStatuses(modifiedDmms);
@@ -160,22 +156,5 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private void sendRejectMessage(final int prNumber) {
         String errorMessage = DmmReportRenderService.HEADER + "Report will not be generated for non mergeable PR.";
         reportSenderService.sendReport(errorMessage, REPORT_ID, prNumber);
-    }
-
-    private void completeFutures(final CompletableFuture... futures) {
-        try {
-            CompletableFuture.allOf(futures).get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Exception on loading repositories");
-            throw new RuntimeException(e);
-        }
-    }
-
-    private <T> T extractFuture(final CompletableFuture<T> future) {
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException("Extract future exception");
-        }
     }
 }

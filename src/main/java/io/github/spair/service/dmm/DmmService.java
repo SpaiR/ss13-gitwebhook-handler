@@ -9,8 +9,7 @@ import io.github.spair.service.dmm.entity.DmmChunkDiff;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
 import io.github.spair.service.dmm.entity.ModifiedDmm;
 import io.github.spair.service.github.entity.PullRequestFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.spair.util.FutureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +18,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class DmmService {
 
     private final ChunkDiffGenerator chunkDiffGenerator;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DmmService.class);
 
     @Autowired
     public DmmService(final ChunkDiffGenerator chunkDiffGenerator) {
@@ -53,13 +49,12 @@ public class DmmService {
                 break;
         }
 
-        try {
-            CompletableFuture.allOf(oldDmmFuture, newDmmFuture).get();
-            return new ModifiedDmm(dmmFile.getFilename(), oldDmmFuture.get(), newDmmFuture.get());
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Error during DMM's parsing. DMM name: {}", dmmFile.getRealName());
-            throw new RuntimeException(e);
-        }
+        FutureUtil.completeFutures(oldDmmFuture, newDmmFuture);
+
+        Dmm oldDmm = FutureUtil.extractFuture(oldDmmFuture);
+        Dmm newDmm = FutureUtil.extractFuture(newDmmFuture);
+
+        return new ModifiedDmm(dmmFile.getFilename(), oldDmm, newDmm);
     }
 
     public DmmDiffStatus createDmmDiffStatus(final ModifiedDmm modifiedDmm) {

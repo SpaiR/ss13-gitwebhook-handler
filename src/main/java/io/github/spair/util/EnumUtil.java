@@ -1,4 +1,4 @@
-package io.github.spair.service;
+package io.github.spair.util;
 
 import org.springframework.util.ObjectUtils;
 

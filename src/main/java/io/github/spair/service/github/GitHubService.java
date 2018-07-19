@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.spair.service.EnumUtil;
+import io.github.spair.util.EnumUtil;
 import io.github.spair.service.RestService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.github.entity.IssueComment;

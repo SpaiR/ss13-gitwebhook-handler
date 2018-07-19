@@ -6,22 +6,18 @@ import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
 import io.github.spair.service.github.entity.PullRequestFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.github.spair.util.FutureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Service
 public class DmiService {
 
     private final DmiLoader dmiLoader;
     private final SpriteDiffStatusGenerator spriteDiffStatusGenerator;
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(DmiService.class);
 
     @Autowired
     public DmiService(final DmiLoader dmiLoader,
@@ -51,17 +47,12 @@ public class DmiService {
                 break;
         }
 
-        try {
-            CompletableFuture.allOf(oldDmiFuture, newDmiFuture).get();
+        FutureUtil.completeFutures(oldDmiFuture, newDmiFuture);
 
-            final Optional<Dmi> oldDmi = oldDmiFuture.get();
-            final Optional<Dmi> newDmi = newDmiFuture.get();
+        final Optional<Dmi> oldDmi = FutureUtil.extractFuture(oldDmiFuture);
+        final Optional<Dmi> newDmi = FutureUtil.extractFuture(newDmiFuture);
 
-            return new ModifiedDmi(filename, oldDmi.orElse(null), newDmi.orElse(null));
-        } catch (InterruptedException | ExecutionException e) {
-            LOGGER.error("Error during downloading DMI's. DMI name: {}", realName);
-            throw new RuntimeException(e);
-        }
+        return new ModifiedDmi(filename, oldDmi.orElse(null), newDmi.orElse(null));
     }
 
     public Optional<DmiDiffStatus> createDmiDiffStatus(final ModifiedDmi modifiedDmi) {
