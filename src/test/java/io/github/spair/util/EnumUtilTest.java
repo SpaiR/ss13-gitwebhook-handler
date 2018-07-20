@@ -1,6 +1,5 @@
 package io.github.spair.util;
 
-import io.github.spair.util.EnumUtil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

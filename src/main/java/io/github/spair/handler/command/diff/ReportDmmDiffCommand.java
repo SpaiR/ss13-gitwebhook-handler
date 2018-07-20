@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Component
 public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
@@ -86,8 +85,8 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
         final Dme oldDme = FutureUtil.extractFuture(parseOldDmeFuture);
         final Dme newDme = FutureUtil.extractFuture(parseNewDmeFuture);
 
-        List<ModifiedDmm> modifiedDmms = getModifiedDmms(dmmPrFiles, oldDme, newDme);
-        List<DmmDiffStatus> dmmDiffStatuses = getDmmDiffStatuses(modifiedDmms);
+        List<ModifiedDmm> modifiedDmms = dmmService.listModifiedDmms(dmmPrFiles, oldDme, newDme);
+        List<DmmDiffStatus> dmmDiffStatuses = dmmService.listDmmDiffStatuses(modifiedDmms);
 
         if (dmmDiffStatuses.isEmpty()) {
             return;
@@ -97,16 +96,6 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
         final String errorMessage = reportRenderService.renderError();
 
         reportSenderService.sendReport(report, errorMessage, REPORT_ID, prNumber);
-    }
-
-    private List<ModifiedDmm> getModifiedDmms(final List<PullRequestFile> prFiles, final Dme oldDme, final Dme newDme) {
-        return prFiles.stream()
-                .map(dmmPrFile -> dmmService.createModifiedDmm(dmmPrFile, oldDme, newDme))
-                .collect(Collectors.toList());
-    }
-
-    private List<DmmDiffStatus> getDmmDiffStatuses(final List<ModifiedDmm> modifiedDmms) {
-        return modifiedDmms.stream().map(dmmService::createDmmDiffStatus).collect(Collectors.toList());
     }
 
     private CompletableFuture<File> getMasterRepoAsync() {

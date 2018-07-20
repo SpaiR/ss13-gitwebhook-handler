@@ -74,8 +74,8 @@ public class ReportDmmDiffCommandTest {
         when(gitHubRepository.mergeForkWithMaster(forkFolder)).thenReturn(true);
         when(configService.getConfig().getDmmBotConfig().getPathToDme()).thenReturn("/dme/path");
         when(dmeService.parseDme(any(File.class))).thenReturn(mock(Dme.class));
-        when(dmmService.createModifiedDmm(any(PullRequestFile.class), any(Dme.class), any(Dme.class))).thenReturn(mock(ModifiedDmm.class));
-        when(dmmService.createDmmDiffStatus(any(ModifiedDmm.class))).thenReturn(mock(DmmDiffStatus.class));
+        when(dmmService.listModifiedDmms(any(List.class), any(Dme.class), any(Dme.class))).thenReturn(Lists.newArrayList(mock(ModifiedDmm.class)));
+        when(dmmService.listDmmDiffStatuses(any(List.class))).thenReturn(Lists.newArrayList(mock(DmmDiffStatus.class)));
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
         when(reportRenderService.renderError()).thenReturn("Fake Error");
 

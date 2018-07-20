@@ -28,7 +28,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "ConstantConditions"})
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({DmmParser.class, DmmComparator.class})
 public class DmmServiceTest {
@@ -72,55 +72,73 @@ public class DmmServiceTest {
         PowerMockito.when(DmmParser.parse(eq(newDmmFile), any(Dme.class))).thenReturn(mockedNewDmm);
 
         PowerMockito.mockStatic(DmmComparator.class);
-        PowerMockito.when(DmmComparator.compareByChunks(mockedOldDmm, null)).thenReturn(oldCompareToNullList);
-        PowerMockito.when(DmmComparator.compareByChunks(mockedNewDmm, null)).thenReturn(newCompareToNullList);
-        PowerMockito.when(DmmComparator.compareByChunks(mockedOldDmm, mockedNewDmm)).thenReturn(oldCompareToNewList);
+        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedOldDmm), eq(Dmm.EMPTY_MAP))).thenReturn(oldCompareToNullList);
+        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedNewDmm), eq(Dmm.EMPTY_MAP))).thenReturn(newCompareToNullList);
+        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedOldDmm), eq(mockedNewDmm))).thenReturn(oldCompareToNewList);
 
         when(chunkDiffGenerator.generate(anyList(), eq(mockedOldDmm), eq(null))).thenReturn(oldWithNullChunkDiffList);
-        when(chunkDiffGenerator.generate(anyList(), eq(mockedNewDmm), eq(null))).thenReturn(newWithNullChunkDiffList);
+        when(chunkDiffGenerator.generate(anyList(), eq(null), eq(mockedNewDmm))).thenReturn(newWithNullChunkDiffList);
         when(chunkDiffGenerator.generate(anyList(), eq(mockedOldDmm), eq(mockedNewDmm))).thenReturn(oldWithNewChunkDiffList);
     }
 
     @Test
-    public void testCreateModifiedDmmWhenAdded() {
-        ModifiedDmm result = dmmService.createModifiedDmm(getPullRequestFile(PullRequestFile.Status.ADDED), mockedOldDme, mockedNewDme);
-        assertEquals(Optional.empty(), result.getOldDmm());
-        assertNotEquals(Optional.empty(), result.getNewDmm());
+    public void testListModifiedDmmsWhenAdded() {
+        List<ModifiedDmm> result = dmmService.listModifiedDmms(Lists.newArrayList(getPullRequestFile(PullRequestFile.Status.ADDED)), mockedOldDme, mockedNewDme);
+        assertEquals(Optional.empty(), result.get(0).getOldDmm());
+        assertNotEquals(Optional.empty(), result.get(0).getNewDmm());
     }
 
     @Test
-    public void testCreateModifiedDmmWhenModified() {
-        ModifiedDmm result = dmmService.createModifiedDmm(getPullRequestFile(PullRequestFile.Status.MODIFIED), mockedOldDme, mockedNewDme);
-        assertNotEquals(Optional.empty(), result.getOldDmm());
-        assertNotEquals(Optional.empty(), result.getNewDmm());
+    public void testListModifiedDmmsWhenModified() {
+        List<ModifiedDmm> result = dmmService.listModifiedDmms(Lists.newArrayList(getPullRequestFile(PullRequestFile.Status.MODIFIED)), mockedOldDme, mockedNewDme);
+        assertNotEquals(Optional.empty(), result.get(0).getOldDmm());
+        assertNotEquals(Optional.empty(), result.get(0).getNewDmm());
     }
 
     @Test
-    public void testCreateModifiedDmmWhenRemoved() {
-        ModifiedDmm result = dmmService.createModifiedDmm(getPullRequestFile(PullRequestFile.Status.REMOVED), mockedOldDme, mockedNewDme);
-        assertNotEquals(Optional.empty(), result.getOldDmm());
-        assertEquals(Optional.empty(), result.getNewDmm());
+    public void testListModifiedDmmsWhenRemoved() {
+        List<ModifiedDmm> result = dmmService.listModifiedDmms(Lists.newArrayList(getPullRequestFile(PullRequestFile.Status.REMOVED)), mockedOldDme, mockedNewDme);
+        assertNotEquals(Optional.empty(), result.get(0).getOldDmm());
+        assertEquals(Optional.empty(), result.get(0).getNewDmm());
     }
 
     @Test
-    public void testCreateDmmDiffStatusWhenOldPresent() {
-        DmmDiffStatus actual = dmmService.createDmmDiffStatus(getModifiedDmm(mockedOldDmm, null));
-        assertEquals(FILENAME, actual.getFilename());
-        assertEquals(oldWithNullChunkDiffList, actual.getDmmDiffChunks());
+    public void testListDmmDiffStatusesWhenOldPresent() {
+        List<DmmDiffStatus> actual = dmmService.listDmmDiffStatuses(Lists.newArrayList(getModifiedDmm(mockedOldDmm, null)));
+        assertEquals(FILENAME, actual.get(0).getFilename());
+        assertEquals(oldWithNullChunkDiffList, actual.get(0).getDmmDiffChunks());
     }
 
     @Test
-    public void testCreateDmmDiffStatusWhenNewPresent() {
-        DmmDiffStatus actual = dmmService.createDmmDiffStatus(getModifiedDmm(mockedNewDmm, null));
-        assertEquals(FILENAME, actual.getFilename());
-        assertEquals(newWithNullChunkDiffList, actual.getDmmDiffChunks());
+    public void testListDmmDiffStatusesWhenNewPresent() {
+        List<DmmDiffStatus> actual = dmmService.listDmmDiffStatuses(Lists.newArrayList(getModifiedDmm(null, mockedNewDmm)));
+        assertEquals(FILENAME, actual.get(0).getFilename());
+        assertEquals(newWithNullChunkDiffList, actual.get(0).getDmmDiffChunks());
     }
 
     @Test
-    public void testCreateDmmDiffStatusWhenOldAndNewPresent() {
-        DmmDiffStatus actual = dmmService.createDmmDiffStatus(getModifiedDmm(mockedOldDmm, mockedNewDmm));
-        assertEquals(FILENAME, actual.getFilename());
-        assertEquals(oldWithNewChunkDiffList, actual.getDmmDiffChunks());
+    public void testListDmmDiffStatusesWhenOldAndNewPresent() {
+        List<DmmDiffStatus> actual = dmmService.listDmmDiffStatuses(Lists.newArrayList(getModifiedDmm(mockedOldDmm, mockedNewDmm)));
+        assertEquals(FILENAME, actual.get(0).getFilename());
+        assertEquals(oldWithNewChunkDiffList, actual.get(0).getDmmDiffChunks());
+    }
+
+    @Test
+    public void testListMapDiffChunksWhenOldPresent() {
+        List<MapRegion> result = dmmService.listMapDiffChunks(getModifiedDmm(mockedOldDmm, null));
+        assertEquals(oldCompareToNullList.get(), result);
+    }
+
+    @Test
+    public void testListMapDiffChunksWhenNewPresent() {
+        List<MapRegion> result = dmmService.listMapDiffChunks(getModifiedDmm(null, mockedNewDmm));
+        assertEquals(newCompareToNullList.get(), result);
+    }
+
+    @Test
+    public void testListMapDiffChunksWhenOldAndNewPresent() {
+        List<MapRegion> result = dmmService.listMapDiffChunks(getModifiedDmm(mockedOldDmm, mockedNewDmm));
+        assertEquals(oldCompareToNewList.get(), result);
     }
 
     private PullRequestFile getPullRequestFile(PullRequestFile.Status status) {

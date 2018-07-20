@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class DmmService {
@@ -29,7 +30,13 @@ public class DmmService {
         this.chunkDiffGenerator = chunkDiffGenerator;
     }
 
-    public ModifiedDmm createModifiedDmm(final PullRequestFile dmmFile, final Dme oldDme, final Dme newDme) {
+    public List<ModifiedDmm> listModifiedDmms(final List<PullRequestFile> prFiles, final Dme oldDme, final Dme newDme) {
+        return prFiles.stream()
+                .map(dmmPrFile -> createModifiedDmm(dmmPrFile, oldDme, newDme))
+                .collect(Collectors.toList());
+    }
+
+    private ModifiedDmm createModifiedDmm(final PullRequestFile dmmFile, final Dme oldDme, final Dme newDme) {
         CompletableFuture<Dmm> oldDmmFuture = CompletableFuture.completedFuture(null);
         CompletableFuture<Dmm> newDmmFuture = CompletableFuture.completedFuture(null);
 
@@ -57,7 +64,7 @@ public class DmmService {
         return new ModifiedDmm(dmmFile.getFilename(), oldDmm, newDmm);
     }
 
-    public DmmDiffStatus createDmmDiffStatus(final ModifiedDmm modifiedDmm) {
+    public List<MapRegion> listMapDiffChunks(final ModifiedDmm modifiedDmm) {
         final Optional<Dmm> oldDmm = modifiedDmm.getOldDmm();
         final Optional<Dmm> newDmm = modifiedDmm.getNewDmm();
 
@@ -77,9 +84,17 @@ public class DmmService {
             throw new IllegalArgumentException("One of DMM's should exist");
         }
 
-        List<MapRegion> chunks = DmmComparator.compareByChunks(toCompare, compareWith).orElse(Collections.emptyList());
+        return DmmComparator.compareByChunks(toCompare, compareWith).orElse(Collections.emptyList());
+    }
+
+    public List<DmmDiffStatus> listDmmDiffStatuses(final List<ModifiedDmm> modifiedDmms) {
+        return modifiedDmms.stream().map(this::createDmmDiffStatus).collect(Collectors.toList());
+    }
+
+    private DmmDiffStatus createDmmDiffStatus(final ModifiedDmm modifiedDmm) {
+        List<MapRegion> chunks = listMapDiffChunks(modifiedDmm);
         List<DmmChunkDiff> dmmDiffChunks = chunkDiffGenerator.generate(
-                chunks, oldDmm.orElse(null), newDmm.orElse(null)
+                chunks, modifiedDmm.getOldDmm().orElse(null), modifiedDmm.getNewDmm().orElse(null)
         );
 
         DmmDiffStatus dmmDiffStatus = new DmmDiffStatus(modifiedDmm.getFilename());
