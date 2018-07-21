@@ -6,6 +6,7 @@ import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
 import io.github.spair.service.github.entity.PullRequestFile;
+import org.assertj.core.util.Lists;
 import org.assertj.core.util.Sets;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -56,21 +58,21 @@ public class DmiServiceTest {
 
     @Test
     public void testCreateModifiedDmiWhenModified() {
-        assertEquals(new ModifiedDmi(FILENAME, oldMockedDmi, newMockedDmi), dmiService.createModifiedDmi(createPullRequestFile(PullRequestFile.Status.MODIFIED)));
+        assertEquals(createModifiedDmi(oldMockedDmi, newMockedDmi), dmiService.listModifiedDmis(createPullRequestFile(PullRequestFile.Status.MODIFIED)));
         verify(dmiLoader).loadFromGitHub(REALNAME, FILENAME);
         verify(dmiLoader).loadFromUrl(REALNAME, RAW_URL);
     }
 
     @Test
     public void testCreateModifiedDmiWhenAdded() {
-        assertEquals(new ModifiedDmi(FILENAME, null, newMockedDmi), dmiService.createModifiedDmi(createPullRequestFile(PullRequestFile.Status.ADDED)));
+        assertEquals(createModifiedDmi(null, newMockedDmi), dmiService.listModifiedDmis(createPullRequestFile(PullRequestFile.Status.ADDED)));
         verify(dmiLoader, never()).loadFromGitHub(REALNAME, FILENAME);
         verify(dmiLoader).loadFromUrl(REALNAME, RAW_URL);
     }
 
     @Test
     public void testCreateModifiedDmiWhenRemoved() {
-        assertEquals(new ModifiedDmi(FILENAME, oldMockedDmi, null), dmiService.createModifiedDmi(createPullRequestFile(PullRequestFile.Status.REMOVED)));
+        assertEquals(createModifiedDmi(oldMockedDmi, null), dmiService.listModifiedDmis(createPullRequestFile(PullRequestFile.Status.REMOVED)));
         verify(dmiLoader).loadFromGitHub(REALNAME, FILENAME);
         verify(dmiLoader, never()).loadFromUrl(REALNAME, RAW_URL);
     }
@@ -96,10 +98,10 @@ public class DmiServiceTest {
 
         when(spriteDiffStatusGenerator.generate(any())).thenReturn(Collections.emptyList());
 
-        Optional<DmiDiffStatus> diffStatusOpt = dmiService.createDmiDiffStatus(modifiedDmi);
-        assertTrue(diffStatusOpt.isPresent());
+        List<DmiDiffStatus> diffStatusList = dmiService.listDmiDiffStatuses(Lists.newArrayList(modifiedDmi));
+        assertFalse(diffStatusList.isEmpty());
 
-        DmiDiffStatus diffStatus = diffStatusOpt.get();
+        DmiDiffStatus diffStatus = diffStatusList.get(0);
 
         assertTrue(diffStatus.isHasDuplicates());
         assertEquals(diffStatus.getFilename(), FILENAME);
@@ -116,14 +118,18 @@ public class DmiServiceTest {
         when(mockedDiff.isSame()).thenReturn(true);
         when(DmiComparator.compare(any(), any())).thenReturn(mockedDiff);
 
-        assertFalse(dmiService.createDmiDiffStatus(mock(ModifiedDmi.class)).isPresent());
+        assertTrue(dmiService.listDmiDiffStatuses(Lists.newArrayList(mock(ModifiedDmi.class))).isEmpty());
     }
 
-    private PullRequestFile createPullRequestFile(final PullRequestFile.Status status) {
+    private List<ModifiedDmi> createModifiedDmi(final Dmi oldDmi, final Dmi newDmi) {
+        return Lists.newArrayList(new ModifiedDmi(FILENAME, oldDmi, newDmi));
+    }
+
+    private List<PullRequestFile> createPullRequestFile(final PullRequestFile.Status status) {
         PullRequestFile dmiFile = new PullRequestFile();
         dmiFile.setFilename(FILENAME);
         dmiFile.setRawUrl(RAW_URL);
         dmiFile.setStatus(status);
-        return dmiFile;
+        return Lists.newArrayList(dmiFile);
     }
 }

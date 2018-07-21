@@ -14,6 +14,12 @@ final class PullRequestHelper {
                 .collect(Collectors.toList());
     }
 
+    static List<PullRequestFile> filterDmiFiles(final List<PullRequestFile> pullRequestFiles) {
+        return pullRequestFiles.stream()
+                .filter(file -> file.getFilename().endsWith(ByondFiles.DMI_SUFFIX))
+                .collect(Collectors.toList());
+    }
+
     private PullRequestHelper() {
     }
 }

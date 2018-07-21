@@ -10,8 +10,10 @@ import io.github.spair.util.FutureUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 public class DmiService {
@@ -26,7 +28,11 @@ public class DmiService {
         this.spriteDiffStatusGenerator = spriteDiffStatusGenerator;
     }
 
-    public ModifiedDmi createModifiedDmi(final PullRequestFile dmiFile) {
+    public List<ModifiedDmi> listModifiedDmis(final List<PullRequestFile> dmiPrFiles) {
+        return dmiPrFiles.stream().map(this::createModifiedDmi).collect(Collectors.toList());
+    }
+
+    private ModifiedDmi createModifiedDmi(final PullRequestFile dmiFile) {
         final String realName = dmiFile.getRealName();
         final String filename = dmiFile.getFilename();
         final String fileRawUrl = dmiFile.getRawUrl();
@@ -55,7 +61,13 @@ public class DmiService {
         return new ModifiedDmi(filename, oldDmi.orElse(null), newDmi.orElse(null));
     }
 
-    public Optional<DmiDiffStatus> createDmiDiffStatus(final ModifiedDmi modifiedDmi) {
+    public List<DmiDiffStatus> listDmiDiffStatuses(final List<ModifiedDmi> modifiedDmis) {
+        return modifiedDmis.stream()
+                .map(this::createDmiDiffStatus).filter(Optional::isPresent).map(Optional::get)
+                .collect(Collectors.toList());
+    }
+
+    private Optional<DmiDiffStatus> createDmiDiffStatus(final ModifiedDmi modifiedDmi) {
         final Optional<Dmi> oldDmi = modifiedDmi.getOldDmi();
         final Optional<Dmi> newDmi = modifiedDmi.getNewDmi();
 

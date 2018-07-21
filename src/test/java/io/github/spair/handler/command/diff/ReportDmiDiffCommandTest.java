@@ -50,8 +50,8 @@ public class ReportDmiDiffCommandTest {
         List<PullRequestFile> prFilesList = getPullRequestFileList();
 
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
-        when(dmiService.createModifiedDmi(any(PullRequestFile.class))).thenReturn(mock(ModifiedDmi.class));
-        when(dmiService.createDmiDiffStatus(any(ModifiedDmi.class))).thenReturn(Optional.of(mock(DmiDiffStatus.class)));
+        when(dmiService.listModifiedDmis(anyList())).thenReturn(Lists.newArrayList(mock(ModifiedDmi.class)));
+        when(dmiService.listDmiDiffStatuses(anyList())).thenReturn(Lists.newArrayList(mock(DmiDiffStatus.class)));
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
         when(reportRenderService.renderError()).thenReturn("Fake Error");
 
