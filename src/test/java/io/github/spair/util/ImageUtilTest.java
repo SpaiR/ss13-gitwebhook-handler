@@ -1,4 +1,4 @@
-package io.github.spair.service.image;
+package io.github.spair.util;
 
 import io.github.spair.ResourceHelper;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 import static org.junit.Assert.assertArrayEquals;
 
-public class ImageHelperTest {
+public class ImageUtilTest {
 
     @Test
     public void testGetDifferenceImage() {
@@ -15,7 +15,7 @@ public class ImageHelperTest {
         BufferedImage imageCompareWith = imageFile("imageCompareWith.png");
         BufferedImage expectedImage = imageFile("imageDifference.png");
 
-        BufferedImage actualImage = ImageHelper.getDifferenceImage(imageToCompare, imageCompareWith);
+        BufferedImage actualImage = ImageUtil.getDifferenceImage(imageToCompare, imageCompareWith);
 
         assertImages(expectedImage, actualImage);
     }
@@ -25,13 +25,13 @@ public class ImageHelperTest {
         BufferedImage imageToSplitOrig = imageFile("imageToSplitOrig.png");
 
         int imageCount = 0;
-        for (BufferedImage img : ImageHelper.splitImage(imageToSplitOrig, 2)) {
+        for (BufferedImage img : ImageUtil.splitImage(imageToSplitOrig, 2)) {
             BufferedImage splitImg = imageFile("imageSplit-2-" + (++imageCount) + ".png");
             assertImages(splitImg, img);
         }
 
         imageCount = 0;
-        for (BufferedImage img : ImageHelper.splitImage(imageToSplitOrig, 4)) {
+        for (BufferedImage img : ImageUtil.splitImage(imageToSplitOrig, 4)) {
             BufferedImage splitImg = imageFile("imageSplit-4-" + (++imageCount) + ".png");
             assertImages(splitImg, img);
         }

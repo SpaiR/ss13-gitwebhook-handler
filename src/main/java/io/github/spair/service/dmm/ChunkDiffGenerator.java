@@ -5,7 +5,7 @@ import io.github.spair.byond.dmm.MapRegion;
 import io.github.spair.byond.dmm.parser.Dmm;
 import io.github.spair.byond.dmm.render.DmmRender;
 import io.github.spair.service.dmm.entity.DmmChunkDiff;
-import io.github.spair.service.image.ImageHelper;
+import io.github.spair.util.ImageUtil;
 import io.github.spair.service.image.ImageUploaderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,11 +65,11 @@ final class ChunkDiffGenerator {
             }
 
             if (oldChunkImage != null && newChunkImage != null) {
-                BufferedImage differenceImage = ImageHelper.getDifferenceImage(oldChunkImage, newChunkImage);
+                BufferedImage differenceImage = ImageUtil.getDifferenceImage(oldChunkImage, newChunkImage);
                 diffImagesLinks = getImageLinks(differenceImage);
             }
             if (oldChunkAreaImage != null && newChunkAreaImage != null) {
-                BufferedImage differenceImage = ImageHelper.getDifferenceImage(oldChunkAreaImage, newChunkAreaImage);
+                BufferedImage differenceImage = ImageUtil.getDifferenceImage(oldChunkAreaImage, newChunkAreaImage);
                 diffAreasImagesLinks = getImageLinks(differenceImage);
             }
 
@@ -99,11 +99,11 @@ final class ChunkDiffGenerator {
     private List<String> getImageLinks(final BufferedImage image) {
         List<String> imageLinks = new ArrayList<>();
         if (isToSoftSplit(image)) {
-            ImageHelper.splitImage(image, SOFT_SPLIT_FACTOR).forEach(img ->
+            ImageUtil.splitImage(image, SOFT_SPLIT_FACTOR).forEach(img ->
                     imageLinks.add(imageUploaderService.uploadImage(img))
             );
         } else if (isToHardSplit(image)) {
-            ImageHelper.splitImage(image, HARD_SPLIT_FACTOR).forEach(img ->
+            ImageUtil.splitImage(image, HARD_SPLIT_FACTOR).forEach(img ->
                     imageLinks.add(imageUploaderService.uploadImage(img))
             );
         } else {

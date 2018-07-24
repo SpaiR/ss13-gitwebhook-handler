@@ -5,8 +5,8 @@ import io.github.spair.byond.dmm.MapRegion;
 import io.github.spair.byond.dmm.parser.Dmm;
 import io.github.spair.byond.dmm.render.DmmRender;
 import io.github.spair.service.dmm.entity.DmmChunkDiff;
-import io.github.spair.service.image.ImageHelper;
 import io.github.spair.service.image.ImageUploaderService;
+import io.github.spair.util.ImageUtil;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({DmmRender.class, ImageHelper.class})
+@PrepareForTest({DmmRender.class, ImageUtil.class})
 public class ChunkDiffGeneratorTest {
 
     @Mock
@@ -61,13 +61,13 @@ public class ChunkDiffGeneratorTest {
         when(imageUploaderService.uploadImage(any(BufferedImage.class))).thenReturn("[link]");
 
         PowerMockito.mockStatic(DmmRender.class);
-        PowerMockito.mockStatic(ImageHelper.class);
+        PowerMockito.mockStatic(ImageUtil.class);
 
-        PowerMockito.when(ImageHelper.getDifferenceImage(any(BufferedImage.class), any(BufferedImage.class)))
+        PowerMockito.when(ImageUtil.getDifferenceImage(any(BufferedImage.class), any(BufferedImage.class)))
                 .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
-        PowerMockito.when(ImageHelper.splitImage(any(BufferedImage.class), eq(2))).thenReturn(SPLITTED_IMAGES_MEDIUM);
-        PowerMockito.when(ImageHelper.splitImage(any(BufferedImage.class), eq(4))).thenReturn(SPLITTED_IMAGES_BIG);
+        PowerMockito.when(ImageUtil.splitImage(any(BufferedImage.class), eq(2))).thenReturn(SPLITTED_IMAGES_MEDIUM);
+        PowerMockito.when(ImageUtil.splitImage(any(BufferedImage.class), eq(4))).thenReturn(SPLITTED_IMAGES_BIG);
     }
 
     @Test

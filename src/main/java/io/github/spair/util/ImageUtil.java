@@ -1,4 +1,4 @@
-package io.github.spair.service.image;
+package io.github.spair.util;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class ImageHelper {
+public final class ImageUtil {
 
     public static BufferedImage getDifferenceImage(final BufferedImage img1, final BufferedImage img2) {
         final int width = img1.getWidth();
@@ -55,6 +55,6 @@ public final class ImageHelper {
 
     }
 
-    private ImageHelper() {
+    private ImageUtil() {
     }
 }
