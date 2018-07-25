@@ -1,12 +1,9 @@
 package io.github.spair.handler.command.diff;
 
-import io.github.spair.byond.dme.Dme;
-import io.github.spair.service.config.ConfigService;
-import io.github.spair.service.dme.DmeService;
+import io.github.spair.service.dme.DmePairGenerator;
+import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.dmm.DmmService;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
-import io.github.spair.service.dmm.entity.ModifiedDmm;
-import io.github.spair.service.github.GitHubRepository;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
@@ -16,13 +13,12 @@ import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.io.File;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,13 +34,9 @@ public class ReportDmmDiffCommandTest {
     @Mock
     private GitHubService gitHubService;
     @Mock
-    private GitHubRepository gitHubRepository;
+    private DmePairGenerator dmePairGenerator;
     @Mock
     private DmmService dmmService;
-    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-    private ConfigService configService;
-    @Mock
-    private DmeService dmeService;
     @Mock
     private ReportRenderService<DmmDiffStatus> reportRenderService;
     @Mock
@@ -52,14 +44,11 @@ public class ReportDmmDiffCommandTest {
 
     private ReportDmmDiffCommand command;
 
-    private File masterFolder = new File("masterFolder");
-    private File forkFolder = new File("forkFolder");
-
     private static final String REPORT_ID = "## DMM Diff Report";
 
     @Before
     public void setUp() {
-        command = new ReportDmmDiffCommand(gitHubService, gitHubRepository, dmmService, configService, dmeService, reportRenderService, reportSenderService);
+        command = new ReportDmmDiffCommand(gitHubService, dmePairGenerator, dmmService, reportRenderService, reportSenderService);
     }
 
     @Test
@@ -69,12 +58,7 @@ public class ReportDmmDiffCommandTest {
         List<PullRequestFile> prFilesList = getPullRequestFileList();
 
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
-        when(gitHubRepository.loadMasterRepository()).thenReturn(masterFolder);
-        when(gitHubRepository.loadForkRepository(eq(pullRequest), any(Consumer.class), any(Runnable.class))).thenReturn(forkFolder);
-        when(gitHubRepository.mergeForkWithMaster(forkFolder)).thenReturn(true);
-        when(configService.getConfig().getDmmBotConfig().getPathToDme()).thenReturn("/dme/path");
-        when(dmeService.parseDme(any(File.class))).thenReturn(mock(Dme.class));
-        when(dmmService.listModifiedDmms(any(List.class), any(Dme.class), any(Dme.class))).thenReturn(Lists.newArrayList(mock(ModifiedDmm.class)));
+        when(dmePairGenerator.generate(eq(pullRequest), any(), any())).thenReturn(Optional.of(mock(DmePair.class)));
         when(dmmService.listDmmDiffStatuses(any(List.class))).thenReturn(Lists.newArrayList(mock(DmmDiffStatus.class)));
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
         when(reportRenderService.renderError()).thenReturn("Fake Error");
@@ -89,7 +73,7 @@ public class ReportDmmDiffCommandTest {
         List<PullRequestFile> prFilesList = getPullRequestFileList();
 
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
-        when(gitHubRepository.mergeForkWithMaster(any())).thenReturn(false);
+        when(dmePairGenerator.generate(any(PullRequest.class), any(), any())).thenReturn(Optional.empty());
 
         command.execute(PullRequest.builder().number(1).build());
 
