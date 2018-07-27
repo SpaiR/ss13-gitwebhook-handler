@@ -1,6 +1,7 @@
 package io.github.spair.handler.command.changelog;
 
 import io.github.spair.handler.command.HandlerCommand;
+import io.github.spair.handler.command.PullRequestHelper;
 import io.github.spair.service.changelog.ChangelogService;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.github.GitHubService;

@@ -1,6 +1,7 @@
 package io.github.spair.service.dme;
 
 import io.github.spair.byond.dme.Dme;
+import io.github.spair.byond.dme.DmeParser;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.github.GitHubRepository;
@@ -16,23 +17,18 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Component
-public class DmePairGenerator {
+final class DmePairGenerator {
 
     private final GitHubRepository gitHubRepository;
     private final ConfigService configService;
-    private final DmeService dmeService;
 
     @Autowired
-    public DmePairGenerator(
-            final GitHubRepository gitHubRepository,
-            final ConfigService configService,
-            final DmeService dmeService) {
+    DmePairGenerator(final GitHubRepository gitHubRepository, final ConfigService configService) {
         this.gitHubRepository = gitHubRepository;
         this.configService = configService;
-        this.dmeService = dmeService;
     }
 
-    public Optional<DmePair> generate(final PullRequest pullRequest,
+    Optional<DmePair> generate(final PullRequest pullRequest,
                                       @Nullable final Consumer<Integer> updateCallback,
                                       @Nullable final Runnable endCallback) {
         CompletableFuture<File> loadMasterFuture = getMasterRepoAsync();
@@ -71,6 +67,6 @@ public class DmePairGenerator {
     }
 
     private CompletableFuture<Dme> getDmeAsync(final String path) {
-        return CompletableFuture.supplyAsync(() -> dmeService.parseDme(new File(path)));
+        return CompletableFuture.supplyAsync(() -> DmeParser.parse(new File(path)));
     }
 }

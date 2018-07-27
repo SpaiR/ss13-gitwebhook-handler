@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.FileSystemUtils;
 
+import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
@@ -70,8 +71,9 @@ public class GitHubRepository {
         return masterFolder;
     }
 
-    public File loadForkRepository(
-            final PullRequest pullRequest, final Consumer<Integer> updateCallback, final Runnable endCallback) {
+    public File loadForkRepository(final PullRequest pullRequest,
+                                   @Nullable final Consumer<Integer> updateCallback,
+                                   @Nullable final Runnable endCallback) {
         final File forkFolder = new File(formRepositoryFolderPath(pullRequest));
 
         doWithRepoLock(forkFolder.getName(), () -> {

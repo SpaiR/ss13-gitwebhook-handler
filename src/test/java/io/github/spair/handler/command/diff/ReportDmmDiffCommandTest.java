@@ -1,6 +1,6 @@
 package io.github.spair.handler.command.diff;
 
-import io.github.spair.service.dme.DmePairGenerator;
+import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.dmm.DmmService;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
@@ -34,7 +34,7 @@ public class ReportDmmDiffCommandTest {
     @Mock
     private GitHubService gitHubService;
     @Mock
-    private DmePairGenerator dmePairGenerator;
+    private DmeService dmeService;
     @Mock
     private DmmService dmmService;
     @Mock
@@ -48,7 +48,7 @@ public class ReportDmmDiffCommandTest {
 
     @Before
     public void setUp() {
-        command = new ReportDmmDiffCommand(gitHubService, dmePairGenerator, dmmService, reportRenderService, reportSenderService);
+        command = new ReportDmmDiffCommand(gitHubService, dmeService, dmmService, reportRenderService, reportSenderService);
     }
 
     @Test
@@ -58,7 +58,7 @@ public class ReportDmmDiffCommandTest {
         List<PullRequestFile> prFilesList = getPullRequestFileList();
 
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
-        when(dmePairGenerator.generate(eq(pullRequest), any(), any())).thenReturn(Optional.of(mock(DmePair.class)));
+        when(dmeService.createDmePairForPullRequest(eq(pullRequest), any(), any())).thenReturn(Optional.of(mock(DmePair.class)));
         when(dmmService.listDmmDiffStatuses(any(List.class))).thenReturn(Lists.newArrayList(mock(DmmDiffStatus.class)));
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
         when(reportRenderService.renderError()).thenReturn("Fake Error");
@@ -73,7 +73,7 @@ public class ReportDmmDiffCommandTest {
         List<PullRequestFile> prFilesList = getPullRequestFileList();
 
         when(gitHubService.listPullRequestFiles(1)).thenReturn(prFilesList);
-        when(dmePairGenerator.generate(any(PullRequest.class), any(), any())).thenReturn(Optional.empty());
+        when(dmeService.createDmePairForPullRequest(any(PullRequest.class), any(), any())).thenReturn(Optional.empty());
 
         command.execute(PullRequest.builder().number(1).build());
 

@@ -2,7 +2,8 @@ package io.github.spair.handler.command.diff;
 
 import io.github.spair.byond.dme.Dme;
 import io.github.spair.handler.command.HandlerCommand;
-import io.github.spair.service.dme.DmePairGenerator;
+import io.github.spair.handler.command.PullRequestHelper;
+import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.dmm.DmmService;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
@@ -26,7 +27,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private static final String REPORT_ID = DmmReportRenderService.TITLE;
 
     private final GitHubService gitHubService;
-    private final DmePairGenerator dmePairGenerator;
+    private final DmeService dmeService;
     private final DmmService dmmService;
     private final ReportRenderService<DmmDiffStatus> reportRenderService;
     private final ReportSenderService reportSenderService;
@@ -34,12 +35,12 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     @Autowired
     public ReportDmmDiffCommand(
             final GitHubService gitHubService,
-            final DmePairGenerator dmePairGenerator,
+            final DmeService dmeService,
             final DmmService dmmService,
             final ReportRenderService<DmmDiffStatus> reportRenderService,
             final ReportSenderService reportSenderService) {
         this.gitHubService = gitHubService;
-        this.dmePairGenerator = dmePairGenerator;
+        this.dmeService = dmeService;
         this.dmmService = dmmService;
         this.reportRenderService = reportRenderService;
         this.reportSenderService = reportSenderService;
@@ -55,7 +56,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
             return;
         }
 
-        Optional<DmePair> dmePair = dmePairGenerator.generate(
+        Optional<DmePair> dmePair = dmeService.createDmePairForPullRequest(
                 pullRequest, getUpdateCallback(prNumber), getEndCallback(prNumber));
 
         if (!dmePair.isPresent()) {
