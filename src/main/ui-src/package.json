@@ -2,7 +2,7 @@
   "name": "ui-src",
   "version": "1.0.0",
   "author": "SpaiR <klimbetoo@gmail.com>",
-  "license": "MIT",
+  "license": "AGPLv3",
   "scripts": {
     "build": "gulp"
   },
