@@ -12,6 +12,7 @@ Handler features:
  - Changelog generation and validation from PR description markup
  - `DMM` and `DMI` diff reports
  - Test Merge changelog generation
+ - Interactive Diff Map for `.dmm` files
  - Auto-labeling of PRs and Issues
  - Web UI interface (Configuration without recompiling or redeploying)
 
@@ -23,8 +24,7 @@ but unlike it this handler gives more complex and flexible solution, which could
 **Important:** application needs Java (at least 8 version).
 
 1. [Download](https://github.com/SpaiR/ss13-gitwebhook-handler/releases) 'jar' file.
-2. Start it with any next command:
-    - `java -jar ss13-gitwebhook-handler-${version}.jar --security.user.name=${login} --security.user.password=${password}`
+2. Start it with next command:
     - `java -jar ss13-gitwebhook-handler-${version}.jar --server.port=${port} --security.user.name=${login} --security.user.password=${password}`
 3. Go to configuration UI in browser and change all properties as you need. Config page located on address: `/config`
 4. Configure your repository to send webhook to handler.
@@ -48,6 +48,12 @@ Endpoint to send webhooks: `/handler`
 
 To store images handler use self hosted image sharing service [PictShare](https://github.com/chrisiaut/pictshare) with `upload_code` check.
 Current configured endpoint is `img.taucetistation.org`. It can't be changed without app recompiling.
+
+### Image Compression Util
+
+During generating of Interactive Diff Map a lot of map images could be created. To optimize their storage space,
+[pngquant](https://pngquant.org/) tool is used to compress them. On `Windows` you should put `pngquant.exe` in the root
+of application (place where log/config files generated), on `*nix` systems tool should be available by path `/usr/bin/pngquant`.
 
 ## How To Work With...
 
@@ -145,6 +151,12 @@ Read more in Web UI.
 
 If handler found changes in `.dmi`/`.dmm` files, diff report will be generated automatically.
 Report generation happens on PR creation and new commits pushing events.
+
+### ... Interactive Diff Map
+
+To create interactive map PR should be labeled with `Interactive Diff Map` label (name is configurable). Right after that
+comment with map links will be appeared. After removing this label, comment with links will be deleted, and local server files
+with map images will be deleted.
 
 ### ... Test Merge Changelog generation
 
