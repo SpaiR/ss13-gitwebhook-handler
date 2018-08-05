@@ -6,8 +6,7 @@ import io.github.spair.service.dmi.entity.DmiSpriteDiffStatus;
 import io.github.spair.service.report.BodyPartRender;
 import io.github.spair.service.report.ReportHelper;
 
-import static io.github.spair.service.report.ReportConstants.NEW_LINE;
-import static io.github.spair.service.report.ReportConstants.TABLE_DELIMITER;
+import static io.github.spair.service.report.ReportConstants.*;
 
 final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
 

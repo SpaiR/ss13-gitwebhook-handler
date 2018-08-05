@@ -26,21 +26,21 @@ public class PullRequestHelperTest {
     }
 
     @Test
-    public void testCheckPRForTestChangelogWhenAllIsValid() {
+    public void testCheckForTestChangelogWhenAllIsValid() {
         PullRequest pr = PullRequest.builder().sender(MASTERUSER).touchedLabel(TESTMERGE).build();
-        assertTrue(PullRequestHelper.checkPRForTestChangelog(pr, config));
+        assertTrue(PullRequestHelper.checkForTestChangelog(pr, config));
     }
 
     @Test
-    public void testCheckPRForTestChangelogWhenNoMasterUser() {
+    public void testCheckForTestChangelogWhenNoMasterUser() {
         PullRequest pr = PullRequest.builder().touchedLabel(TESTMERGE).build();
-        assertFalse(PullRequestHelper.checkPRForTestChangelog(pr, config));
+        assertFalse(PullRequestHelper.checkForTestChangelog(pr, config));
     }
 
     @Test
-    public void testCheckPRForTestChangelogWhenNoLabel() {
+    public void testCheckForTestChangelogWhenNoLabel() {
         PullRequest pr = PullRequest.builder().sender(MASTERUSER).touchedLabel("").build();
-        assertFalse(PullRequestHelper.checkPRForTestChangelog(pr, config));
+        assertFalse(PullRequestHelper.checkForTestChangelog(pr, config));
     }
 
     @Test

@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
     <link rel="stylesheet" href="webjars/material-design-lite/1.3.0/material.min.css"/>
-    <link rel="stylesheet" href="style.min.css"/>
+    <link rel="stylesheet" th:href="'static/config-style.min.css?v=' + ${appVersion}"/>
     <script defer src="webjars/jquery/3.2.1/jquery.min.js"></script>
     <script defer src="webjars/material-design-lite/1.3.0/material.min.js"></script>
     <script defer src="webjars/rivets/0.9.6/dist/rivets.bundled.min.js"></script>
-    <script defer src="script.min.js"></script>
+    <script defer th:src="'static/config-script.min.js?v=' + ${appVersion}"></script>
 </head>
 </html>

@@ -47,8 +47,8 @@ public class DmmServiceTest {
 
     private DmmService dmmService;
 
-    private File oldDmmFile = new File("oldRoot" + File.separator + "dmmFile");
-    private File newDmmFile = new File("newRoot" + File.separator + "dmmFile");
+    private File oldDmmFile = new File("oldRoot" + File.separator + "dmmFile.dmm");
+    private File newDmmFile = new File("newRoot" + File.separator + "dmmFile.dmm");
 
     private Optional<List<MapRegion>> oldCompareToNullList = Optional.of(Lists.newArrayList(mock(MapRegion.class)));
     private Optional<List<MapRegion>> newCompareToNullList = Optional.of(Lists.newArrayList(mock(MapRegion.class)));
@@ -58,7 +58,7 @@ public class DmmServiceTest {
     private List<DmmChunkDiff> newWithNullChunkDiffList = Lists.newArrayList(mock(DmmChunkDiff.class));
     private List<DmmChunkDiff> oldWithNewChunkDiffList = Lists.newArrayList(mock(DmmChunkDiff.class));
 
-    private static final String FILENAME = "filename";
+    private static final String FILENAME = "/filename.dmm";
 
     @Before
     public void setUp() {
@@ -123,27 +123,9 @@ public class DmmServiceTest {
         assertEquals(oldWithNewChunkDiffList, actual.get(0).getDmmDiffChunks());
     }
 
-    @Test
-    public void testListMapDiffChunksWhenOldPresent() {
-        List<MapRegion> result = dmmService.listMapDiffChunks(getModifiedDmm(mockedOldDmm, null));
-        assertEquals(oldCompareToNullList.get(), result);
-    }
-
-    @Test
-    public void testListMapDiffChunksWhenNewPresent() {
-        List<MapRegion> result = dmmService.listMapDiffChunks(getModifiedDmm(null, mockedNewDmm));
-        assertEquals(newCompareToNullList.get(), result);
-    }
-
-    @Test
-    public void testListMapDiffChunksWhenOldAndNewPresent() {
-        List<MapRegion> result = dmmService.listMapDiffChunks(getModifiedDmm(mockedOldDmm, mockedNewDmm));
-        assertEquals(oldCompareToNewList.get(), result);
-    }
-
     private PullRequestFile getPullRequestFile(PullRequestFile.Status status) {
         PullRequestFile pullRequestFile = new PullRequestFile();
-        pullRequestFile.setFilename("dmmFile");
+        pullRequestFile.setFilename("/dmmFile.dmm");
         pullRequestFile.setStatus(status);
         return pullRequestFile;
     }

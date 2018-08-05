@@ -52,7 +52,7 @@ public class RemoveTestChangelogCommand implements HandlerCommand<PullRequest> {
 
     private boolean checkPullRequest(final PullRequest pullRequest) {
         if (pullRequest.getType() == PullRequestType.UNLABELED) {
-            return PullRequestHelper.checkPRForTestChangelog(pullRequest, configService.getConfig());
+            return PullRequestHelper.checkForTestChangelog(pullRequest, configService.getConfig());
         }
         return pullRequest.getType() == PullRequestType.CLOSED || pullRequest.getType() == PullRequestType.MERGED;
     }

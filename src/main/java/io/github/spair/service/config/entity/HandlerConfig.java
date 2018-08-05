@@ -19,6 +19,7 @@ public class HandlerConfig {
     private String requestAgentName = "Agent name";
     private String timeZone = "Europe/Moscow";
     private String imageUploadCode = "1234567890";
+    private String handlerUrl = "http://127.0.0.1:8080";
     private GitHubConfig gitHubConfig = new GitHubConfig();
     private ChangelogConfig changelogConfig = new ChangelogConfig();
     private Labels labels = new Labels();
@@ -49,6 +50,7 @@ public class HandlerConfig {
         private String workInProgress = "Work In Progress";
         private String doNotMerge = "DO NOT MERGE";
         private String testMerge = "Test Merge";
+        private String interactiveDiffMap = "Interactive Diff Map";
         private Map<String, String> labelsForClasses = new HashMap<>();
     }
 

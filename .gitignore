@@ -23,8 +23,12 @@ dist/
 nbdist/
 .nb-gradle/
 
+### UI ###
+node_modules/
+
 ### Project Files ###
 GWHConfig.json
 GWHLog.log
 src/main/resources/static/*.min*
-.repos
+.repos/
+.maps/

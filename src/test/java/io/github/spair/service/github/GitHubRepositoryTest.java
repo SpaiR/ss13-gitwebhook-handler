@@ -30,7 +30,7 @@ public class GitHubRepositoryTest {
     private GitHubRepository repository;
 
     private static final String MASTER_FOLDER_PATH = ".repos" + File.separator + ".master";
-    private static final String TEST_FORK_FOLDER_PATH = ".repos/fork.author=testUser.pr=23.branch=testBranch";
+    private static final String TEST_FORK_FOLDER_PATH = ".repos/fork.author=testUser123.pr=23.branch=testBranch";
 
     @Before
     public void setUp() {
@@ -108,6 +108,6 @@ public class GitHubRepositoryTest {
     }
 
     private PullRequest getTestPullRequest() {
-        return PullRequest.builder().author("testUser").number(23).branchName("testBranch").build();
+        return PullRequest.builder().author("testUser123").sourceHeadName("testUser").number(23).branchName("testBranch").build();
     }
 }

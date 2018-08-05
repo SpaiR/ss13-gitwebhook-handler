@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
+<head th:replace="config-fragments/header :: header">
     <title id="page-title">Handler Config</title>
 </head>
 <body>
@@ -30,33 +30,33 @@
 
     <main class="mdl-layout__content">
         <section class="mdl-layout__tab-panel is-active" id="fixed-tab-general">
-            <div th:replace="fragments/tabs/general :: tab"></div>
+            <div th:replace="config-fragments/tabs/general :: tab"></div>
         </section>
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-github">
-            <div th:replace="fragments/tabs/github :: tab"></div>
+            <div th:replace="config-fragments/tabs/github :: tab"></div>
         </section>
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-changelog">
-            <div th:replace="fragments/tabs/changelog :: tab"></div>
+            <div th:replace="config-fragments/tabs/changelog :: tab"></div>
         </section>
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-labels">
-            <div th:replace="fragments/tabs/labels :: tab"></div>
+            <div th:replace="config-fragments/tabs/labels :: tab"></div>
         </section>
 
         <section class="mdl-layout__tab-panel" id="fixed-tab-dmm-bot">
-            <div th:replace="fragments/tabs/dmm-bot :: tab"></div>
+            <div th:replace="config-fragments/tabs/dmm-bot :: tab"></div>
         </section>
     </main>
 
-    <div th:include="fragments/about :: about"></div>
+    <div th:include="config-fragments/about :: about"></div>
 
     <footer class="mdl-layout__footer mdl-mini-footer">
         <div class="mdl-mini-footer__left-section">
             <ul class="mdl-mini-footer__link-list">
                 <li>
-                    <a href="https://github.com/SpaiR/ss13-gitwebhook-handler"><img class="mdl-mini-footer__link-image" src="github.png"/></a>
+                    <a href="https://github.com/SpaiR/ss13-gitwebhook-handler"><img class="mdl-mini-footer__link-image" src="static/github.png"/></a>
                     <span>&nbsp;Code licensed under an MIT-style License.</span>
                 </li>
             </ul>

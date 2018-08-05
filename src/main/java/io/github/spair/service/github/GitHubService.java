@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -28,7 +27,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Base64;
-import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -97,6 +95,10 @@ public class GitHubService {
         restService.patch(pathProvider.issueComment(commentId), requestBody, getAuthHeaders());
     }
 
+    public void removeComment(final int commentId) {
+        restService.delete(pathProvider.issueComment(commentId), getAuthHeaders());
+    }
+
     public void addLabel(final int issueNum, final String labelName) {
         addLabels(issueNum, Collections.singleton(labelName));
     }
@@ -163,7 +165,7 @@ public class GitHubService {
     public List<PullRequestFile> listPullRequestFiles(final int prNum) {
         List<PullRequestFile> pullRequestFiles = new ArrayList<>();
 
-        new LinkProcessor(
+        new LinkProcessor(restService, getAuthHeaders(),
                 respArray -> respArray.forEach(nodeObject -> {
                     PullRequestFile pullRequestFile = new PullRequestFile();
 
@@ -187,7 +189,7 @@ public class GitHubService {
     public List<IssueComment> listIssueComments(final int issueNum) {
         List<IssueComment> issueComments = new ArrayList<>();
 
-        new LinkProcessor(
+        new LinkProcessor(restService, getAuthHeaders(),
                 respArray -> respArray.forEach(nodeObject -> {
                     IssueComment issueComment = new IssueComment();
 
@@ -254,34 +256,5 @@ public class GitHubService {
         LOGGER.error("The file SHA was not found. Rel path argument: {}. Dir path: {}. File name: {}",
                 relPath, dirPath, fileName);
         throw new IllegalArgumentException("Exception on getting file sha");
-    }
-
-    /**
-     * Some responses from GitHub are divided into pages, where next page link provided in 'link' header.
-     * This class process those responses.
-     */
-    @SuppressWarnings("checkstyle:MemberName")
-    private final class LinkProcessor {
-
-        private final String LINK = "link";
-        private final Pattern NEXT_PR_FILES = Pattern.compile("<([\\w\\d/?=:.]*)>;\\srel=\"next\"");
-        private final Consumer<ArrayNode> consumer;
-
-        private LinkProcessor(final Consumer<ArrayNode> consumer) {
-            this.consumer = consumer;
-        }
-
-        private void recursiveProcess(final String link) {
-            ResponseEntity<ArrayNode> resp = restService.getForEntity(link, getAuthHeaders(), ArrayNode.class);
-
-            consumer.accept(resp.getBody());
-
-            String headerLinks = resp.getHeaders().getOrDefault(LINK, Collections.emptyList()).toString();
-            Matcher nextLink = NEXT_PR_FILES.matcher(headerLinks);
-
-            if (nextLink.find()) {
-                recursiveProcess(nextLink.group(1));
-            }
-        }
     }
 }

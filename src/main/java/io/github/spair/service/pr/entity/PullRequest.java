@@ -15,6 +15,7 @@ public class PullRequest {
 
     private String author;
     private String branchName;
+    private String sourceHeadName;
     private int number;
     private String title;
     private PullRequestType type;

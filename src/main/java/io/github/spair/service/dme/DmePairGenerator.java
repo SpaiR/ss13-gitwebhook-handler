@@ -29,8 +29,8 @@ final class DmePairGenerator {
     }
 
     Optional<DmePair> generate(final PullRequest pullRequest,
-                                      @Nullable final Consumer<Integer> updateCallback,
-                                      @Nullable final Runnable endCallback) {
+                               @Nullable final Consumer<Integer> updateCallback,
+                               @Nullable final Runnable endCallback) {
         CompletableFuture<File> loadMasterFuture = getMasterRepoAsync();
         CompletableFuture<File> loadForkFuture = getForkRepoAsync(pullRequest, updateCallback, endCallback);
         FutureUtil.completeFutures(loadMasterFuture, loadForkFuture);

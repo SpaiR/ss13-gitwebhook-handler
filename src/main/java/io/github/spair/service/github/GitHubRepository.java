@@ -78,12 +78,12 @@ public class GitHubRepository {
 
         doWithRepoLock(forkFolder.getName(), () -> {
             if (!forkFolder.exists()) {
-                final String author = pullRequest.getAuthor();
+                final String headName = pullRequest.getSourceHeadName();
                 final String repoName = configService.getConfig().getGitHubConfig().getRepositoryName();
                 final String branchName = pullRequest.getBranchName();
                 final CloneMonitor cloneMonitor = new CloneMonitor(updateCallback, endCallback);
 
-                gitService.cloneRepository(author, repoName, branchName, forkFolder, cloneMonitor);
+                gitService.cloneRepository(headName, repoName, branchName, forkFolder, cloneMonitor);
                 gitService.configRepositoryRemote(forkFolder);
             } else {
                 gitService.pullRepository(forkFolder);

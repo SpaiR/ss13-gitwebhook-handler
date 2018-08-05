@@ -29,6 +29,11 @@
                         <label for="image-upload-code" class="mdl-textfield__label">Image Upload Code</label>
                     </div>
 
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input rv-value="config.handlerUrl" id="handler-url" class="mdl-textfield__input">
+                        <label for="handler-url" class="mdl-textfield__label">Handler Url</label>
+                    </div>
+
                     <hr class="tab-content__line"/>
                     <div id="progress-bar"
                          class="tab-content__progress-bar tab-content__progress-bar--hidden mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
@@ -58,7 +63,7 @@
             </div>
         </div>
 
-        <div th:replace="fragments/tabs/general_help :: tab"></div>
+        <div th:replace="config-fragments/tabs/general_help :: tab"></div>
     </div>
 </div>
 </html>

@@ -4,12 +4,7 @@ import io.github.spair.service.dmm.entity.DmmChunkDiff;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
 import io.github.spair.service.report.BodyPartRender;
 
-import static io.github.spair.service.report.ReportConstants.DETAILS_OPEN;
-import static io.github.spair.service.report.ReportConstants.DETAILS_CLOSE;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_OPEN;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_CLOSE;
-import static io.github.spair.service.report.ReportConstants.NEW_LINE;
-import static io.github.spair.service.report.ReportConstants.TABLE_DELIMITER;
+import static io.github.spair.service.report.ReportConstants.*;
 import static io.github.spair.service.report.dmm.DmmReportHelper.appendImgIfNotEmpty;
 
 final class AreasTablePartRender implements BodyPartRender<DmmDiffStatus> {

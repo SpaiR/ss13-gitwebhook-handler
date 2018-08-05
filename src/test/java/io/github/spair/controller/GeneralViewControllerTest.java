@@ -2,9 +2,6 @@ package io.github.spair.controller;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.springframework.boot.info.BuildProperties;
-import org.springframework.ui.Model;
 
 import static org.junit.Assert.assertEquals;
 
@@ -14,12 +11,12 @@ public class GeneralViewControllerTest {
 
     @Before
     public void setUp() {
-        controller = new GeneralViewController(Mockito.mock(BuildProperties.class));
+        controller = new GeneralViewController();
     }
 
     @Test
     public void testConfig() {
-        assertEquals("config", controller.config(Mockito.mock(Model.class)));
+        assertEquals("config", controller.config());
     }
 
     @Test

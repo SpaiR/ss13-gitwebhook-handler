@@ -64,7 +64,36 @@ public class DmmService {
         return new ModifiedDmm(dmmFile.getFilename(), oldDmm, newDmm);
     }
 
-    public List<MapRegion> listMapDiffChunks(final ModifiedDmm modifiedDmm) {
+    public List<DmmDiffStatus> listDmmDiffStatuses(final List<ModifiedDmm> modifiedDmms) {
+        return modifiedDmms.stream().map(this::createDmmDiffStatus).collect(Collectors.toList());
+    }
+
+    public MapRegion createMapRegion(final ModifiedDmm modifiedDmm) {
+        final ComparePair comparePair = resolveModifiedDmm(modifiedDmm);
+        final Dmm toCompare = comparePair.getToCompare();
+        final Dmm compareWith = comparePair.getCompareWith();
+        return DmmComparator.compare(toCompare, compareWith).orElseThrow(RuntimeException::new);
+    }
+
+    private DmmDiffStatus createDmmDiffStatus(final ModifiedDmm modifiedDmm) {
+        List<MapRegion> chunks = listMapRegions(modifiedDmm);
+        List<DmmChunkDiff> dmmDiffChunks = chunkDiffGenerator.generate(
+                chunks, modifiedDmm.getOldDmm().orElse(null), modifiedDmm.getNewDmm().orElse(null)
+        );
+
+        DmmDiffStatus dmmDiffStatus = new DmmDiffStatus(modifiedDmm.getFilename());
+        dmmDiffStatus.setDmmDiffChunks(dmmDiffChunks);
+        return dmmDiffStatus;
+    }
+
+    private List<MapRegion> listMapRegions(final ModifiedDmm modifiedDmm) {
+        final ComparePair compairPair = resolveModifiedDmm(modifiedDmm);
+        final Dmm toCompare = compairPair.getToCompare();
+        final Dmm compareWith = compairPair.getCompareWith();
+        return DmmComparator.compareByChunks(toCompare, compareWith).orElse(Collections.emptyList());
+    }
+
+    private ComparePair resolveModifiedDmm(final ModifiedDmm modifiedDmm) {
         final Optional<Dmm> oldDmm = modifiedDmm.getOldDmm();
         final Optional<Dmm> newDmm = modifiedDmm.getNewDmm();
 
@@ -84,21 +113,6 @@ public class DmmService {
             throw new IllegalArgumentException("One of DMM's should exist");
         }
 
-        return DmmComparator.compareByChunks(toCompare, compareWith).orElse(Collections.emptyList());
-    }
-
-    public List<DmmDiffStatus> listDmmDiffStatuses(final List<ModifiedDmm> modifiedDmms) {
-        return modifiedDmms.stream().map(this::createDmmDiffStatus).collect(Collectors.toList());
-    }
-
-    private DmmDiffStatus createDmmDiffStatus(final ModifiedDmm modifiedDmm) {
-        List<MapRegion> chunks = listMapDiffChunks(modifiedDmm);
-        List<DmmChunkDiff> dmmDiffChunks = chunkDiffGenerator.generate(
-                chunks, modifiedDmm.getOldDmm().orElse(null), modifiedDmm.getNewDmm().orElse(null)
-        );
-
-        DmmDiffStatus dmmDiffStatus = new DmmDiffStatus(modifiedDmm.getFilename());
-        dmmDiffStatus.setDmmDiffChunks(dmmDiffChunks);
-        return dmmDiffStatus;
+        return new ComparePair(toCompare, compareWith);
     }
 }

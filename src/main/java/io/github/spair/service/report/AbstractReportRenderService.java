@@ -2,12 +2,7 @@ package io.github.spair.service.report;
 
 import java.util.List;
 
-import static io.github.spair.service.report.ReportConstants.DETAILS_CLOSE;
-import static io.github.spair.service.report.ReportConstants.DETAILS_OPEN;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_OPEN;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_CLOSE;
-import static io.github.spair.service.report.ReportConstants.NEW_LINE;
-import static io.github.spair.service.report.ReportConstants.LINE_HORIZONTAL;
+import static io.github.spair.service.report.ReportConstants.*;
 
 public abstract class AbstractReportRenderService<T> implements ReportRenderService<T> {
 

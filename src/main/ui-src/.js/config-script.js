@@ -1,20 +1,20 @@
 $.ajaxSetup({
-    beforeSend: function(xhr) {
+    beforeSend: xhr => {
         xhr.setRequestHeader('X-CSRF-TOKEN', $("meta[name='_csrf']").attr('content'));
     }
 });
 
-var controller = {
-    disableSaveBtn: function() {
+let controller = {
+    disableSaveBtn: () => {
         toggleSaveButton(false);
     },
 
-    enableSaveBtn: function() {
+    enableSaveBtn: () => {
         toggleSaveButton(true);
     },
 
-    removeClass: function(event, rivetsBinding) {
-        var className = rivetsBinding.item,
+    removeClass: (event, rivetsBinding) => {
+        let className = rivetsBinding.item,
             classesArray = config.changelogConfig.html.availableClasses;
 
         classesArray.splice(classesArray.indexOf(className), 1);
@@ -24,8 +24,8 @@ var controller = {
         delete config.labels.labelsForClasses[className];
     },
 
-    removeMasterUser: function(event, rivetsBinding) {
-        var userName = rivetsBinding.item,
+    removeMasterUser: (event, rivetsBinding) => {
+        let userName = rivetsBinding.item,
             usersArray = config.gitHubConfig.masterUsers;
 
         usersArray.splice(usersArray.indexOf(userName), 1);
@@ -34,12 +34,13 @@ var controller = {
     requestAgentName: '',
     timeZone: '',
     imageUploadCode: '',
+    handlerUrl: '',
     gitHubConfig: {
         organizationName: '',
         repositoryName: '',
         token: '',
         secretKey: '',
-        masterUsers: [ ]
+        masterUsers: []
     },
     labels: {
         invalidChangelog: '',
@@ -48,12 +49,13 @@ var controller = {
         workInProgress: '',
         doNotMerge: '',
         testMerge: '',
-        labelsForClasses: { }
+        interactiveDiffMap: '',
+        labelsForClasses: {}
     },
     changelogConfig: {
         pathToChangelog: '',
         html: {
-            availableClasses: [ ]
+            availableClasses: []
         }
     },
     dmmBotConfig: {
@@ -61,27 +63,27 @@ var controller = {
     }
 };
 
-$.ajax('/config/rest/current').done(function(data) {
+$.ajax('/config/rest/current').done(data => {
     config = data;
 
-    $(document).ready(function() {
+    $(document).ready(() => {
         initRivets();
         initForms();
     });
 });
 
-$(document).ready(function() {
+$(document).ready(() => {
     initDmmBot();
 
 
-    $('#open-about-button, #close-about-button').click(function() {
+    $('#open-about-button, #close-about-button').click(() => {
         $('#overlay').fadeToggle('fast');
         $('#about-block').fadeToggle('fast');
     });
 
 
-    $('.help__button').click(function() {
-        var $icon = $(this).find('.material-icons'),
+    $('.help__button').click(() => {
+        const $icon = $(this).find('.material-icons'),
             CLOSE_ICON = 'close', HELP_ICON = 'help';
 
         if ($icon.html() === HELP_ICON) {
@@ -93,21 +95,21 @@ $(document).ready(function() {
         $('#' + $(this).data('for')).fadeToggle('fast');
     });
 
-    $('#save-config').click(function() {
+    $('#save-config').click(() => {
         $.ajax({
             url: '/config/rest/current',
             method: 'PUT',
             contentType: 'application/json',
             data: JSON.stringify(config)
-        }).done(function() {
+        }).done(() => {
             showToast('Configuration saved.');
             toggleSaveButton(false);
         });
     });
 
 
-    $('#validate-config').click(function() {
-        var $githubIcon = $('#github-fail'),
+    $('#validate-config').click(() => {
+        const $githubIcon = $('#github-fail'),
             $changelogIcon = $('#changelog-fail'),
             $dmmBotIcon = $('#dmm-bot-fail'),
             $progressBar = $('#progress-bar');
@@ -124,13 +126,13 @@ $(document).ready(function() {
             method: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(config)
-        }).done(function() {
+        }).done(() => {
             showToast('Configuration is valid.');
             toggleSaveButton(true);
-        }).fail(function(jqXHR) {
+        }).fail(jqXHR => {
             showToast('Error! Configuration is invalid.');
 
-            var responseObject = JSON.parse(jqXHR.responseText);
+            const responseObject = JSON.parse(jqXHR.responseText);
 
             if (!responseObject.gitHubOk) {
                 $githubIcon.show();
@@ -143,17 +145,17 @@ $(document).ready(function() {
             if (!responseObject.dmmBotOk) {
                 $dmmBotIcon.show();
             }
-        }).always(function() {
+        }).always(() => {
             $progressBar.slideUp('fast');
         });
     });
 
 
-    $('#add-class-button').click(function() {
+    $('#add-class-button').click(() => {
         addClassAction();
     });
 
-    $('#add-class-field').keypress(function(e) {
+    $('#add-class-field').keypress(e => {
         // React on 'enter' button.
         if (e.which === 13) {
             addClassAction();
@@ -161,11 +163,11 @@ $(document).ready(function() {
     });
 
 
-    $('#add-master-user-button').click(function() {
+    $('#add-master-user-button').click(() => {
         addMasterUserAction();
     });
 
-    $('#add-master-user-field').keypress(function(e) {
+    $('#add-master-user-field').keypress(e => {
         // React on 'enter' button.
         if (e.which === 13) {
             addMasterUserAction();
@@ -186,7 +188,7 @@ function addMasterUserAction() {
 }
 
 function addFieldValueToArray(fieldSelector, arrayToAdd) {
-    var $addField = $(fieldSelector),
+    const $addField = $(fieldSelector),
         fieldValue = $addField.val();
 
     if (fieldValue.length > 0) {
@@ -202,11 +204,11 @@ function addFieldValueToArray(fieldSelector, arrayToAdd) {
 }
 
 function showToast(message) {
-    $('#snackbar').get(0).MaterialSnackbar.showSnackbar({ message: message });
+    $('#snackbar').get(0).MaterialSnackbar.showSnackbar({message: message});
 }
 
 function initDmmBot() {
-    var $initMasterBtn = $('#init-master-repo'),
+    const $initMasterBtn = $('#init-master-repo'),
         $initMasterDone = $('#init-master-repo .done'),
         $initMasterProcess = $('#init-master-repo .process'),
         $initMasterFail = $('#init-master-repo .fail'),
@@ -231,8 +233,8 @@ function initDmmBot() {
         $.ajax({
             url: REPOS_MASTER_URL,
             method: 'GET'
-        }).done(function(status) {
-            if (status == 'DONE') {
+        }).done(status => {
+            if (status === 'DONE') {
                 $initMasterDone.show();
             } else if (status === 'NOT_STARTED') {
                 $initMasterFail.show();
@@ -249,7 +251,7 @@ function initDmmBot() {
         });
     })();
 
-    $initMasterBtn.click(function() {
+    $initMasterBtn.click(() => {
         $initMasterDone.hide();
         $initMasterFail.hide();
         $initMasterProcess.show();
@@ -259,10 +261,10 @@ function initDmmBot() {
         $.ajax({
             url: REPOS_MASTER_URL,
             method: 'PUT'
-        }).done(function() {
+        }).done(() => {
             toggleInitBtn(true);
             toggleCleanBtn(true);
-        }).fail(function() {
+        }).fail(() => {
             $initMasterFail.show();
             $initMasterProcess.hide();
             toggleInitBtn(true);
@@ -271,17 +273,21 @@ function initDmmBot() {
         });
     });
 
-    $cleanReposBtn.click(function() {
+    $cleanReposBtn.click(() => {
         $cleanReposProcess.show();
+        toggleCleanBtn(false);
+        toggleInitBtn(false);
 
         $.ajax({
             url: REPOS_URL,
             method: 'DELETE'
-        }).done(function() {
+        }).done(() => {
             showToast('All repos deleted.');
             $initMasterDone.hide();
             $initMasterFail.show();
-        }).always(function() {
+        }).always(() => {
+            toggleCleanBtn(true);
+            toggleInitBtn(true);
             $cleanReposProcess.hide();
         });
     });
@@ -289,7 +295,7 @@ function initDmmBot() {
 
 function initForms() {
     // Check all fields for changes, to make labels float.
-    $('.mdl-textfield').each(function() {
+    $('.mdl-textfield').each(() => {
         if (this.MaterialTextfield)
             this.MaterialTextfield.checkDirty();
     });
@@ -297,9 +303,9 @@ function initForms() {
 
 function initRivets() {
     rivets.binders['label-for-class-value'] = {
-        routine: function(el, value) {
+        routine: (el, value) => {
             this.className = value;
-            var labelsForClassesMap = config.labels.labelsForClasses;
+            const labelsForClassesMap = config.labels.labelsForClasses;
 
             if (labelsForClassesMap.hasOwnProperty(value)) {
                 el.value = labelsForClassesMap[value];
@@ -308,13 +314,13 @@ function initRivets() {
             }
         },
 
-        bind: function(el) {
-            var that = this;
-            $(el).keyup(function() {
+        bind: el => {
+            const that = this;
+            $(el).keyup(() => {
                 config.labels.labelsForClasses[that.className] = el.value;
             });
         }
     };
 
-    rivets.bind(document.body, { config: config, ctrl: controller });
+    rivets.bind(document.body, {config: config, ctrl: controller});
 }

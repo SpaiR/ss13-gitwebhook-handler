@@ -35,13 +35,13 @@ public class PullRequestHandler extends AbstractHandler<PullRequest> implements 
                         Command.REPORT_DMM_DIFF);
                 break;
             case SYNCHRONIZE:
-                commands = wrapCommands(Command.REPORT_DMI_DIFF, Command.REPORT_DMM_DIFF);
+                commands = wrapCommands(Command.REPORT_DMI_DIFF, Command.REPORT_DMM_DIFF, Command.BUILD_IDMAP);
                 break;
             case LABELED:
-                commands = wrapCommands(Command.ADD_TEST_CHANGELOG);
+                commands = wrapCommands(Command.ADD_TEST_CHANGELOG, Command.BUILD_IDMAP);
                 break;
             case UNLABELED:
-                commands = wrapCommands(Command.REMOVE_TEST_CHANGELOG);
+                commands = wrapCommands(Command.REMOVE_TEST_CHANGELOG, Command.DELETE_IDMAP);
                 break;
             case EDITED:
                 commands = wrapCommands(Command.VALIDATE_CHANGELOG);

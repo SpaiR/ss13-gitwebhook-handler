@@ -30,7 +30,7 @@ public class AddTestChangelogCommand implements HandlerCommand<PullRequest> {
 
     @Override
     public void execute(final PullRequest pullRequest) {
-        if (!PullRequestHelper.checkPRForTestChangelog(pullRequest, configService.getConfig())) {
+        if (!PullRequestHelper.checkForTestChangelog(pullRequest, configService.getConfig())) {
             return;
         }
 

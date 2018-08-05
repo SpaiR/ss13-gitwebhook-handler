@@ -6,13 +6,7 @@ import io.github.spair.service.report.BodyPartRender;
 
 import java.util.List;
 
-import static io.github.spair.service.report.ReportConstants.DETAILS_OPEN;
-import static io.github.spair.service.report.ReportConstants.DETAILS_CLOSE;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_OPEN;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_CLOSE;
-import static io.github.spair.service.report.ReportConstants.NEW_LINE;
-import static io.github.spair.service.report.ReportConstants.TABLE_DELIMITER;
-import static io.github.spair.service.report.ReportConstants.LINE_BREAK;
+import static io.github.spair.service.report.ReportConstants.*;
 
 final class RawLinksPartRender implements BodyPartRender<DmmDiffStatus> {
 

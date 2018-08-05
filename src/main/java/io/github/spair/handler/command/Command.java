@@ -7,6 +7,8 @@ import io.github.spair.handler.command.changelog.ValidateChangelogCommand;
 import io.github.spair.handler.command.diff.DeletePullRequestRepoCommand;
 import io.github.spair.handler.command.diff.ReportDmiDiffCommand;
 import io.github.spair.handler.command.diff.ReportDmmDiffCommand;
+import io.github.spair.handler.command.diff.BuildIDMapCommand;
+import io.github.spair.handler.command.diff.DeleteIDMapCommand;
 import io.github.spair.handler.command.label.LabelIssueCommand;
 import io.github.spair.handler.command.label.LabelPullRequestCommand;
 import org.springframework.aop.framework.Advised;
@@ -21,7 +23,9 @@ public enum Command {
     REPORT_DMM_DIFF(ReportDmmDiffCommand.class),
     DELETE_PULL_REQUEST_REPO(DeletePullRequestRepoCommand.class),
     ADD_TEST_CHANGELOG(AddTestChangelogCommand.class),
-    REMOVE_TEST_CHANGELOG(RemoveTestChangelogCommand.class);
+    REMOVE_TEST_CHANGELOG(RemoveTestChangelogCommand.class),
+    BUILD_IDMAP(BuildIDMapCommand.class),
+    DELETE_IDMAP(DeleteIDMapCommand.class);
 
     private final Class classOfCommand;
 

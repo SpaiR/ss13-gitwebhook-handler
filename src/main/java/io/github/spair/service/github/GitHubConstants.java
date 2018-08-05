@@ -13,6 +13,8 @@ public final class GitHubConstants {
     public static final String PULL_REQUEST_EVENT = "pull_request";
     public static final String ISSUES_EVENT = "issues";
 
+    public static final int COMMENT_LIMIT = 65535;
+
     private GitHubConstants() {
     }
 }

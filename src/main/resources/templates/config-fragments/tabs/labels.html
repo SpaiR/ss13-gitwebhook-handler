@@ -43,6 +43,11 @@
                         <label for="test-merge" class="mdl-textfield__label">Test Merge</label>
                     </div>
 
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                        <input rv-value="config.labels.interactiveDiffMap" id="interactive-diff-map" class="mdl-textfield__input">
+                        <label for="interactive-diff-map" class="mdl-textfield__label">Interactive Diff Map</label>
+                    </div>
+
                     <br/>
 
                     <div class="classes-labels">
@@ -68,7 +73,7 @@
             </div>
         </div>
 
-        <div th:replace="fragments/tabs/labels_help :: tab"></div>
+        <div th:replace="config-fragments/tabs/labels_help :: tab"></div>
     </div>
 </div>
 </html>

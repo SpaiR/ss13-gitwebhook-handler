@@ -33,7 +33,7 @@ public final class ImageUtil {
         int chunkWidth = image.getWidth() / splitFactor;
         int chunkHeight = image.getHeight() / splitFactor;
 
-        List<BufferedImage> images = new ArrayList<>();
+        List<BufferedImage> images = new ArrayList<>(splitFactor * splitFactor);
 
         for (int x = 0; x < splitFactor; x++) {
             for (int y = 0; y < splitFactor; y++) {

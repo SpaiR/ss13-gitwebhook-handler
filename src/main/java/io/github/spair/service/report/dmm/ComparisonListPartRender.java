@@ -7,11 +7,7 @@ import io.github.spair.service.report.ReportHelper;
 
 import java.util.List;
 
-import static io.github.spair.service.report.ReportConstants.DETAILS_OPEN;
-import static io.github.spair.service.report.ReportConstants.DETAILS_CLOSE;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_OPEN;
-import static io.github.spair.service.report.ReportConstants.SUMMARY_CLOSE;
-import static io.github.spair.service.report.ReportConstants.NEW_LINE;
+import static io.github.spair.service.report.ReportConstants.*;
 
 final class ComparisonListPartRender implements BodyPartRender<DmmDiffStatus> {
 

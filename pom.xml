@@ -4,7 +4,7 @@
 
     <groupId>io.github.spair</groupId>
     <artifactId>ss13-gitwebhook-handler</artifactId>
-    <version>1.4.2.2-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>ss13-gitwebhook-handler</name>
@@ -73,6 +73,17 @@
             <version>5.0.1.201806211838-r</version>
         </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.7</version>
+        </dependency>
+
         <!-- BYOND Tool Set -->
         <dependency>
             <groupId>io.github.spair</groupId>
@@ -87,7 +98,7 @@
         <dependency>
             <groupId>io.github.spair</groupId>
             <artifactId>byond-dmm-util</artifactId>
-            <version>0.1.4.3</version>
+            <version>0.1.6</version>
         </dependency>
         <!-- End of BYOND Tool Set -->
 
@@ -153,12 +164,6 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>build-info</id>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <goals>
                             <goal>repackage</goal>
                         </goals>
@@ -198,6 +203,9 @@
                                 <include>**/*.min.*</include>
                             </includes>
                         </fileset>
+                        <fileset>
+                            <directory>src/main/ui-src/dist</directory>
+                        </fileset>
                     </filesets>
                 </configuration>
             </plugin>
@@ -207,90 +215,45 @@
     <profiles>
         <profile>
             <id>uiCompile</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>com.github.warmuuh</groupId>
-                        <artifactId>libsass-maven-plugin</artifactId>
-                        <version>0.2.9-libsass_3.4.7</version>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>compile-scss</id>
-                                <phase>generate-resources</phase>
+                                <id>npm run build</id>
+                                <phase>generate-sources</phase>
                                 <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <inputPath>src/main/ui-src</inputPath>
-                            <outputPath>src/main/ui-src</outputPath>
-                            <generateSourceMap>false</generateSourceMap>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>net.alchim31.maven</groupId>
-                        <artifactId>yuicompressor-maven-plugin</artifactId>
-                        <version>1.5.1</version>
-                        <executions>
-                            <execution>
-                                <id>compress-static-resources</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>compress</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <jswarn>true</jswarn>
-                            <suffix>.min</suffix>
-                            <force>true</force>
-                            <sourceDirectory>src/main/ui-src</sourceDirectory>
-                            <outputDirectory>src/main/ui-src</outputDirectory>
-                            <excludes>
-                                <exclude>**/*.min.*</exclude>
-                            </excludes>
-                            <aggregations>
-                                <aggregation>
-                                    <inputDir>src/main/ui-src</inputDir>
-                                    <output>src/main/resources/static/style.min.css</output>
-                                    <includes>
-                                        <include>**/*.min.css</include>
-                                    </includes>
-                                </aggregation>
-                                <aggregation>
-                                    <inputDir>src/main/ui-src</inputDir>
-                                    <output>src/main/resources/static/script.min.js</output>
-                                    <includes>
-                                        <include>**/*.min.js</include>
-                                    </includes>
-                                </aggregation>
-                            </aggregations>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <artifactId>maven-clean-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>clean-compiled-resources</id>
-                                <phase>generate-resources</phase>
-                                <goals>
-                                    <goal>clean</goal>
+                                    <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                                    <filesets>
-                                        <fileset>
-                                            <directory>src/main/ui-src</directory>
-                                            <includes>
-                                                <include>**/*.css</include>
-                                                <include>**/*.min.js</include>
-                                            </includes>
-                                        </fileset>
-                                    </filesets>
+                                    <workingDirectory>src/main/ui-src</workingDirectory>
+                                    <executable>npm.cmd</executable>
+                                    <arguments>
+                                        <argument>run</argument>
+                                        <argument>build</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-resources-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-ui-resources</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>src/main/resources/static</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>src/main/ui-src/dist</directory>
+                                        </resource>
+                                    </resources>
                                 </configuration>
                             </execution>
                         </executions>

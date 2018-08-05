@@ -3,6 +3,7 @@ package io.github.spair.service.changelog;
 import io.github.spair.service.TimeService;
 import io.github.spair.service.changelog.entity.Changelog;
 import io.github.spair.service.changelog.entity.ChangelogRow;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -166,7 +167,7 @@ final class HtmlChangelogGenerator {
         try (Scanner scanner = new Scanner(html)) {
             StringBuilder res = new StringBuilder();
             while (scanner.hasNextLine()) {
-                res.append(scanner.nextLine().replaceAll("\\s+$", "")).append(System.lineSeparator());
+                res.append(StringUtils.stripEnd(scanner.nextLine(), null)).append(System.lineSeparator());
             }
             res.delete(res.lastIndexOf(System.lineSeparator()), res.length());
             return res.toString();
