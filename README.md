@@ -19,6 +19,9 @@ Handler features:
 Tool may look similar to `github_webhook_processor.php`, which do sort of same things,
 but unlike it this handler gives more complex and flexible solution, which could be extended in any way, without maintenance problems.
 
+Current work of handler can be seen here [TauCetiStation/TauCetiClassic](https://github.com/TauCetiStation/TauCetiClassic).
+<hr />
+
 ## Installation
 
 **Important:** application needs Java (at least 8 version).
@@ -164,6 +167,6 @@ Some pull requests may be merged locally for test merge. Since pull request does
 To notify players about changes there is ability to create Test Merge changelog, by adding "Test Merge" label.
 This changelog will be automatically removed after PR merging or label removing.
 
-<hr />
+## License
 
-Current work of handler can be seen here [TauCetiStation/TauCetiClassic](https://github.com/TauCetiStation/TauCetiClassic).
+Code is licensed under [GNU Affero General Public License version 3](https://opensource.org/licenses/AGPL-3.0). All commits and builds before version 1.5 exclusively are licensed under [MIT](https://opensource.org/licenses/MIT)
