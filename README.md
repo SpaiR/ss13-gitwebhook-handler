@@ -169,4 +169,4 @@ This changelog will be automatically removed after PR merging or label removing.
 
 ## License
 
-Code is licensed under [GNU Affero General Public License version 3](https://opensource.org/licenses/AGPL-3.0). All commits before 71af3d0a7418c70f042a3f28746f0ebd836c4658 and builds before version 1.5 (all exclusively) are licensed under [MIT](https://opensource.org/licenses/MIT)
+Code is licensed under [GNU Affero General Public License version 3](https://opensource.org/licenses/AGPL-3.0). All commits before [71af3d0](https://github.com/SpaiR/ss13-gitwebhook-handler/commit/71af3d0a7418c70f042a3f28746f0ebd836c4658) and builds before version 1.5 (all exclusively) are licensed under [MIT](https://opensource.org/licenses/MIT)
