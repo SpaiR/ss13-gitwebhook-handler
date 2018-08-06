@@ -83,8 +83,8 @@ $(document).ready(() => {
 
 
     $('.help__button').click(() => {
-        const $icon = $(this).find('.material-icons'),
-            CLOSE_ICON = 'close', HELP_ICON = 'help';
+        const CLOSE_ICON = 'close', HELP_ICON = 'help';
+        let $icon = $(this).find('.material-icons');
 
         if ($icon.html() === HELP_ICON) {
             $icon.html(CLOSE_ICON);
@@ -109,7 +109,7 @@ $(document).ready(() => {
 
 
     $('#validate-config').click(() => {
-        const $githubIcon = $('#github-fail'),
+        let $githubIcon = $('#github-fail'),
             $changelogIcon = $('#changelog-fail'),
             $dmmBotIcon = $('#dmm-bot-fail'),
             $progressBar = $('#progress-bar');
@@ -132,7 +132,7 @@ $(document).ready(() => {
         }).fail(jqXHR => {
             showToast('Error! Configuration is invalid.');
 
-            const responseObject = JSON.parse(jqXHR.responseText);
+            let responseObject = JSON.parse(jqXHR.responseText);
 
             if (!responseObject.gitHubOk) {
                 $githubIcon.show();
@@ -188,7 +188,7 @@ function addMasterUserAction() {
 }
 
 function addFieldValueToArray(fieldSelector, arrayToAdd) {
-    const $addField = $(fieldSelector),
+    let $addField = $(fieldSelector),
         fieldValue = $addField.val();
 
     if (fieldValue.length > 0) {
@@ -295,7 +295,7 @@ function initDmmBot() {
 
 function initForms() {
     // Check all fields for changes, to make labels float.
-    $('.mdl-textfield').each(() => {
+    $('.mdl-textfield').each(function () {
         if (this.MaterialTextfield)
             this.MaterialTextfield.checkDirty();
     });
@@ -303,7 +303,7 @@ function initForms() {
 
 function initRivets() {
     rivets.binders['label-for-class-value'] = {
-        routine: (el, value) => {
+        routine: function (el, value) {
             this.className = value;
             const labelsForClassesMap = config.labels.labelsForClasses;
 
@@ -314,7 +314,7 @@ function initRivets() {
             }
         },
 
-        bind: el => {
+        bind: function (el) {
             const that = this;
             $(el).keyup(() => {
                 config.labels.labelsForClasses[that.className] = el.value;
