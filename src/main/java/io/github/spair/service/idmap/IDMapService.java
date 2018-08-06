@@ -12,7 +12,6 @@ import io.github.spair.service.idmap.entity.MapImagesInfo;
 import io.github.spair.service.image.ImageCompressorService;
 import io.github.spair.util.FutureUtil;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
@@ -24,8 +23,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.io.InputStream;
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -127,8 +124,8 @@ public class IDMapService {
             return Optional.empty();
         }
 
-        try (InputStream is = new FileInputStream(imageFile)) {
-            return Optional.of(IOUtils.toByteArray(is));
+        try {
+            return Optional.of(FileUtils.readFileToByteArray(imageFile));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

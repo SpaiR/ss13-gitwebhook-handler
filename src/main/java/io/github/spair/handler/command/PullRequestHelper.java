@@ -24,8 +24,9 @@ public final class PullRequestHelper {
 
     public static boolean checkForIDMap(final PullRequest pullRequest, final HandlerConfig config) {
         if (pullRequest.getType() == PullRequestType.SYNCHRONIZE) {
+            final String interactiveDiffMapLabel = config.getLabels().getInteractiveDiffMap();
             for (String label : pullRequest.getLabels()) {
-                if (label.equals(config.getLabels().getInteractiveDiffMap())) {
+                if (label.equals(interactiveDiffMapLabel)) {
                     return true;
                 }
             }

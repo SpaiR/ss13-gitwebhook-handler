@@ -3,10 +3,13 @@ package io.github.spair.handler.command;
 import io.github.spair.service.config.entity.HandlerConfig;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
+import io.github.spair.service.pr.entity.PullRequestType;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.util.collections.Sets;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -15,6 +18,7 @@ public class PullRequestHelperTest {
 
     private static final String MASTERUSER = "masteruser";
     private static final String TESTMERGE = "testmerge";
+    private static final String IDMAP = "idmap";
 
     private HandlerConfig config;
 
@@ -23,6 +27,7 @@ public class PullRequestHelperTest {
         config = new HandlerConfig();
         config.getGitHubConfig().getMasterUsers().add(MASTERUSER);
         config.getLabels().setTestMerge(TESTMERGE);
+        config.getLabels().setInteractiveDiffMap(IDMAP);
     }
 
     @Test
@@ -67,5 +72,35 @@ public class PullRequestHelperTest {
 
         assertEquals(1, filteredPrFiles.size());
         assertEquals(new PullRequestFile(){{setFilename("file3.dmi");}}, filteredPrFiles.get(0));
+    }
+
+    @Test
+    public void testCheckForIDMapWhenSynchronizedWithIDMapLabel() {
+        PullRequest pr = PullRequest.builder().labels(Sets.newSet(IDMAP)).type(PullRequestType.SYNCHRONIZE).build();
+        assertTrue(PullRequestHelper.checkForIDMap(pr, config));
+    }
+
+    @Test
+    public void testCheckForIDMapWhenSynchronizedWithoutLabel() {
+        PullRequest pr = PullRequest.builder().labels(Collections.emptySet()).type(PullRequestType.SYNCHRONIZE).build();
+        assertFalse(PullRequestHelper.checkForIDMap(pr, config));
+    }
+
+    @Test
+    public void testCheckForIDMapWhenLabeledWithMasterUser() {
+        PullRequest pr = PullRequest.builder().touchedLabel(IDMAP).sender(MASTERUSER).build();
+        assertTrue(PullRequestHelper.checkForIDMap(pr, config));
+    }
+
+    @Test
+    public void testCheckForIDMapWhenLabeledWithWrongLabel() {
+        PullRequest pr = PullRequest.builder().touchedLabel("wrongLabel").sender(MASTERUSER).build();
+        assertFalse(PullRequestHelper.checkForIDMap(pr, config));
+    }
+
+    @Test
+    public void testCheckForIDMapWhenLabeledWithWrongUser() {
+        PullRequest pr = PullRequest.builder().touchedLabel(IDMAP).sender("wrongUser").build();
+        assertFalse(PullRequestHelper.checkForIDMap(pr, config));
     }
 }
