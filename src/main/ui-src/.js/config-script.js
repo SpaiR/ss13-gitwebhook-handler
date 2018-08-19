@@ -82,7 +82,7 @@ $(document).ready(() => {
     });
 
 
-    $('.help__button').click(() => {
+    $('.help__button').click(function () {
         const CLOSE_ICON = 'close', HELP_ICON = 'help';
         let $icon = $(this).find('.material-icons');
 
