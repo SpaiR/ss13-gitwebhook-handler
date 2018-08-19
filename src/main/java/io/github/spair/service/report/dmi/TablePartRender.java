@@ -78,21 +78,21 @@ final class TablePartRender implements BodyPartRender<DmiDiffStatus> {
         private static String create(final SpriteDir dir) {
             switch (dir) {
                 case SOUTH:
-                    return "&#x1F87B;";  // 🡻
+                    return "\uD83E\uDC7B";  // 🡻
                 case NORTH:
-                    return "&#x1F879;";  // 🡹
+                    return "\uD83E\uDC79";  // 🡹
                 case EAST:
-                    return "&#x1F87A;";  // 🡺
+                    return "\uD83E\uDC7A";  // 🡺
                 case WEST:
-                    return "&#x1F878;";  // 🡸
+                    return "\uD83E\uDC78";  // 🡸
                 case SOUTHEAST:
-                    return "&#x1F87E;";  // 🡾
+                    return "\uD83E\uDC7E";  // 🡾
                 case SOUTHWEST:
-                    return "&#x1F87F;";  // 🡿
+                    return "\uD83E\uDC7F";  // 🡿
                 case NORTHEAST:
-                    return "&#x1F87D;";  // 🡽
+                    return "\uD83E\uDC7D";  // 🡽
                 case NORTHWEST:
-                    return "&#x1F87C;";  // 🡼
+                    return "\uD83E\uDC7C";  // 🡼
                 default:
                     return "?";
             }

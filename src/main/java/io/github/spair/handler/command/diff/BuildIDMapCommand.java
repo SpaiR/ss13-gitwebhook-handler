@@ -26,7 +26,7 @@ import java.util.Optional;
 public class BuildIDMapCommand implements HandlerCommand<PullRequest> {
 
     static final String TITLE = "## Interactive Diff Map";
-    private static final String ARROW = "&#x2BC8;"; // ⯈
+    private static final String ARROW = "\u2BC8"; // ⯈
 
     private final GitHubCommentService gitHubCommentService;
     private final ConfigService configService;
@@ -93,7 +93,8 @@ public class BuildIDMapCommand implements HandlerCommand<PullRequest> {
     private String createMapLink(final int prNumber, final String mapName) {
         String mapNameWithSuffix = mapName + ByondFiles.DMM_SUFFIX;
         String handlerUrl = handlerUrlService.getServerUrl();
-        return String.format(ARROW + " [%s](%s/map?pr=%d&map=%s)", mapNameWithSuffix, handlerUrl, prNumber, mapName);
+        return String.format(
+                ARROW + " **[%s](%s/map?pr=%d&map=%s)**", mapNameWithSuffix, handlerUrl, prNumber, mapName);
     }
 
     private String buildComment(final List<String> mapLinks) {

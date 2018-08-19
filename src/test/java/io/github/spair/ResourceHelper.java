@@ -6,6 +6,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 public final class ResourceHelper {
@@ -13,7 +14,7 @@ public final class ResourceHelper {
     public static String readFile(String filePath) {
         try {
             File file = new ClassPathResource(filePath).getFile();
-            return new String(Files.readAllBytes(file.toPath()));
+            return new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

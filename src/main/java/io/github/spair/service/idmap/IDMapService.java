@@ -222,9 +222,8 @@ public class IDMapService {
             List<MapHash> mapHashes = new ArrayList<>();
 
             for (File imageFile : FileUtils.listFiles(mapFolder, null, false)) {
-                BufferedImage image = ImageIO.read(imageFile);
-
                 if (mapImageSize == null) {
+                    BufferedImage image = ImageIO.read(imageFile);
                     mapImageSize = new MapImageSize(image.getWidth(), image.getHeight());
                 }
 
