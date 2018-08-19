@@ -5,11 +5,11 @@ import io.github.spair.handler.command.PullRequestHelper;
 import io.github.spair.service.dmi.DmiService;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
+import io.github.spair.service.github.GitHubCommentService;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
-import io.github.spair.service.report.ReportSenderService;
 import io.github.spair.service.report.dmi.DmiReportRenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,18 +24,18 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
     private final GitHubService gitHubService;
     private final DmiService dmiService;
     private final ReportRenderService<DmiDiffStatus> reportRenderService;
-    private final ReportSenderService reportSenderService;
+    private final GitHubCommentService gitHubCommentService;
 
     @Autowired
     public ReportDmiDiffCommand(
             final GitHubService gitHubService,
             final DmiService dmiService,
             final ReportRenderService<DmiDiffStatus> reportRenderService,
-            final ReportSenderService reportSenderService) {
+            final GitHubCommentService gitHubCommentService) {
         this.gitHubService = gitHubService;
         this.dmiService = dmiService;
         this.reportRenderService = reportRenderService;
-        this.reportSenderService = reportSenderService;
+        this.gitHubCommentService = gitHubCommentService;
     }
 
     @Override
@@ -56,8 +56,6 @@ public class ReportDmiDiffCommand implements HandlerCommand<PullRequest> {
         }
 
         final String report = reportRenderService.renderStatus(dmiDiffStatuses);
-        final String errorMessage = reportRenderService.renderError();
-
-        reportSenderService.sendReport(report, errorMessage, REPORT_ID, prNumber);
+        gitHubCommentService.sendCommentOrUpdate(prNumber, report, REPORT_ID);
     }
 }

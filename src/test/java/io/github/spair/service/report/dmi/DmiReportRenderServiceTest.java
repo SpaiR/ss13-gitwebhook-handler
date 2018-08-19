@@ -48,11 +48,6 @@ public class DmiReportRenderServiceTest {
     }
 
     @Test
-    public void renderError() {
-        assertEquals("## DMI Diff Report" + NEW_LINE + NEW_LINE + "Report is too long and can't be printed.", renderService.renderError());
-    }
-
-    @Test
     public void renderTitle() {
         assertEquals("## DMI Diff Report", renderService.renderTitle());
     }

@@ -3,11 +3,11 @@ package io.github.spair.handler.command.diff;
 import io.github.spair.service.dmi.DmiService;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
+import io.github.spair.service.github.GitHubCommentService;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
-import io.github.spair.service.report.ReportSenderService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class ReportDmiDiffCommandTest {
     @Mock
     private ReportRenderService<DmiDiffStatus> reportRenderService;
     @Mock
-    private ReportSenderService reportSenderService;
+    private GitHubCommentService gitHubCommentService;
 
     private ReportDmiDiffCommand command;
 
@@ -40,7 +40,7 @@ public class ReportDmiDiffCommandTest {
 
     @Before
     public void setUp() {
-        command = new ReportDmiDiffCommand(gitHubService, dmiService, reportRenderService, reportSenderService);
+        command = new ReportDmiDiffCommand(gitHubService, dmiService, reportRenderService, gitHubCommentService);
     }
 
     @Test
@@ -51,18 +51,17 @@ public class ReportDmiDiffCommandTest {
         when(dmiService.listModifiedDmis(anyList())).thenReturn(Lists.newArrayList(mock(ModifiedDmi.class)));
         when(dmiService.listDmiDiffStatuses(anyList())).thenReturn(Lists.newArrayList(mock(DmiDiffStatus.class)));
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
-        when(reportRenderService.renderError()).thenReturn("Fake Error");
 
         command.execute(PullRequest.builder().number(1).build());
 
-        verify(reportSenderService).sendReport("Fake Report", "Fake Error", REPORT_ID, 1);
+        verify(gitHubCommentService).sendCommentOrUpdate(1, "Fake Report", REPORT_ID);
     }
 
     @Test
     public void testExecuteWithoutDiffs() {
         when(gitHubService.listPullRequestFiles(1)).thenReturn(Lists.emptyList());
         command.execute(PullRequest.builder().number(1).build());
-        verify(reportSenderService, never()).sendReport(anyString(), anyString(), anyString(), anyInt());
+        verify(gitHubCommentService, never()).sendCommentOrUpdate(anyInt(), anyString(), anyString());
     }
 
     private List<PullRequestFile> getPullRequestFileList() {

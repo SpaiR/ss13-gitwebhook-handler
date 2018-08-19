@@ -40,10 +40,5 @@ public class AbstractReportRenderServiceTest {
         protected String renderBody(final Object status) {
             return "Body";
         }
-
-        @Override
-        public String renderError() {
-            return "";
-        }
     }
 }

@@ -8,11 +8,11 @@ import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.dmm.DmmService;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
 import io.github.spair.service.dmm.entity.ModifiedDmm;
+import io.github.spair.service.github.GitHubCommentService;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
-import io.github.spair.service.report.ReportSenderService;
 import io.github.spair.service.report.dmm.DmmReportRenderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
     private final DmeService dmeService;
     private final DmmService dmmService;
     private final ReportRenderService<DmmDiffStatus> reportRenderService;
-    private final ReportSenderService reportSenderService;
+    private final GitHubCommentService gitHubCommentService;
 
     @Autowired
     public ReportDmmDiffCommand(
@@ -38,12 +38,12 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
             final DmeService dmeService,
             final DmmService dmmService,
             final ReportRenderService<DmmDiffStatus> reportRenderService,
-            final ReportSenderService reportSenderService) {
+            final GitHubCommentService gitHubCommentService) {
         this.gitHubService = gitHubService;
         this.dmeService = dmeService;
         this.dmmService = dmmService;
         this.reportRenderService = reportRenderService;
-        this.reportSenderService = reportSenderService;
+        this.gitHubCommentService = gitHubCommentService;
     }
 
     @Override
@@ -75,12 +75,10 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
         }
 
         final String report = reportRenderService.renderStatus(dmmDiffStatuses);
-        final String errorMessage = reportRenderService.renderError();
-
-        reportSenderService.sendReport(report, errorMessage, REPORT_ID, prNumber);
+        gitHubCommentService.sendCommentOrUpdate(prNumber, report, REPORT_ID);
     }
 
-    private Consumer<Integer> getUpdateCallback(final int pullRequestNumber) {
+    private Consumer<Integer> getUpdateCallback(final int prNumber) {
         final int updatePcntWait = 10;
         final int[] nextUpdateMessage = new int[]{0}; // Hack to increment value inside of lambda.
         return pcnt -> {
@@ -89,21 +87,21 @@ public class ReportDmmDiffCommand implements HandlerCommand<PullRequest> {
 
                 String message = DmmReportRenderService.HEADER
                         + "Cloning PR repository... Progress: **" + pcnt + "%**";
-                reportSenderService.sendReport(message, REPORT_ID, pullRequestNumber);
+                gitHubCommentService.sendCommentOrUpdate(prNumber, message, REPORT_ID);
             }
         };
     }
 
-    private Runnable getEndCallback(final int pullRequestNumber) {
+    private Runnable getEndCallback(final int prNumber) {
         return () -> {
             String message = DmmReportRenderService.HEADER
                     + "Cloning is done. Report will be generated in a few minutes...";
-            reportSenderService.sendReport(message, REPORT_ID, pullRequestNumber);
+            gitHubCommentService.sendCommentOrUpdate(prNumber, message, REPORT_ID);
         };
     }
 
     private void sendRejectMessage(final int prNumber) {
         String errorMessage = DmmReportRenderService.HEADER + "Report will not be generated for non mergeable PR.";
-        reportSenderService.sendReport(errorMessage, REPORT_ID, prNumber);
+        gitHubCommentService.sendCommentOrUpdate(prNumber, errorMessage, REPORT_ID);
     }
 }

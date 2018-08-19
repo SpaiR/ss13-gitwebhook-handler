@@ -65,10 +65,4 @@ public class DmmReportRenderServiceTest {
         String expected = OBJECTS_TABLE_PART + AREAS_TABLE_PART + COMPARISON_PART + RAW_LINKS_PART;
         assertEquals(expected, renderService.renderBody(mock(DmmDiffStatus.class)));
     }
-
-    @Test
-    public void testRenderError() {
-        String expected = "## DMM Diff Report" + NEW_LINE + NEW_LINE + "Report is too long and can't be printed.";
-        assertEquals(expected, renderService.renderError());
-    }
 }

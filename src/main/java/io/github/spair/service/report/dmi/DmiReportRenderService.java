@@ -63,10 +63,4 @@ public class DmiReportRenderService extends AbstractReportRenderService<DmiDiffS
                 + tablePartRender.render(status) + NEW_LINE
                 + statesNumberPartRender.render(status);
     }
-
-    @Override
-    public String renderError() {
-        return TITLE + NEW_LINE + NEW_LINE
-                + "Report is too long and can't be printed.";
-    }
 }

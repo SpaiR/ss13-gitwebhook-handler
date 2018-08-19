@@ -4,11 +4,11 @@ import io.github.spair.service.dme.DmeService;
 import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.dmm.DmmService;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
+import io.github.spair.service.github.GitHubCommentService;
 import io.github.spair.service.github.GitHubService;
 import io.github.spair.service.github.entity.PullRequestFile;
 import io.github.spair.service.pr.entity.PullRequest;
 import io.github.spair.service.report.ReportRenderService;
-import io.github.spair.service.report.ReportSenderService;
 import org.assertj.core.util.Lists;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class ReportDmmDiffCommandTest {
     @Mock
     private ReportRenderService<DmmDiffStatus> reportRenderService;
     @Mock
-    private ReportSenderService reportSenderService;
+    private GitHubCommentService gitHubCommentService;
 
     private ReportDmmDiffCommand command;
 
@@ -48,7 +48,7 @@ public class ReportDmmDiffCommandTest {
 
     @Before
     public void setUp() {
-        command = new ReportDmmDiffCommand(gitHubService, dmeService, dmmService, reportRenderService, reportSenderService);
+        command = new ReportDmmDiffCommand(gitHubService, dmeService, dmmService, reportRenderService, gitHubCommentService);
     }
 
     @Test
@@ -61,11 +61,10 @@ public class ReportDmmDiffCommandTest {
         when(dmeService.createDmePairForPullRequest(eq(pullRequest), any(), any())).thenReturn(Optional.of(mock(DmePair.class)));
         when(dmmService.listDmmDiffStatuses(any(List.class))).thenReturn(Lists.newArrayList(mock(DmmDiffStatus.class)));
         when(reportRenderService.renderStatus(anyList())).thenReturn("Fake Report");
-        when(reportRenderService.renderError()).thenReturn("Fake Error");
 
         command.execute(pullRequest);
 
-        verify(reportSenderService).sendReport("Fake Report", "Fake Error", REPORT_ID, 1);
+        verify(gitHubCommentService).sendCommentOrUpdate(1, "Fake Report", REPORT_ID);
     }
 
     @Test
@@ -77,16 +76,16 @@ public class ReportDmmDiffCommandTest {
 
         command.execute(PullRequest.builder().number(1).build());
 
-        verify(reportSenderService).sendReport(
+        verify(gitHubCommentService).sendCommentOrUpdate(1,
                 "## DMM Diff Report" + System.lineSeparator() + System.lineSeparator()
-                        + "Report will not be generated for non mergeable PR.", REPORT_ID, 1);
+                        + "Report will not be generated for non mergeable PR.", REPORT_ID);
     }
 
     @Test
     public void testExecuteWithoutDiffs() {
         when(gitHubService.listPullRequestFiles(1)).thenReturn(Lists.emptyList());
         command.execute(PullRequest.builder().number(1).build());
-        verify(reportSenderService, never()).sendReport(anyString(), anyString(), anyString(), anyInt());
+        verify(gitHubCommentService, never()).sendCommentOrUpdate(anyInt(), anyString(), anyString());
     }
 
     @Test
@@ -97,16 +96,16 @@ public class ReportDmmDiffCommandTest {
             updateCallback.accept(i);
         }
 
-        verify(reportSenderService, times(11)).sendReport(anyString(), eq(REPORT_ID), eq(23));
+        verify(gitHubCommentService, times(11)).sendCommentOrUpdate(eq(23), anyString(), eq(REPORT_ID));
     }
 
     @Test
     public void testEndCallback() {
         Runnable endCallback = ReflectionTestUtils.invokeMethod(command, "getEndCallback", 23);
         endCallback.run();
-        verify(reportSenderService).sendReport(
+        verify(gitHubCommentService).sendCommentOrUpdate(23,
                 "## DMM Diff Report" + System.lineSeparator() + System.lineSeparator()
-                        + "Cloning is done. Report will be generated in a few minutes...", REPORT_ID, 23);
+                        + "Cloning is done. Report will be generated in a few minutes...", REPORT_ID);
     }
 
     private List<PullRequestFile> getPullRequestFileList() {

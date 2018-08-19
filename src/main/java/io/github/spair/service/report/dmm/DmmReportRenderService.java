@@ -35,9 +35,4 @@ public class DmmReportRenderService extends AbstractReportRenderService<DmmDiffS
                 + comparisonListPartRender.render(status)
                 + rawLinksPartRender.render(status);
     }
-
-    @Override
-    public String renderError() {
-        return HEADER + "Report is too long and can't be printed.";
-    }
 }
