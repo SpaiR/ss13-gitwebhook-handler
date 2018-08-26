@@ -1,6 +1,11 @@
 package io.github.spair.service.dmi;
 
-import io.github.spair.byond.dmi.*;
+import io.github.spair.byond.dmi.DmiMeta;
+import io.github.spair.byond.dmi.DmiSprite;
+import io.github.spair.byond.dmi.SpriteDir;
+import io.github.spair.byond.dmi.comparator.DiffStatus;
+import io.github.spair.byond.dmi.comparator.DmiDiff;
+import io.github.spair.byond.dmi.comparator.DmiDiffEntry;
 import io.github.spair.service.dmi.entity.DmiSpriteDiffStatus;
 import io.github.spair.service.image.ImageUploaderService;
 import org.assertj.core.util.Lists;
@@ -61,7 +66,7 @@ public class SpriteDiffStatusGeneratorTest {
         DmiSprite newSpriteMock = mock(DmiSprite.class);
         when(newSpriteMock.getSprite()).thenReturn(newImage);
 
-        Diff diffMock = mock(Diff.class);
+        DmiDiffEntry diffMock = mock(DmiDiffEntry.class);
         when(diffMock.getStateName()).thenReturn("simpleState");
         when(diffMock.getOldSprite()).thenReturn(oldSpriteMock);
         when(diffMock.getNewSprite()).thenReturn(newSpriteMock);
@@ -72,7 +77,7 @@ public class SpriteDiffStatusGeneratorTest {
         when(metaMock.getSpritesHeight()).thenReturn(32);
 
         DmiDiff dmiDiff = mock(DmiDiff.class);
-        when(dmiDiff.getDiffs()).thenReturn(Lists.newArrayList(diffMock, diffMock));
+        when(dmiDiff.getDmiDiffEntries()).thenReturn(Lists.newArrayList(diffMock, diffMock));
         when(dmiDiff.getOldMeta()).thenReturn(metaMock);
         when(dmiDiff.getNewMeta()).thenReturn(metaMock);
 

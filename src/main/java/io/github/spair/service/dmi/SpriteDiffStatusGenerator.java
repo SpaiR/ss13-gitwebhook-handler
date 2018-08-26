@@ -1,9 +1,9 @@
 package io.github.spair.service.dmi;
 
-import io.github.spair.byond.dmi.Diff;
-import io.github.spair.byond.dmi.DmiDiff;
 import io.github.spair.byond.dmi.DmiMeta;
 import io.github.spair.byond.dmi.DmiSprite;
+import io.github.spair.byond.dmi.comparator.DmiDiff;
+import io.github.spair.byond.dmi.comparator.DmiDiffEntry;
 import io.github.spair.service.dmi.entity.DmiSpriteDiffStatus;
 import io.github.spair.service.image.ImageUploaderService;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ final class SpriteDiffStatusGenerator {
     }
 
     List<DmiSpriteDiffStatus> generate(final DmiDiff dmiDiff) {
-        final List<Diff> diffs = dmiDiff.getDiffs();
+        final List<DmiDiffEntry> diffs = dmiDiff.getDmiDiffEntries();
         final ExecutorService executor = createExecutor(diffs.size());
         final List<Callable<DmiSpriteDiffStatus>> callableList = createCallableList(dmiDiff);
 
@@ -59,11 +59,11 @@ final class SpriteDiffStatusGenerator {
 
     private List<Callable<DmiSpriteDiffStatus>> createCallableList(final DmiDiff dmiDiff) {
         List<Callable<DmiSpriteDiffStatus>> callableList = new ArrayList<>();
-        dmiDiff.getDiffs().forEach(diff -> callableList.add(() -> createDmiSpriteDiffStatus(dmiDiff, diff)));
+        dmiDiff.getDmiDiffEntries().forEach(diff -> callableList.add(() -> createDmiSpriteDiffStatus(dmiDiff, diff)));
         return callableList;
     }
 
-    private DmiSpriteDiffStatus createDmiSpriteDiffStatus(final DmiDiff dmiDiff, final Diff diff) {
+    private DmiSpriteDiffStatus createDmiSpriteDiffStatus(final DmiDiff dmiDiff, final DmiDiffEntry diff) {
         DmiSpriteDiffStatus spriteDiffStatus = new DmiSpriteDiffStatus();
 
         final String stateName = diff.getStateName();

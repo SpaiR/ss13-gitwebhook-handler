@@ -3,7 +3,7 @@ package io.github.spair.service.idmap;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.spair.byond.ByondTypes;
 import io.github.spair.byond.dmm.MapRegion;
-import io.github.spair.byond.dmm.parser.Dmm;
+import io.github.spair.byond.dmm.Dmm;
 import io.github.spair.byond.dmm.render.DmmRender;
 import io.github.spair.service.dmm.entity.ModifiedDmm;
 import io.github.spair.service.idmap.entity.MapHash;

@@ -1,9 +1,9 @@
 package io.github.spair.service.dmm;
 
 import io.github.spair.byond.dme.Dme;
-import io.github.spair.byond.dmm.DmmComparator;
+import io.github.spair.byond.dmm.Dmm;
 import io.github.spair.byond.dmm.MapRegion;
-import io.github.spair.byond.dmm.parser.Dmm;
+import io.github.spair.byond.dmm.comparator.DmmComparator;
 import io.github.spair.byond.dmm.parser.DmmParser;
 import io.github.spair.service.dmm.entity.DmmChunkDiff;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
@@ -35,6 +35,8 @@ public class DmmServiceTest {
 
     @Mock
     private ChunkDiffGenerator chunkDiffGenerator;
+
+    private static final Dmm EMPTY_MAP = new Dmm();
 
     @Mock
     private Dme mockedOldDme;
@@ -72,8 +74,8 @@ public class DmmServiceTest {
         PowerMockito.when(DmmParser.parse(eq(newDmmFile), any(Dme.class))).thenReturn(mockedNewDmm);
 
         PowerMockito.mockStatic(DmmComparator.class);
-        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedOldDmm), eq(Dmm.EMPTY_MAP))).thenReturn(oldCompareToNullList);
-        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedNewDmm), eq(Dmm.EMPTY_MAP))).thenReturn(newCompareToNullList);
+        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedOldDmm), eq(EMPTY_MAP))).thenReturn(oldCompareToNullList);
+        PowerMockito.when(DmmComparator.compareByChunks(eq(mockedNewDmm), eq(EMPTY_MAP))).thenReturn(newCompareToNullList);
         PowerMockito.when(DmmComparator.compareByChunks(eq(mockedOldDmm), eq(mockedNewDmm))).thenReturn(oldCompareToNewList);
 
         when(chunkDiffGenerator.generate(anyList(), eq(mockedOldDmm), eq(null))).thenReturn(oldWithNullChunkDiffList);

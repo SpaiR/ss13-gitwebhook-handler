@@ -1,7 +1,7 @@
 package io.github.spair.service.dme;
 
 import io.github.spair.byond.dme.Dme;
-import io.github.spair.byond.dme.DmeParser;
+import io.github.spair.byond.dme.parser.DmeParser;
 import io.github.spair.service.config.ConfigService;
 import io.github.spair.service.dme.entity.DmePair;
 import io.github.spair.service.github.GitHubRepository;

@@ -1,8 +1,8 @@
 package io.github.spair.service.dmi;
 
 import io.github.spair.byond.dmi.Dmi;
-import io.github.spair.byond.dmi.DmiComparator;
-import io.github.spair.byond.dmi.DmiDiff;
+import io.github.spair.byond.dmi.comparator.DmiComparator;
+import io.github.spair.byond.dmi.comparator.DmiDiff;
 import io.github.spair.service.dmi.entity.DmiDiffStatus;
 import io.github.spair.service.dmi.entity.ModifiedDmi;
 import io.github.spair.service.github.entity.PullRequestFile;

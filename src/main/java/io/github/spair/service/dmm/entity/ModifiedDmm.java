@@ -1,6 +1,6 @@
 package io.github.spair.service.dmm.entity;
 
-import io.github.spair.byond.dmm.parser.Dmm;
+import io.github.spair.byond.dmm.Dmm;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;

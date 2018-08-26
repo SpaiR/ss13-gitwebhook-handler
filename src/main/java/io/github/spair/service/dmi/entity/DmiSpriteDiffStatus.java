@@ -1,7 +1,7 @@
 package io.github.spair.service.dmi.entity;
 
-import io.github.spair.byond.dmi.DiffStatus;
 import io.github.spair.byond.dmi.SpriteDir;
+import io.github.spair.byond.dmi.comparator.DiffStatus;
 import lombok.Data;
 
 @Data

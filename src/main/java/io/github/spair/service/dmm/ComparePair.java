@@ -1,6 +1,6 @@
 package io.github.spair.service.dmm;
 
-import io.github.spair.byond.dmm.parser.Dmm;
+import io.github.spair.byond.dmm.Dmm;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

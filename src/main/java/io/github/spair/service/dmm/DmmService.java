@@ -1,9 +1,9 @@
 package io.github.spair.service.dmm;
 
 import io.github.spair.byond.dme.Dme;
-import io.github.spair.byond.dmm.DmmComparator;
+import io.github.spair.byond.dmm.Dmm;
 import io.github.spair.byond.dmm.MapRegion;
-import io.github.spair.byond.dmm.parser.Dmm;
+import io.github.spair.byond.dmm.comparator.DmmComparator;
 import io.github.spair.byond.dmm.parser.DmmParser;
 import io.github.spair.service.dmm.entity.DmmChunkDiff;
 import io.github.spair.service.dmm.entity.DmmDiffStatus;
@@ -105,10 +105,10 @@ public class DmmService {
             compareWith = newDmm.get();
         } else if (oldDmm.isPresent()) {
             toCompare = oldDmm.get();
-            compareWith = Dmm.EMPTY_MAP;
+            compareWith = new Dmm();
         } else if (newDmm.isPresent()) {
             toCompare = newDmm.get();
-            compareWith = Dmm.EMPTY_MAP;
+            compareWith = new Dmm();
         } else {
             throw new IllegalArgumentException("One of DMM's should exist");
         }

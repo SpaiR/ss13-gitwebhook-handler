@@ -1,7 +1,7 @@
 package io.github.spair.service.dmi;
 
 import io.github.spair.byond.dmi.Dmi;
-import io.github.spair.byond.dmi.DmiSlurper;
+import io.github.spair.byond.dmi.slurper.DmiSlurper;
 import io.github.spair.service.RestService;
 import io.github.spair.service.github.GitHubService;
 import org.slf4j.Logger;
