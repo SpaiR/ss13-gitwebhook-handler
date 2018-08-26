@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -68,8 +69,8 @@ public class SpriteDiffStatusGeneratorTest {
 
         DmiDiffEntry diffMock = mock(DmiDiffEntry.class);
         when(diffMock.getStateName()).thenReturn("simpleState");
-        when(diffMock.getOldSprite()).thenReturn(oldSpriteMock);
-        when(diffMock.getNewSprite()).thenReturn(newSpriteMock);
+        when(diffMock.getOldSprite()).thenReturn(Optional.of(oldSpriteMock));
+        when(diffMock.getNewSprite()).thenReturn(Optional.of(newSpriteMock));
         when(diffMock.getStatus()).thenReturn(DiffStatus.MODIFIED);
 
         DmiMeta metaMock = mock(DmiMeta.class);

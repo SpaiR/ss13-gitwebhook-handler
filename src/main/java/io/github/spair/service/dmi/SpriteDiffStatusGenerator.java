@@ -69,8 +69,8 @@ final class SpriteDiffStatusGenerator {
         final String stateName = diff.getStateName();
         final DmiMeta oldMeta = dmiDiff.getOldMeta();
         final DmiMeta newMeta = dmiDiff.getNewMeta();
-        final DmiSprite oldSprite = diff.getOldSprite();
-        final DmiSprite newSprite = diff.getNewSprite();
+        final DmiSprite oldSprite = diff.getOldSprite().orElse(null);
+        final DmiSprite newSprite = diff.getNewSprite().orElse(null);
 
         spriteDiffStatus.setName(stateName);
         spriteDiffStatus.setSpriteWidth(determineValue(oldMeta, newMeta, DmiMeta::getSpritesWidth));
